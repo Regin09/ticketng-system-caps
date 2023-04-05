@@ -35,7 +35,7 @@ import Tickets from '../../pages/tickets/Tickets';
 import Members from '../../pages/members/Members';
 import Clients from '../../pages/clients/Clients';
 import Feedback from '../../pages/Feedback/Feedback';
-
+import {Helmet} from 'react-helmet';
 
 const drawerWidth = 230;
 const openedMixin = (theme) => ({
@@ -126,6 +126,9 @@ const DashboardLayout = () => {
   
     return (
       <>
+      <Helmet>
+          <style>{'body { background-color: #F5F8FB; }'}</style>
+      </Helmet>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
           <Toolbar className='navbar'>
