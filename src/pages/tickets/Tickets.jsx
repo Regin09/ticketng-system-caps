@@ -9,6 +9,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import {userColumns, userRows} from "../../datatablesource";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 const Tickets = () => {
   const [data, setData] = useState(userRows)
@@ -56,6 +58,16 @@ const Tickets = () => {
                 backgroundColor:"white"
               }
               }}>
+                <DeleteOutlineOutlinedIcon 
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "2px",
+                  cursor: "pointer",
+                  marginTop: "3.4px",
+                  marginBottom: "5px",
+                }}
+                  />
             Delete Ticket
           </Button>
           <Button 
@@ -68,6 +80,16 @@ const Tickets = () => {
                 backgroundColor:"white"
               }
               }}>
+            <AddCircleOutlineOutlinedIcon
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: "2px",
+              cursor: "pointer",
+              marginTop: "3.4px",
+              marginBottom: "5px",
+            }}
+              />
             Create Ticket
           </Button>
         </Stack>
