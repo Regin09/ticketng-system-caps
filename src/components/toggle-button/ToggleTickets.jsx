@@ -1,8 +1,4 @@
 import * as React from 'react';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -16,23 +12,23 @@ export default function ToggleButtonSizes(props) {
 
   const children = [
     <ToggleButton value="left" key="left"
-    sx={{borderRadius:'8px'}}>
+    sx={{borderRadius:'8px',height:"36px"}}>
       {props.MenuName[0]}
     </ToggleButton>,
     <ToggleButton value="center" key="center"
-    sx={{borderRadius:'8px'}}>
+    sx={{borderRadius:'8px',height:"36px"}}>
     {props.MenuName[1]}
       </ToggleButton>,
     <ToggleButton value="right" key="right"
-    sx={{borderRadius:'8px'}}>
+    sx={{borderRadius:'8px',height:"36px"}}>
     {props.MenuName[2]}
       </ToggleButton>,
     <ToggleButton value="justify" key="justify"
-    sx={{borderRadius:'8px'}}>
+    sx={{borderRadius:'8px',height:"36px"}}>
     {props.MenuName[3]}
     </ToggleButton>,
     <ToggleButton value="ayam" key="justify"
-     sx={{borderRadius:'8px'}}>
+     sx={{borderRadius:'8px',height:"36px"}}>
      {props.MenuName[4]}
      </ToggleButton>,
   ];

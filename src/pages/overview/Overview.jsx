@@ -4,7 +4,6 @@ import Container from '@mui/system/Container'
 import { Fragment } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import "./overview.css";
-import ToggleButtonSizes from '../../components/toggle-button/Toggle'
 
 const Overview = () => {
     return (

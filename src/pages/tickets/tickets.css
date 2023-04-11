@@ -1,0 +1,107 @@
+.induk-togle1{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.induk-togle2{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.induk-toglee{
+    display: flex;
+    justify-content: space-around;
+}
+
+.datatable{
+    height: 650px;
+    padding: 20px;
+}
+
+.cellAction{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.datatable .cellWithStatus.Selected {
+    background-color: rgba(0, 128, 0, 0.05);
+    color: #000000;
+}
+.datatable .cellWithStatus.To-Do {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: #FF8A00;
+}
+.datatable .cellWithStatus.Done {
+    background-color: rgba(255, 217, 0, 0.05);
+    color: #FF0000;
+}
+.datatable .cellWithStatus.In-Progress {
+    background-color: rgba(255, 217, 0, 0.05);
+    color: #1B8500;
+}
+.datatable .cellWithPriority {
+    display: flex;
+    align-items: center;
+}
+
+.datatable .cellWithPriority.Critical .dot {
+        height: 17px;
+        width: 17px;
+        background-color: #FF0000;
+        border-radius: 50%;
+        display: inline-block;
+         -o-object-fit: cover;
+         object-fit: cover;
+        margin-right: 7px;
+}
+.datatable .cellWithPriority.High .dot {
+    height: 17px;
+    width: 17px;
+    background-color: #FF7B01;
+    border-radius: 50%;
+    display: inline-block;
+     -o-object-fit: cover;
+     object-fit: cover;
+    margin-right: 7px;
+}
+.datatable .cellWithPriority.Medium .dot {
+    height: 17px;
+    width: 17px;
+    background-color: #FFF500;
+    border-radius: 50%;
+    display: inline-block;
+     -o-object-fit: cover;
+     object-fit: cover;
+    margin-right: 7px;
+}
+.datatable .cellWithPriority.Low .dot {
+    height: 17px;
+    width: 17px;
+    background-color: #4FCF00;
+    border-radius: 50%;
+    display: inline-block;
+     -o-object-fit: cover;
+     object-fit: cover;
+    margin-right: 7px;
+}
+.datatable .cellAction {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .datatable .cellAction .viewButton {
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: darkblue;
+    border: 1px dotted rgba(0, 0, 139, 0.596);
+    cursor: pointer;
+  }
+  .datatable .cellAction .deleteButton {
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: crimson;
+    border: 1px dotted rgba(0, 0, 139, 0.596);
+    cursor: pointer;
+  }
+
