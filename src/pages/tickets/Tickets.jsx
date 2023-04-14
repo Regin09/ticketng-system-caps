@@ -90,7 +90,7 @@ const Tickets = () => {
               marginBottom: "5px",
             }}
               />
-            Create Ticket
+            <Link to="createTickets" style={{textDecoration:"none",color:"black"}}>Create Tickets</Link>
           </Button>
         </Stack>
       </Grid>
@@ -105,6 +105,8 @@ const Tickets = () => {
             checkboxSelection
             sx={{
               background:"#FFFFFF",
+              border: "1px solid rgba(0, 0, 0, 0.2)",
+              borderRadius: "14px",
             }}
           />
         </div>

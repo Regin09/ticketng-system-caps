@@ -17,8 +17,6 @@ import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import "./dashboardlayout.css";
 import Avatar from '@mui/material/Avatar';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
@@ -30,12 +28,8 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { Logout } from '@mui/icons-material';
 import { Link, Outlet } from 'react-router-dom';
 import LogoWebsite from '../../assets/images/Logo Btech.png'
-import Overview from '../../pages/overview/Overview';
-import Tickets from '../../pages/tickets/Tickets';
-import Members from '../../pages/members/Members';
-import Clients from '../../pages/clients/Clients';
-import Feedback from '../../pages/Feedback/Feedback';
 import {Helmet} from 'react-helmet';
+
 
 const drawerWidth = 230;
 const openedMixin = (theme) => ({
@@ -45,6 +39,7 @@ const openedMixin = (theme) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
+  zIndex:"10000",
 });
 
 const closedMixin = (theme) => ({
@@ -57,6 +52,7 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
+  zIndex:"10000",
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -84,6 +80,7 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
+  backgroundColor:"#8DF35D!important",
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -92,6 +89,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
+    
+
     ...(open && {
       ...openedMixin(theme),
       '& .MuiDrawer-paper': openedMixin(theme),
@@ -127,7 +126,7 @@ const DashboardLayout = () => {
     return (
       <>
       <Helmet>
-          <style>{'body { background-color: #F5F8FB; }'}</style>
+          <style>{'body { background-color: #F5F8FB}'}</style>
       </Helmet>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -141,6 +140,7 @@ const DashboardLayout = () => {
               sx={{
                 marginRight: 1,
                 marginLeft: open ? 'none' : 6,
+                
               }}
             >
               <MenuIcon />
@@ -210,8 +210,8 @@ const DashboardLayout = () => {
       </Menu>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open} className="sidebar-menu"> 
-        <DrawerHeader sx={{ border: 'none', display: 'flex', justifyContent: 'flex-start' }}>
+        <Drawer variant="permanent" open={open} className="sidebar-menu" > 
+        <DrawerHeader sx={{ border: 'none', display: 'flex', justifyContent: 'flex-start',backgroundColor:"green" }}>
           {open ? (
             <img src={LogoWebsite} alt="Logo" style={{ height: '48px', alignSelf: 'left' }} />
           ) : (
@@ -220,9 +220,10 @@ const DashboardLayout = () => {
             </IconButton>
           )}
         </DrawerHeader>
+        <div style={{backgroundColor:"green",height:"100%",}}>
           <List>
           {[
-            { title: 'Overview', icon: <RemoveRedEyeOutlinedIcon />, link:'/overview'},
+            { title: 'Overview', icon: <RemoveRedEyeOutlinedIcon sx={{color:"red"}} />, link:'/overview'},
             { title: 'Tickets', icon: <LocalActivityOutlinedIcon />, link: '/tickets' },
             { title: 'Members', icon: <GroupOutlinedIcon />, link :'/members' },
             { title: 'Clients', icon: <BusinessIcon />, link :'/clients' },
@@ -246,15 +247,20 @@ const DashboardLayout = () => {
                 >
                   {listNavbar.icon}
                 </ListItemIcon>
-                <ListItemText primary={listNavbar.title} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={listNavbar.title} sx={{ opacity: open ? 1 : 0}} />
               </ListItemButton>
             </ListItem>
             </Link>
           ))}
+          
         </List>
+        </div>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: '64.2px' }}>
+        
+        <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: open?'230px':'64.2px' }}>
+          
           <DrawerHeader/>
+                  
         <Outlet />
       </Box>
       </>

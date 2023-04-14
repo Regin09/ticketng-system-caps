@@ -9,6 +9,7 @@ import {userColumns, userRows} from "../../datatablesourcemembers";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import ToggleMembers from '../../components/toggle-button/ToggleMembers';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 const Members = () => {
   const [data, setData] = useState(userRows)
@@ -35,12 +36,36 @@ const Members = () => {
 <Container>
   <div className="induk-toglee">
     <Grid container spacing={2}>
-      <Grid item md={12} xl={12} sm={12} className='induk-togle1'>
+      <Grid item md={6} xl={6} sm={6} className='induk-togle1'>
         <div className="togle-button">
           <ToggleMembers MenuName={['Engineer','User','Admin']} />
         </div>
         </Grid>
-      <Grid item md={12} xl={12} sm={12} className='induk-togle3'>
+        <Grid item md={6} xl={6} sm={6} className='induk-togle2'>
+        <Button 
+            variant="contained" 
+            sx={{
+              color:"black",
+              background:"#FFFFFF",
+              height:"36px",
+              "&:hover":{
+                backgroundColor:"white"
+              }
+              }}>
+            <AddCircleOutlineOutlinedIcon
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: "2px",
+              cursor: "pointer",
+              marginTop: "3.4px",
+              marginBottom: "5px",
+            }}
+              />
+            <Link to="CreateMember" style={{textDecoration:"none",color:"black"}}>Create Tickets</Link>
+            </Button>
+            </Grid>
+<Grid item md={12} xl={12} sm={12} className='induk-togle3'>
         <div className="datatable">
           <DataGrid
             className="datagrid"
@@ -51,6 +76,8 @@ const Members = () => {
             checkboxSelection
             sx={{
               background:"#FFFFFF",
+              border: "1px solid rgba(0, 0, 0, 0.2)",
+              borderRadius: "14px",
             }}
           />
         </div>
