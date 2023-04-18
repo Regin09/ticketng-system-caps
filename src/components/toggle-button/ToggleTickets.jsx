@@ -42,7 +42,7 @@ export default function ToggleButtonSizes(props) {
   return (
     <React.Fragment>
     <Stack spacing={2} alignItems="center">
-      <ToggleButtonGroup {...control} 
+      <ToggleButtonGroup onSelect={(e)=>{console.log(e)}} {...control} 
       aria-label="Medium sizes"
       >
         {children}

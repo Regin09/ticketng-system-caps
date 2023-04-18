@@ -15,121 +15,219 @@ import MenuItem from '@mui/material/MenuItem';
 const DetailFeedback = () => {
   return (
     <Container>
-      <Grid container spacing={1}>
-        <Grid item md={12} xl={12} sm={12} >
-          <h2>User Feedback</h2>
-        </Grid>
-        <Grid item md={12} xl={12} sm={12}>
-        <Grid item md={12} xl={12} sm={12}>
-          <Card sx={{ 
-            minWidth: "1000px",
-            height:"600px",
-            border:"1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "10px", 
-            }}>
-          <CardContent>
-          <Stack spacing={2} direction="row">
-          <Grid item md={4} xl={4} sm={4}> 
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-              ID
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined"  size='small' 
+    <h2>Create Ticket</h2>
+      <Card sx={{ 
+        minWidth: "100%",
+        border:"1px solid rgba(0, 0, 0, 0.2)",
+        borderRadius: "10px", 
+        padding:"16px",
+        }}>
+      <div>
+      <Grid container spacing={2}>
+      <Grid item xs={12} md={6} xl={4}> 
+          <Typography variant="body2" sx={{fontSize:"17px"}}>
+            ID
+          </Typography>
+          <TextField id="outlined-basic" variant="outlined"  size='small' 
                 sx={{
-                  width:"211px", 
+                  width:"100%", 
                   height:"35px",  
                   background:"#FFFFFF",
                   borderRadius: "7px"
                  }}/>
-          </Grid>
-          <Grid item md={4} xl={4} sm={4}> 
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                Sender Username
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined" size='small' 
+      </Grid>
+      <Grid item xs={12} md={6} xl={4}>
+               <Typography variant="body2" sx={{fontSize:"17px"}}>
+               Sender Username
+               </Typography>
+               <TextField id="outlined-basic" variant="outlined" size='small' 
                 sx={{
-                  width:"211px", 
+                  width:"100%", 
                   height:"35px",  
                   background:"#FFFFFF",
                   borderRadius: "7px"
                  }}/>
-          </Grid>
-          <Grid item md={4} xl={4} sm={4}> 
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                Sender Name
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined" size='small' 
-                sx={{
-                  width:"211px", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px"
-                 }}/>
-          </Grid>
-          </Stack>
-          <br/>
-          <Stack spacing={2} direction="row">
-          <Grid item md={4} xl={4} sm={4}> 
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-              Sender Client
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined"  size='small' 
-                sx={{
-                  width:"211px", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px"
-                 }}/>
-          </Grid>
-          <Grid item md={4} xl={4} sm={4}> 
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                 Engineer Username
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined" size='small' 
-                sx={{
-                  width:"211px", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px"
-                 }}/>
-          </Grid>
-          <Grid item md={4} xl={4} sm={4}> 
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                Engineer Name
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined" size='small' 
-                sx={{
-                  width:"211px", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px"
-                 }}/>
-          </Grid>
-          </Stack>
-          <br/>
-          <Grid item md={12} xl={12} sm={12}>
-            <br/>
-            <Typography variant="body2" sx={{fontSize:"17px"}}>
-              Description
-              <br />
-            </Typography>
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              rows={12}
-              sx={{
-                width:"1100px", 
-                height:"5px",  
-                background:"#FFFFFF",
-                borderRadius: "7px"
-              }}
-            />
-          </Grid>
-          </CardContent>
-          </Card>
-        </Grid>
+      </Grid>
+      <Grid item xs={12} md={6} xl={4}>
+          <Typography variant="body2" sx={{fontSize:"17px"}}>
+          Sender Name
+          </Typography>
+          <TextField id="outlined-basic" variant="outlined"  size='small' 
+            sx={{
+              width:"100%", 
+              height:"35px",  
+              background:"#FFFFFF",
+              borderRadius: "7px"
+             }}/>
       </Grid>
       </Grid>
-    </Container>
+      </div>
+      <br/>
+      <Grid container spacing={2}>
+      <Grid item xs={12} md={6} xl={4}>
+          <Typography variant="body2" sx={{fontSize:"17px"}}>
+            Sender Client
+          </Typography>
+          <TextField id="outlined-basic" variant="outlined" size='small'  
+            sx={{
+              width:"100%", 
+              height:"35px",  
+              background:"#FFFFFF",
+              borderRadius: "7px",
+             }}/>
+      </Grid>
+      <Grid item xs={12} md={6} xl={4}>
+          <Typography variant="body2" sx={{fontSize:"17px"}}>
+            Engineer Username
+          </Typography>
+          <TextField id="outlined-basic" variant="outlined" size='small'  
+            sx={{
+              width:"100%", 
+              height:"35px",  
+              background:"#FFFFFF",
+              borderRadius: "7px",
+             }}/>
+      </Grid>
+      <Grid item xs={12} md={6} xl={4}>
+          <Typography variant="body2" sx={{fontSize:"17px"}}>
+             Engineer Name
+          </Typography>
+          <TextField
+            id="outlined-basic"
+            size='small'
+            variant='outlined'
+            sx={{width:'100%'}}
+          >
+          </TextField>
+      </Grid>
+      </Grid>
+      <br/>
+      <div style={{width:'100%'}}>
+        <Typography variant="body2" sx={{fontSize:"17px"}}>
+          Description
+          <br />
+        </Typography>
+        <TextField
+          id="outlined-multiline-static"
+          multiline
+          rows={10}
+          sx={{
+            width:"100%", 
+            height:"100%",  
+            background:"#FFFFFF",
+            borderRadius: "7px",
+            
+          }}
+        /> 
+        </div>
+      </Card>
+</Container>
+    // <Container>
+    //     <h2>User Feedback</h2>
+    //       <Card sx={{ 
+    //         minWidth: "100%",
+    //         border:"1px solid rgba(0, 0, 0, 0.2)",
+    //         borderRadius: "10px", 
+    //         padding:"16px",
+    //         }}>
+    //       <div>
+    //       <Grid container spacing={2}>
+    //       <Grid item md={12} xl={6} sm={3}> 
+    //           <Typography variant="body2" sx={{fontSize:"17px"}}>
+    //           ID
+    //           </Typography>
+    //           <TextField id="outlined-basic" variant="outlined"  size='small' 
+    //             sx={{
+    //               width:"100%", 
+    //               height:"35px",  
+    //               background:"#FFFFFF",
+    //               borderRadius: "7px"
+    //              }}/>
+    //       </Grid>
+    //       <Grid item md={12} xl={6} sm={3}> 
+    //           <Typography variant="body2" sx={{fontSize:"17px"}}>
+    //           Sender Username
+    //           </Typography>
+    //           <TextField id="outlined-basic" variant="outlined" size='small' 
+    //             sx={{
+    //               width:"100%", 
+    //               height:"35px",  
+    //               background:"#FFFFFF",
+    //               borderRadius: "7px"
+    //              }}/>
+    //       </Grid>
+    //       <Grid item md={12} xl={6} sm={3}> 
+    //           <Typography variant="body2" sx={{fontSize:"17px"}}>
+    //             Sender Name
+    //           </Typography>
+    //           <TextField id="outlined-basic" variant="outlined" size='small' 
+    //             sx={{
+    //               width:"100%", 
+    //               background:"#FFFFFF",
+    //              }}/>
+    //       </Grid>
+    //      </Grid>
+    //      </div>
+    //       <br/>
+    //       <div>
+    //       <Grid container spacing={3}>
+    //       <Grid item md={12} xl={6} sm={3}> 
+    //           <Typography variant="body2" sx={{fontSize:"17px"}}>
+    //           Sender Client
+    //           </Typography>
+    //           <TextField id="outlined-basic" variant="outlined"  size='small' 
+    //             sx={{
+    //               width:"100%", 
+                  
+    //              }}/>
+    //       </Grid>
+    //       <Grid item md={12} xl={6} sm={3}> 
+    //           <Typography variant="body2" sx={{fontSize:"17px"}}>
+    //              Engineer Username
+    //           </Typography>
+    //           <TextField id="outlined-basic" variant="outlined" size='small' 
+    //             sx={{
+    //               width:"100%", 
+                 
+    //              }}/>
+    //       </Grid>
+    //       <Grid item md={12} xl={6} sm={3}> 
+    //           <Typography variant="body2" sx={{fontSize:"17px"}}>
+    //             Engineer Name
+    //           </Typography>
+    //           <TextField id="outlined-basic" variant="outlined" size='small' 
+    //             sx={{
+    //               width:"100%", 
+                 
+    //              }}/>
+    //       </Grid>
+    //       </Grid>
+    //       </div>
+    //       <br/>
+    //       <div>
+    //       <Grid item md={12} xl={6} sm={3}>
+    //         <br/>
+    //         <Typography variant="body2" sx={{fontSize:"17px"}}>
+    //           Description
+    //           <br />
+    //         </Typography>
+    //         <TextField
+    //           id="outlined-multiline-static"
+    //           multiline
+    //           rows={12}
+    //           sx={{
+    //             width:"100%", 
+    //             height:"5px",  
+    //             background:"#FFFFFF",
+    //             borderRadius: "7px"
+    //           }}
+    //         />
+    //       </Grid>
+    //       </div>
+    //       </Card>
+    
+      
+    // </Container>
   )
 }
 
