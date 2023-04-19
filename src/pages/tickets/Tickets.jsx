@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import ToggleButtonSizes from '../../components/toggle-button/ToggleTickets'
-import { Container } from '@mui/material'
+import { styled, useTheme }  from '@mui/material'
 import Grid from '@mui/material/Grid';
 import "./tickets.css";
 import Stack from '@mui/material/Stack';
@@ -19,8 +19,25 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import ToggleButton from '@mui/material/ToggleButton';
+import MuiToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import EnhancedTable from '../../components/tickets-comp/tickkkets';
 
 const Tickets = () => {
+  const theme=useTheme()
+  const [statusTicket, setStatusTicket] = React.useState('ALL');
+
+  React.useEffect(() => {
+    document.title = 'Menu Keuangan';
+  }, []);
+
+  const ToggleButton = styled(MuiToggleButton)({
+    '&.Mui-selected, &.Mui-selected:hover': {
+      color: '#1F305C !important',
+      backgroundColor: 'rgba(31, 48, 92, 0.25)',
+    },
+  });
   const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
   
@@ -96,17 +113,51 @@ const Tickets = () => {
   const rows = [
     createData('21', 'Host 14 is down', 'regingeorgius', 'Selected', 'ITB', 'Critical','View&Delete'),
     createData('22', 'Ubuntu hardening', 'tono36', 'Done', 'BRI', 'High','View&Delete'),
-    createData('23', 'Host 17 is out of memory ', 'smith39', 'To-do','ITB','Medium','View&Delete'),
+    createData('23', 'Host 17 is out of memory ', 'smith39', 'To-Do','ITB','Medium','View&Delete'),
     createData('24', 'Kubernetes is down ', 'jana37', 'In-Progress', 'ITB', 'Low','View&Delete'),
   ];
   
   return (
 <Fragment>
+
   <div className="induk-toglee">
     <Grid container spacing={2}>
       <Grid item md={6} xl={6} sm={6} className='induk-togle1'>
         <div className="togle-button">
-          <ToggleButtonSizes MenuName={['All','Selected','To-Do','In-Progress','Done']} />
+        <ToggleButtonGroup
+        value={statusTicket}
+        color="primary"
+        exclusive
+        onChange={(event, value) => {
+          if (value) {
+            setStatusTicket(value);
+          }
+        }}
+        sx={{
+          // border: '1px solid #1F305C',
+          [theme.breakpoints.down('sm')]: {
+            height: '35px !important',
+          },
+        }}
+      >
+        <ToggleButton value="ALL" sx={{ border: '1px solid #1F305C' }}>
+          ALL
+        </ToggleButton>
+        <ToggleButton value="Selected" sx={{ border: '1px solid #1F305C' }}>
+          Selected
+        </ToggleButton>
+        <ToggleButton value="To-Do" sx={{ border: '1px solid #1F305C' }}>
+          To-Do
+        </ToggleButton>
+        <ToggleButton value="In-Progress" sx={{ border: '1px solid #1F305C' }}>
+          In-Progress
+        </ToggleButton>
+        <ToggleButton value="Done" sx={{ border: '1px solid #1F305C' }}>
+          Done
+        </ToggleButton>
+      </ToggleButtonGroup>
+      
+      {/* {statusTicket.toUpperCase()} */}
         </div>
       </Grid>
       <Grid item md={6} xl={6} sm={6} className='induk-togle2'>
@@ -178,7 +229,12 @@ const Tickets = () => {
           </TableHead>
           <TableBody>
             {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .filter((e)=>{
+              // return true
+              return statusTicket==='ALL'?true: e.status===statusTicket 
+            // if(e.status===statusTicket)
+            }
+            )
               .map((row) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
@@ -189,6 +245,8 @@ const Tickets = () => {
                           {column.format && typeof value === 'number'
                             ? column.format(value)
                             : value}
+                            {row.status}
+
                         </TableCell>
                       );
                     })}
@@ -211,6 +269,7 @@ const Tickets = () => {
       </Grid>
     </Grid>
   </div>
+  <EnhancedTable/>
   </Fragment>
    
   )

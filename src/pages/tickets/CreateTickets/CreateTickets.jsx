@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react';
 import { Container } from '@mui/material'
 import Grid from '@mui/material/Grid';
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-
+import { Fragment } from 'react';
 const prior = [
   {
     value: 'low',
@@ -73,7 +73,7 @@ const User =[
 
 const CreateTickets = () => {
   return (
-    <Container>
+    <Fragment>
         <h2>Create Ticket</h2>
           <Card sx={{ 
             minWidth: "100%",
@@ -242,7 +242,7 @@ const CreateTickets = () => {
           
           </Card>
         
-    </Container>
+          </Fragment>
   )
 }
 
