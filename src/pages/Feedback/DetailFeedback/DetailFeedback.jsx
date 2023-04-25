@@ -5,26 +5,23 @@ import { Link } from "react-router-dom";
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 
 const DetailFeedback = () => {
   return (
     <Container>
-    <h2>Create Ticket</h2>
+    <h2 style={{paddingBottom:"15px"}}>Create Ticket</h2>
+    
       <Card sx={{ 
-        minWidth: "100%",
+        width: "100%",
         border:"1px solid rgba(0, 0, 0, 0.2)",
         borderRadius: "10px", 
         padding:"16px",
         }}>
       <div>
       <Grid container spacing={2}>
-      <Grid item xs={12} md={6} xl={4}> 
+      <Grid item xs={12} md={4} xl={4}> 
           <Typography variant="body2" sx={{fontSize:"17px"}}>
             ID
           </Typography>
@@ -36,7 +33,7 @@ const DetailFeedback = () => {
                   borderRadius: "7px"
                  }}/>
       </Grid>
-      <Grid item xs={12} md={6} xl={4}>
+      <Grid item xs={12} md={4} xl={4}>
                <Typography variant="body2" sx={{fontSize:"17px"}}>
                Sender Username
                </Typography>
@@ -48,7 +45,7 @@ const DetailFeedback = () => {
                   borderRadius: "7px"
                  }}/>
       </Grid>
-      <Grid item xs={12} md={6} xl={4}>
+      <Grid item xs={12} md={4} xl={4}>
           <Typography variant="body2" sx={{fontSize:"17px"}}>
           Sender Name
           </Typography>
@@ -64,7 +61,7 @@ const DetailFeedback = () => {
       </div>
       <br/>
       <Grid container spacing={2}>
-      <Grid item xs={12} md={6} xl={4}>
+      <Grid item xs={12} md={4} xl={4}>
           <Typography variant="body2" sx={{fontSize:"17px"}}>
             Sender Client
           </Typography>
@@ -76,7 +73,7 @@ const DetailFeedback = () => {
               borderRadius: "7px",
              }}/>
       </Grid>
-      <Grid item xs={12} md={6} xl={4}>
+      <Grid item xs={12} md={4} xl={4}>
           <Typography variant="body2" sx={{fontSize:"17px"}}>
             Engineer Username
           </Typography>
@@ -88,7 +85,7 @@ const DetailFeedback = () => {
               borderRadius: "7px",
              }}/>
       </Grid>
-      <Grid item xs={12} md={6} xl={4}>
+      <Grid item xs={12} md={4} xl={4}>
           <Typography variant="body2" sx={{fontSize:"17px"}}>
              Engineer Name
           </Typography>

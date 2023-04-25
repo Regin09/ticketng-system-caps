@@ -225,6 +225,7 @@ const CreateTickets = () => {
           </Grid>
           </Grid>
           <div style={{display:"flex",justifyContent:"flex-end",marginTop:"10px"}}> 
+          <Link to="/tickets" style={{textDecoration:"none",color:"black"}}>
           <Button 
             variant="contained"
             sx={{
@@ -236,8 +237,9 @@ const CreateTickets = () => {
                 backgroundColor:"green"
               }
               }}>
-              <Link to="/tickets" style={{textDecoration:"none",color:"black"}}>Create Tickets</Link>
+              Create Tickets
            </Button>
+           </Link>
            </div>     
           
           </Card>

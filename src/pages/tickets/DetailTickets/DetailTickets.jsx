@@ -13,7 +13,7 @@ import FormatUnderlinedOutlinedIcon from '@mui/icons-material/FormatUnderlinedOu
 const DetailTickets = () => {
   return (
       <Fragment>
-        <Link to="Tickets" style={{textDecoration:"none",color:"black"}}>
+        <Link to="editTickets" style={{textDecoration:"none",color:"black"}}>
           <Button 
             variant="contained" size='small'
             sx={{

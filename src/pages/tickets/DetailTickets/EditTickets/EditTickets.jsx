@@ -76,7 +76,7 @@ const EditTickets = () => {
     <Container>
     <Grid container spacing={5}>
       <Grid item md={12} xl={12} sm={12} >
-        <h2>Create Ticket</h2>
+        <h2>Edit Ticket</h2>
       </Grid> 
       
       <Grid item md={12} xl={12} sm={12}>

@@ -16,6 +16,7 @@ import CreateClient from '../../pages/clients/CreateClient/CreateClient';
 import ClientAnalysis from '../../pages/clients/ClientAnalysis/ClientAnalysis';
 import EditClient from '../../pages/clients/EditClient/EditClient';
 import DetailFeedback from '../../pages/Feedback/DetailFeedback/DetailFeedback';
+import EditTickets from '../../pages/tickets/DetailTickets/EditTickets/EditTickets';
 
 function AdminRouter() {
   return (
@@ -29,7 +30,7 @@ function AdminRouter() {
                 <Route path="tickets" element={<Tickets/>} />
                 <Route path="tickets/createTickets" element={<CreateTickets/>} />
                 <Route path="tickets/detailTickets" element={<DetailTickets/>} />
-                    <Route path="tickets/detailTickets/editTickets" element={<Overview/>} />
+                    <Route path="tickets/detailTickets/editTickets" element={<EditTickets/>} />
                 <Route path="members" element={<Members />} />
                 <Route path="members/createAccount" element={<CreateMember/>} />
                 <Route path="members/userPerformance" element={<DetailEngineerPerformance/>} />

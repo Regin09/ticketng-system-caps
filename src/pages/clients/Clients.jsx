@@ -1,27 +1,23 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { Container,styled, useTheme } from '@mui/material';
+import {styled, useTheme } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import "./clients.css";
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
 import MuiToggleButton from '@mui/material/ToggleButton';
+import { Link } from "react-router-dom";
 
 const Clients = () => {
   const theme=useTheme()
-  const [lineBarChart, setLineBarChart] = React.useState('Line Chart');
 
   React.useEffect(() => {
-    document.title = 'Menu Keuangan';
+    document.title = 'Menu Klien';
   }, []);
 
   const ToggleButton = styled(MuiToggleButton)({
@@ -31,50 +27,17 @@ const Clients = () => {
     },
   });
   return (
-  <Container>
-    <Grid container spacing={4}>
-    <ToggleButtonGroup
-        value={lineBarChart}
-        color="primary"
-        exclusive
-        onChange={(event, value) => {
-          if (value) {
-            setLineBarChart(value);
-          }
-        }}
-        sx={{
-          // border: '1px solid #1F305C',
-          [theme.breakpoints.down('sm')]: {
-            height: '35px !important',
-          },
-        }}
-      >
-        <ToggleButton value="Line Chart" sx={{ border: '1px solid #1F305C' }}>
-          All
-        </ToggleButton>
-        <ToggleButton value="Horizontal Bar Chart" sx={{ border: '1px solid #1F305C' }}>
-          Selected
-        </ToggleButton>
-        <ToggleButton value="Vertical Bar Chart" sx={{ border: '1px solid #1F305C' }}>
-          To-Do
-        </ToggleButton>
-        <ToggleButton value="Stacked Bar Chart" sx={{ border: '1px solid #1F305C' }}>
-          In-Progress
-        </ToggleButton>
-        <ToggleButton value="Stacked Bar Chart" sx={{ border: '1px solid #1F305C' }}>
-          Done
-        </ToggleButton>
-      </ToggleButtonGroup>
-
-      <Grid item md={12} xl={12} sm={12} className='togle-clients'>
-        <Stack spacing={2} direction="row">
+  <React.Fragment>
+    <div style={{width:'100%',paddingBottom:'15px',maxWidth:'500px'}}>
+    <Grid container spacing={3} >
+      <Grid item xs={12} md={6} xl={6}>
+      <Link to="createClient" style={{textDecoration:"none",color:"black"}}>
           <Button 
             variant="contained"
             sx={{
               color:"black",
               background:"#FFFFFF",
-              height:"36px",
-              width:"170px",
+              width:"100%",
               "&:hover":{
                 backgroundColor:"white"
               }
@@ -89,13 +52,17 @@ const Clients = () => {
               marginBottom: "5px",
               }}/>
             Create Client
-          </Button>
+          </Button></Link>
+          </Grid>
+          
+          <Grid item xs={12} md={6} xl={6} >
+          <Link to="ClientAnalysis" style={{textDecoration:"none",color:"black"}}>
           <Button 
             variant="contained" 
             sx={{
               color:"black",
               background:"#FFFFFF",
-              height:"36px",
+              width:"100%",
               "&:hover":{
                 backgroundColor:"white"
 
@@ -112,9 +79,13 @@ const Clients = () => {
               }}/>
             Client Analytics
           </Button>
-        </Stack>
+          </Link>
+          </Grid>
       </Grid>
-      <Grid item md={4} xl={4} sm={12} >
+      
+      </div>
+      <Grid container spacing={3}>
+      <Grid item xs={12} md={4} xl={4}>
       <Card sx={{ 
           width: "100%", 
           boxSizing: "border-box",
@@ -132,43 +103,49 @@ const Clients = () => {
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               <hr/>
             </Typography>
-            <div 
-            style={{display:'flex',}}>
-              <div 
-              style={{width:'100%', maxWidth:'130px'}}>
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
                 Client Code
               </div> : 
               <div style={{paddingLeft:'15px'}}>
-               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis enim ullam totam aut eveniet. Pariatur nihil error omnis maiores accusantium. Vitae facilis, non porro nisi quam laboriosam libero ut amet.
+               DST
+              </div>
+            </div>
+            <br/>
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Phone
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               0812222
               </div>
             </div>
             <br />
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Email
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               deltasoft@tech.com
+              </div>
+            </div>
             <br />
-              Client Phone : 08122222
-            <br />
-            <br />
-              Client Email : deltasoft@tech.com
-            <br />
-            
-          </CardContent>
-          <Stack spacing={-3} direction="row">
-          <CardActions>
-            <Button size="small">
+          <div style={{width:'100%',display:'flex'}}>
+          <Link to="editClient" style={{textDecoration:"none",color:"black"}}>
+            <Button size="small" sx={{display:'flex',color:'green'}}>
             <BorderColorOutlinedIcon/>
            </Button> 
-          </CardActions>
-          <CardActions>
-            <Button size="small" sx={{width:"10px"}}>
+           </Link>
+            <Button size="small" sx={{width:"10px",color:'red'}}>
             <DeleteOutlineOutlinedIcon/>
             </Button>
-          </CardActions>
-          </Stack>
+          </div>
+          </CardContent>
         </Card> 
       </Grid>
-      <Grid item md={4} xl={4} sm={12} >
+      <Grid item xs={12} md={4} xl={4}>
       <Card sx={{ 
-          minWidth: "343px", 
-          height: "264px",
+          width: "100%", 
           boxSizing: "border-box",
           border: "1px solid rgba(0, 0, 0, 0.1)",
           borderRadius: "20px",
@@ -184,35 +161,47 @@ const Clients = () => {
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               <hr/>
             </Typography>
-            <Typography variant="body2">
-              Client Code : DST
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Code
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               DST
+              </div>
+            </div>
+            <br/>
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Phone
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               0812222
+              </div>
+            </div>
             <br />
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Email
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               deltasoft@tech.com
+              </div>
+            </div>
             <br />
-              Client Phone : 08122222
-            <br />
-            <br />
-              Client Email : deltasoft@tech.com
-            </Typography>
-            <br />
-          </CardContent>
-          <Stack spacing={-3} direction="row">
-          <CardActions>
-            <Button size="small">
+          <div style={{width:'100%',display:'flex'}}>
+            <Button size="small" sx={{display:'flex'}}>
             <BorderColorOutlinedIcon/>
            </Button> 
-          </CardActions>
-          <CardActions>
             <Button size="small" sx={{width:"10px"}}>
             <DeleteOutlineOutlinedIcon/>
             </Button>
-          </CardActions>
-          </Stack>
+          </div>
+          </CardContent>
         </Card> 
       </Grid>
-      <Grid item md={4} xl={4} sm={12} >
+      <Grid item xs={12} md={4} xl={4}>
       <Card sx={{ 
-          minWidth: "343px", 
-          height: "264px",
+          width: "100%", 
           boxSizing: "border-box",
           border: "1px solid rgba(0, 0, 0, 0.1)",
           borderRadius: "20px",
@@ -228,77 +217,46 @@ const Clients = () => {
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               <hr/>
             </Typography>
-            <Typography variant="body2">
-              Client Code : DST
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Code
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               DST
+              </div>
+            </div>
+            <br/>
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Phone
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               0812222
+              </div>
+            </div>
             <br />
+            <div style={{display:'flex'}}>
+              <div style={{width:'100%',maxWidth:'140px'}}>
+                Client Email
+              </div> : 
+              <div style={{paddingLeft:'15px'}}>
+               deltasoft@tech.com
+              </div>
+            </div>
             <br />
-              Client Phone : 08122222
-            <br />
-            <br />
-              Client Email : deltasoft@tech.com
-            </Typography>
-            <br />
-          </CardContent>
-          <Stack spacing={-3} direction="row">
-          <CardActions>
-            <Button size="small">
+          <div style={{width:'100%',display:'flex'}}>
+            <Button size="small" sx={{display:'flex',color:'green'}}>
             <BorderColorOutlinedIcon/>
            </Button> 
-          </CardActions>
-          <CardActions>
             <Button size="small" sx={{width:"10px"}}>
             <DeleteOutlineOutlinedIcon/>
             </Button>
-          </CardActions>
-          </Stack>
-        </Card> 
-      </Grid>
-      <Grid item md={4} xl={4} sm={12} >
-      <Card sx={{ 
-          minWidth: "343px", 
-          height: "264px",
-          boxSizing: "border-box",
-          border: "1px solid rgba(0, 0, 0, 0.1)",
-          borderRadius: "20px",
-          }}>
-          <CardContent>
-            <Typography variant="h5" component="div" 
-            sx={{
-              display:'flex',
-              justifyContent:'center',
-            }}>
-              DeltaSoft Tech
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              <hr/>
-            </Typography>
-            <Typography variant="body2">
-              Client Code : DST
-            <br />
-            <br />
-              Client Phone : 08122222
-            <br />
-            <br />
-              Client Email : deltasoft@tech.com
-            </Typography>
-            <br />
+          </div>
           </CardContent>
-          <Stack spacing={-3} direction="row">
-          <CardActions>
-            <Button size="small">
-            <BorderColorOutlinedIcon/>
-           </Button> 
-          </CardActions>
-          <CardActions>
-            <Button size="small" sx={{width:"10px"}}>
-            <DeleteOutlineOutlinedIcon/>
-            </Button>
-          </CardActions>
-          </Stack>
         </Card> 
       </Grid>
-    </Grid>
-    </Container>
+      </Grid>
+      </React.Fragment>
   )
 }
 
