@@ -17,12 +17,13 @@ import ClientAnalysis from '../../pages/clients/ClientAnalysis/ClientAnalysis';
 import EditClient from '../../pages/clients/EditClient/EditClient';
 import DetailFeedback from '../../pages/Feedback/DetailFeedback/DetailFeedback';
 import EditTickets from '../../pages/tickets/DetailTickets/EditTickets/EditTickets';
+import { ToggleTickets } from '../../components/toggle-button/ToggleTickets';
 
 function AdminRouter() {
   return (
         <Routes>
       {/* Router Admin */} 
-            <Route path= "/" element={<Choose />} />
+            <Route path= "/" element={<ToggleTickets/>} />
             <Route path="login" element={<Login />} />
             <Route element={<DashboardLayout />} >
                 <Route path="overview" element={<Overview />} />

@@ -17,7 +17,8 @@ import MuiToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import { Container } from '@mui/material'
+import { Container } from '@mui/material';
+
 const headCells = [
   {
     id: 'id',
@@ -80,7 +81,7 @@ const dataTable = [
     id: '23',
     subjects: 'Kubernetes is Down',
     assigned: 'smith39',
-    status: 'To-Do',
+    status: 'In-Progress',
     client: 'ITB',
     priority: 'Critical',
   },
@@ -123,9 +124,23 @@ function RowItem(props) {
         <TableCell sx={{color:1+1===2?'red':'purple'}} >{props.item.id}</TableCell>
         <TableCell align="center">{props.item.subjects}</TableCell>
         <TableCell align="center">{props.item.assigned}</TableCell>
-        <TableCell align="center">{props.item.status}</TableCell>
+        <TableCell align="center" 
+        sx={{color: props.item.status === 'Selected' ?  "black" : props.item.status === 'Done' ? "red" : props.item.status === 'To-Do' ? '#FF8A00': props.item.status === 'In-Progress' ? "#1B8500" : 'none'}}
+        >{props.item.status}
+        </TableCell>
         <TableCell align="center">{props.item.client}</TableCell>
-        <TableCell align="center">{props.item.priority}</TableCell>
+        <TableCell align="center">
+          <div style={{
+              height: '17px',
+              width: '17px',
+              backgroundColor: '#FF0000',
+              borderRadius: '50%',
+              display: 'inline-block',
+              marginRight: '7px',
+            }}>
+            </div>
+          {props.item.priority}
+          </TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -321,9 +336,7 @@ const Tickets = () => {
                     >
                       {headCell.label}
                     </TableSortLabel>
-               
                 </TableCell>
-              
               )  )}
             </TableRow>
             
@@ -332,8 +345,12 @@ const Tickets = () => {
                     
           {/* Table Content */}
           <TableBody>
-            
-            {stableSort(dataTable, getComparator(order, orderBy))
+            {stableSort(dataTable.filter((e)=>{
+              // return true
+              return statusTicket==='ALL'?true: e.status===statusTicket 
+            // if(e.status===statusTicket)
+            }
+            ), getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((rowItem, index) => {
                 return <RowItem key={rowItem.code} item={rowItem} />;
@@ -378,12 +395,7 @@ const Tickets = () => {
       </Box>
           <TableBody>
             {dataTable
-            .filter((e)=>{
-              // return true
-              return statusTicket==='ALL'?true: e.status===statusTicket 
-            // if(e.status===statusTicket)
-            }
-            )
+            
               .map((dataTable) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={rowsPerPage.code}>
