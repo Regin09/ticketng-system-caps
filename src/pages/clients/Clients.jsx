@@ -199,62 +199,7 @@ const Clients = () => {
           </CardContent>
         </Card> 
       </Grid>
-      <Grid item xs={12} md={4} xl={4}>
-      <Card sx={{ 
-          width: "100%", 
-          boxSizing: "border-box",
-          border: "1px solid rgba(0, 0, 0, 0.1)",
-          borderRadius: "20px",
-          }}>
-          <CardContent>
-            <Typography variant="h5" component="div" 
-            sx={{
-              display:'flex',
-              justifyContent:'center',
-            }}>
-              DeltaSoft Tech
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              <hr/>
-            </Typography>
-            <div style={{display:'flex'}}>
-              <div style={{width:'100%',maxWidth:'140px'}}>
-                Client Code
-              </div> : 
-              <div style={{paddingLeft:'15px'}}>
-               DST
-              </div>
-            </div>
-            <br/>
-            <div style={{display:'flex'}}>
-              <div style={{width:'100%',maxWidth:'140px'}}>
-                Client Phone
-              </div> : 
-              <div style={{paddingLeft:'15px'}}>
-               0812222
-              </div>
-            </div>
-            <br />
-            <div style={{display:'flex'}}>
-              <div style={{width:'100%',maxWidth:'140px'}}>
-                Client Email
-              </div> : 
-              <div style={{paddingLeft:'15px'}}>
-               deltasoft@tech.com
-              </div>
-            </div>
-            <br />
-          <div style={{width:'100%',display:'flex'}}>
-            <Button size="small" sx={{display:'flex',color:'green'}}>
-            <BorderColorOutlinedIcon/>
-           </Button> 
-            <Button size="small" sx={{width:"10px"}}>
-            <DeleteOutlineOutlinedIcon/>
-            </Button>
-          </div>
-          </CardContent>
-        </Card> 
-      </Grid>
+      
       </Grid>
       </React.Fragment>
   )

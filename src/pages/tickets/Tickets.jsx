@@ -1,10 +1,8 @@
-import React, { Fragment } from 'react'
+import React, { Fragment,useState } from 'react'
 import {Button,styled, useTheme }  from '@mui/material'
 import Grid from '@mui/material/Grid';
 import "./tickets.css";
-import Stack from '@mui/material/Stack';
 import { Link } from "react-router-dom";
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,6 +16,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { Container } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 
 const headCells = [
   {
@@ -50,6 +49,11 @@ const headCells = [
     numeric: true,
     label: 'Priority',
   },
+  {
+    id:'actions',
+    numeric: true,
+    label:'Actions'
+  }
 ];
 
 const dataTable = [
@@ -67,7 +71,7 @@ const dataTable = [
     assigned: 'tono36',
     status: 'Done',
     client: 'BRI',
-    priority: 'Critical',
+    priority: 'Medium',
   },
   {
     id: '22',
@@ -75,7 +79,7 @@ const dataTable = [
     assigned: 'smith39',
     status: 'To-Do',
     client: 'ITB',
-    priority: 'Critical',
+    priority: 'High',
   },
   {
     id: '23',
@@ -83,7 +87,7 @@ const dataTable = [
     assigned: 'smith39',
     status: 'In-Progress',
     client: 'ITB',
-    priority: 'Critical',
+    priority: 'Low',
   },
 ];
 
@@ -118,10 +122,25 @@ function stableSort(array, comparator) {
 
 function RowItem(props) {
   const [openCell, setOpenCell] = React.useState(false);
+  const [data, setData] = React.useState(dataTable);
+  const handleDeleteClick = (id) => {
+    setData((prevData) => prevData.filter((item) => item.id !== id));
+    // const handleDelete = async () => {
+    //   try {
+    //     await axios.delete(`/api/tickets/${props.item.id}`);
+    //     setTickets(prevTickets => prevTickets.filter(ticket => ticket.id !== props.item.id));
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+    
+  };
+
+  
   return (
     <React.Fragment>
       <TableRow hover>
-        <TableCell sx={{color:1+1===2?'red':'purple'}} >{props.item.id}</TableCell>
+        <TableCell align='center' >{props.item.id}</TableCell>
         <TableCell align="center">{props.item.subjects}</TableCell>
         <TableCell align="center">{props.item.assigned}</TableCell>
         <TableCell align="center" 
@@ -129,18 +148,48 @@ function RowItem(props) {
         >{props.item.status}
         </TableCell>
         <TableCell align="center">{props.item.client}</TableCell>
-        <TableCell align="center">
+        <TableCell align="center" 
+        sx={{
+          }}>
           <div style={{
               height: '17px',
               width: '17px',
-              backgroundColor: '#FF0000',
+              backgroundColor: props.item.priority === 'Critical' ? 'red' : props.item.priority === 'High' ? 'orange' : props.item.priority === 'Medium' ? 'yellow' : props.item.priority === 'Low' ? 'green' :'none',
               borderRadius: '50%',
               display: 'inline-block',
-              marginRight: '7px',
+              marginRight: '5px',
             }}>
             </div>
-          {props.item.priority}
+            {props.item.priority}
           </TableCell>
+          <TableCell align="center" >
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                variant='outlined'
+                color='secondary'
+                size='small'
+                onClick={() => handleDeleteClick(props.item.id)}
+              >
+                Delete
+              </Button>
+              <Link to={`DetailTickets/`} style={{ textDecoration: 'none', marginLeft: '8px' }}>
+              {/* <Link to={`DetailTickets/${props.item.id}`} style={{ textDecoration: 'none', marginLeft: '8px' }}> */}
+              <Button variant="outlined" size="small" color="primary">View</Button>
+              </Link>
+
+              {/* <Link
+                to={`/tickets/${props.item.id}`}
+                style={{ textDecoration: 'none', marginLeft: theme.spacing(1) }}
+              >
+                <Button
+                  variant='outlined'
+                  color='primary'
+                  startIcon={<ViewListOutlinedIcon />}
+                >
+                  View
+                </Button>
+              </Link> */}
+            </Box></TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -149,15 +198,14 @@ function RowItem(props) {
 const Tickets = () => {
   const theme=useTheme()
   const [statusTicket, setStatusTicket] = React.useState('ALL');
-
   React.useEffect(() => {
     document.title = 'Menu Tickets';
   }, []);
 
   const ToggleButton = styled(MuiToggleButton)({
     '&.Mui-selected, &.Mui-selected:hover': {
-      color: '#1F305C !important',
-      backgroundColor: 'rgba(31, 48, 92, 0.25)',
+      color: '#000000  !important',
+      backgroundColor: '#F5B6FF',
     },
   });
 
@@ -236,52 +284,26 @@ const Tickets = () => {
           },
         }}
       >
-        <ToggleButton value="ALL" sx={{ border: '1px solid #1F305C' }}>
+        <ToggleButton value="ALL" sx={{ border: '1px solid rgba(0, 0, 0, 0.2)' }}>
           ALL
         </ToggleButton>
-        <ToggleButton value="Selected" sx={{ border: '1px solid #1F305C' }}>
+        <ToggleButton value="Selected" sx={{ border: '1px solid rgba(0, 0, 0, 0.2)' }}>
           Selected
         </ToggleButton>
-        <ToggleButton value="To-Do" sx={{ border: '1px solid #1F305C' }}>
+        <ToggleButton value="To-Do" sx={{ border: '1px solid rgba(0, 0, 0, 0.2)' }}>
           To-Do
         </ToggleButton>
-        <ToggleButton value="In-Progress" sx={{ border: '1px solid #1F305C' }}>
+        <ToggleButton value="In-Progress" sx={{ border: '1px solid rgba(0, 0, 0, 0.2)' }}>
           In-Progress
         </ToggleButton>
-        <ToggleButton value="Done" sx={{ border: '1px solid #1F305C' }}>
+        <ToggleButton value="Done" sx={{ border: '1px solid rgba(0, 0, 0, 0.2)' }}>
           Done
         </ToggleButton>
       </ToggleButtonGroup>
-      
-      {statusTicket.toUpperCase()}
-      {/* Tambahin Grid Container */}
-        
       </Grid>
       
       <Grid item md={6} xl={6} sm={6} className='induk-togle2'>
-        <Stack spacing={2} direction="row">
-          <Button 
-            variant="contained"
-            sx={{
-              color:"black",
-              background:"#FFFFFF",
-              height:"36px",
-              "&:hover":{
-                backgroundColor:"white"
-              }
-              }}>
-                <DeleteOutlineOutlinedIcon 
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "2px",
-                  cursor: "pointer",
-                  marginTop: "3.4px",
-                  marginBottom: "5px",
-                }}
-                  />
-            Delete Ticket
-          </Button>
+        
           <Link to="createTickets" style={{textDecoration:"none",color:"black"}}>
           <Button 
             variant="contained" 
@@ -306,7 +328,7 @@ const Tickets = () => {
             Create Tickets
           </Button>
           </Link>
-        </Stack>
+        
       </Grid>
       </Grid>
       </div>
@@ -339,8 +361,6 @@ const Tickets = () => {
                 </TableCell>
               )  )}
             </TableRow>
-            
-          
           </TableHead>
                     
           {/* Table Content */}
@@ -393,9 +413,8 @@ const Tickets = () => {
           }}
         />
       </Box>
-          <TableBody>
+          {/* <TableBody>
             {dataTable
-            
               .map((dataTable) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={rowsPerPage.code}>
@@ -414,7 +433,7 @@ const Tickets = () => {
                   </TableRow>
                 );
               })}
-          </TableBody>
+          </TableBody> */}
   
   </Container>
    

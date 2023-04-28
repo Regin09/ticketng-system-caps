@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import AdminRouter from './routers/adminRouter/adminRouter';
+import AdminRouter from './routers/adminRouter';
 // import EngineerRouter from './routers/engineerRouter/engineerRouter';
 // import UserRouter from './routers/userRouter/userRouter';
 

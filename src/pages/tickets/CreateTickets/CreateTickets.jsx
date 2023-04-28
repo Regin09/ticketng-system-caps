@@ -74,7 +74,7 @@ const User =[
 const CreateTickets = () => {
   return (
     <Fragment>
-        <h2>Create Ticket</h2>
+        <h1>Create Ticket</h1>
           <Card sx={{ 
             minWidth: "100%",
             border:"1px solid rgba(0, 0, 0, 0.2)",

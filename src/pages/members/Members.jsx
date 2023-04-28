@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import "./members.css"
 import { Container } from '@mui/material'
 import Grid from '@mui/material/Grid';
@@ -16,7 +16,8 @@ import MuiToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'; 
+import PageviewIcon from '@mui/icons-material/Pageview';
 
 const headCells = [
   {
@@ -50,9 +51,9 @@ const headCells = [
     label: 'Created Date',
   },
   {
-    id: 'action',
+    id: 'actions',
     numeric: false,
-    label: 'Action',
+    label: 'Actions',
   },
 ];
 
@@ -64,25 +65,22 @@ const dataTable = [
     client: 'DST',
     role: 'User',
     created: '10/10/2023',
-    action:<DeleteForeverIcon/>
   },
   {
     name: 'Hanif',
     username: 'hanifasraf',
     email: 'hanif@gmail.com',
     client: 'ATH',
-    role: 'User',
+    role: 'Admin',
     created: '05/10/2022',
-    action:<DeleteForeverIcon/>
   },
   {
     name: 'Aji',
     username: 'aji45',
     email: 'ajiaji45@gmail.com',
     client: 'ATH',
-    role: 'User',
+    role: 'Engineer',
     created: '12/10/2022',
-    action:<DeleteForeverIcon/>
   },
 ];
 
@@ -117,6 +115,10 @@ function stableSort(array, comparator) {
 
 function RowItem(props) {
   const [openCell, setOpenCell] = React.useState(false);
+  const [data, setData] = React.useState(dataTable);
+  const handleDeleteClick = (id) => {
+    setData((prevData) => prevData.filter((item) => item.id !== id));
+  };
   return (
     <React.Fragment>
       <TableRow hover>
@@ -126,7 +128,22 @@ function RowItem(props) {
         <TableCell align="center">{props.item.client}</TableCell>
         <TableCell align="center">{props.item.role}</TableCell>
         <TableCell align="center">{props.item.created}</TableCell>
-        <TableCell align="center">{props.item.action}</TableCell>
+        <TableCell align="center">
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                variant='outlined'
+                color='secondary'
+                size='small'
+                onClick={() => handleDeleteClick(props.item.id)}
+              >
+                Delete
+              </Button>
+              <Link to={`userPerformance/`} style={{ textDecoration: 'none', marginLeft: '8px' }}>
+              {/* <Link to={`DetailTickets/${props.item.id}`} style={{ textDecoration: 'none', marginLeft: '8px' }}> */}
+              <Button variant="outlined" size="small" color="primary">View</Button>
+              </Link>
+          </Box>
+        </TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -221,7 +238,7 @@ const Members = () => {
           Admin
         </ToggleButton>
       </ToggleButtonGroup>
-      {roleMember.toUpperCase()}
+      
       </Grid>
         <Grid item md={6} xl={6} sm={6} className='induk-togle2'>
         <Link to="createAccount" style={{textDecoration:"none",color:"black"}}>
@@ -283,7 +300,11 @@ const Members = () => {
               </TableHead>   
               {/* Table Content */}
               <TableBody>   
-                {stableSort(dataTable, getComparator(order, orderBy))
+                {stableSort(dataTable.filter((e)=>{
+              // return true
+              return roleMember==='ALL'?true: e.role===roleMember
+            // if(e.status===statusTicket)
+            }), getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((rowItem, index) => {
                     return <RowItem key={rowItem.code} item={rowItem} />;
@@ -325,34 +346,6 @@ const Members = () => {
           }}
         />
       </Box>
-          <TableBody sx={{backgroundColor:"#FFFFF"}}>
-            {dataTable
-            .filter((e)=>{
-              // return true
-              return roleMember==='ALL'?true: e.role===roleMember 
-            // if(e.status===statusTicket)
-            }
-            )
-              .map((dataTable) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowsPerPage.code}>
-                    {headCells.map((column) => {
-                      const value = rowsPerPage[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                            {rowsPerPage.status}
-
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-  
   </Container>
   )
 }

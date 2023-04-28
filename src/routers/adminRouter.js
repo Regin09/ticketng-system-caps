@@ -1,29 +1,29 @@
 import { Route, Routes } from 'react-router-dom';
-import Choose from '../../pages/choose/Choose';
-import Overview from '../../pages/overview/Overview';
-import Tickets from '../../pages/tickets/Tickets';
-import Members from '../../pages/members/Members';
-import Login from '../../pages/login/Login';
-import Clients from '../../pages/clients/Clients';
-import UserProfile from '../../pages/userProfile/UserProfile';
-import Feedback from '../../pages/Feedback/Feedback';
-import DashboardLayout from '../../components/DashboardLayout/DashboardLayout';
-import CreateTickets from '../../pages/tickets/CreateTickets/CreateTickets';
-import DetailTickets from '../../pages/tickets/DetailTickets/DetailTickets';
-import CreateMember from '../../pages/members/Create-Member/CreateMember';
-import DetailEngineerPerformance from '../../pages/members/DetailEngineerPerformance/DetailEngineerPerformance';
-import CreateClient from '../../pages/clients/CreateClient/CreateClient';
-import ClientAnalysis from '../../pages/clients/ClientAnalysis/ClientAnalysis';
-import EditClient from '../../pages/clients/EditClient/EditClient';
-import DetailFeedback from '../../pages/Feedback/DetailFeedback/DetailFeedback';
-import EditTickets from '../../pages/tickets/DetailTickets/EditTickets/EditTickets';
-import { ToggleTickets } from '../../components/toggle-button/ToggleTickets';
+import Choose from '../pages/choose/Choose';
+import Overview from '../pages/overview/Overview';
+import Tickets from '../pages/tickets/Tickets';
+import Members from '../pages/members/Members';
+import Login from '../pages/login/Login';
+import Clients from '../pages/clients/Clients';
+import UserProfile from '../pages/userProfile/UserProfile';
+import Feedback from '../pages/Feedback/Feedback';
+import DashboardLayout from '../components/DashboardLayout/DashboardLayout';
+import CreateTickets from '../pages/tickets/CreateTickets/CreateTickets';
+import DetailTickets from '../pages/tickets/DetailTickets/DetailTickets';
+import CreateMember from '../pages/members/Create-Member/CreateMember';
+import DetailEngineerPerformance from '../pages/members/DetailEngineerPerformance/DetailEngineerPerformance';
+import CreateClient from '../pages/clients/CreateClient/CreateClient';
+import ClientAnalysis from '../pages/clients/ClientAnalysis/ClientAnalysis';
+import EditClient from '../pages/clients/EditClient/EditClient';
+import DetailFeedback from '../pages/Feedback/DetailFeedback/DetailFeedback';
+import EditTickets from '../pages/tickets/DetailTickets/EditTickets/EditTickets';
+import { ToggleTickets } from '../components/toggle-button/ToggleTickets';
 
 function AdminRouter() {
   return (
         <Routes>
       {/* Router Admin */} 
-            <Route path= "/" element={<ToggleTickets/>} />
+            <Route path= "/" element={<Choose/>} />
             <Route path="login" element={<Login />} />
             <Route element={<DashboardLayout />} >
                 <Route path="overview" element={<Overview />} />

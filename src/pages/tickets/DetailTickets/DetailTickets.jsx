@@ -28,6 +28,7 @@ const DetailTickets = () => {
               Edit Ticket
           </Button>
           </Link>
+          <Link to="/tickets" style={{textDecoration:"none",color:"black"}}>
           <Button 
             variant="contained" size='small'
             sx={{
@@ -40,10 +41,11 @@ const DetailTickets = () => {
                 backgroundColor:"white"
               }
               }}>
-            <Link to="/tickets" style={{textDecoration:"none",color:"black"}}>Close Ticket</Link>
+            Close Ticket
           </Button>
+          </Link>
           <br/>
-
+          
           <Grid container spacing={2} style={{paddingTop:"16px"}}>
             <Grid item xs={12} md={6} lg={9}>
             <Card sx={{ 
@@ -102,6 +104,20 @@ const DetailTickets = () => {
               commodo felis ac, fringilla tortor. Nulla dui libero, dignissim et eros id, elementum rutrum risus
               </Typography> 
             </Card>
+            <br/>
+            <Link to="/tickets" style={{textDecoration:"none",color:"black"}}>
+            <Button variant="contained" sx={{
+              backgroundColor:'white',
+              color:'black',
+              border: '1px solid rgba(0, 0, 0, 0.2)',
+              borderRadius: '7px',
+              cursor: "pointer",
+              "&:hover":{
+                backgroundColor:"white",}
+              }}>
+                Comment
+              </Button>
+              </Link>
            </Grid>
             <Grid item xs={10} md={4} lg={3} >
               <Card 

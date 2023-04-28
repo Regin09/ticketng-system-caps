@@ -43,6 +43,10 @@ const CreateMember = () => {
               borderRadius: "10px", 
               padding:"16px",
               }}>
+              <div style={{display:'flex',
+              alignItems:'center',
+              flexDirection:'column',
+              gap:'16px 0px'}}>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6} xl={6}> 
                   <Typography variant="body2" sx={{fontSize:"17px"}}>
@@ -54,7 +58,7 @@ const CreateMember = () => {
                         background:"#FFFFFF",
                         borderRadius: "7px"
                     }}/>
-                    <br/>
+                    
                   </Grid>
                   <Grid item xs={12} md={6} xl={6}> 
                     <Typography variant="body2" sx={{fontSize:"17px"}}>
@@ -66,7 +70,7 @@ const CreateMember = () => {
                           background:"#FFFFFF",
                           borderRadius: "7px"
                       }}/>
-                    <br/><br/>
+                    
                   </Grid>         
               </Grid>        
               <Grid container spacing={2}>
@@ -95,7 +99,6 @@ const CreateMember = () => {
                         aria-label="toggle password visibility"
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
-                        
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -106,7 +109,7 @@ const CreateMember = () => {
                     
                   </Grid>         
               </Grid>     
-          <br/>
+          
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6} xl={6}> 
               <Typography variant="body2" sx={{fontSize:"17px"}}>
@@ -136,11 +139,12 @@ const CreateMember = () => {
                   background:"#FFFFFF",
                   borderRadius: "7px"
               }}/>
-              <br/><br/>
+              
               </Grid>
               </Grid>
+              </div>
               <br/>
-              <div style={{display:"flex",justifyContent:"flex-start",marginTop:"10px"}}> 
+              <div style={{display:"flex",justifyContent:"flex-end !important",marginTop:"10px"}}> 
               <Link to="/members" style={{textDecoration:"none",color:"black"}}>
                 <Button 
                   variant="contained"
@@ -153,7 +157,7 @@ const CreateMember = () => {
                       backgroundColor:"green"
                     }
                     }}>
-                    Create Tickets
+                    Create Account
                 </Button>
               </Link>
               </div>

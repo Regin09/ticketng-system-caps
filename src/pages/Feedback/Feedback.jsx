@@ -13,6 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { Link } from "react-router-dom";
 
 const headCells = [
   {
@@ -46,21 +47,21 @@ const headCells = [
     label: 'Created Date',
   },
   {
-    id: 'action',
+    id: 'actions',
     numeric: false,
-    label: 'Action',
+    label: 'Actions',
   },
 ];
 
 const dataTable = [
   {
-    id: '1',
-    sender: 'jim24',
-    client: 'DST',
-    engineer: 'adikuncoro',
-    feedback: 'Detail of Feedback',
-    created: '10/10/2023',
-    action : <DeleteForeverIcon/>
+    name: 'Hanif',
+    username: 'hanifasraf',
+    email: 'hanif@gmail.com',
+    client: 'ATH',
+    role: 'User',
+    created: '05/10/2022',
+    
   },
   {
     name: 'Hanif',
@@ -69,7 +70,6 @@ const dataTable = [
     client: 'ATH',
     role: 'User',
     created: '05/10/2022',
-    action:<DeleteForeverIcon/>
   },
   {
     name: 'Aji',
@@ -78,7 +78,6 @@ const dataTable = [
     client: 'ATH',
     role: 'User',
     created: '12/10/2022',
-    action:<DeleteForeverIcon/>
   },
 ];
 
@@ -113,6 +112,10 @@ function stableSort(array, comparator) {
 
 function RowItem(props) {
   const [openCell, setOpenCell] = React.useState(false);
+  const [data, setData] = React.useState(dataTable);
+  const handleDeleteClick = (id) => {
+    setData((prevData) => prevData.filter((item) => item.id !== id));
+  };
   return (
     <React.Fragment>
       <TableRow hover>
@@ -122,7 +125,20 @@ function RowItem(props) {
         <TableCell align="center">{props.item.client}</TableCell>
         <TableCell align="center">{props.item.role}</TableCell>
         <TableCell align="center">{props.item.created}</TableCell>
-        <TableCell align="center">{props.item.action}</TableCell>
+        <TableCell align="center"><Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
+                variant='outlined'
+                color='secondary'
+                size='small'
+                onClick={() => handleDeleteClick(props.item.id)}
+              >
+                Delete
+              </Button>
+              <Link to={`DetailFeedback/`} style={{ textDecoration: 'none', marginLeft: '8px' }}>
+              {/* <Link to={`DetailTickets/${props.item.id}`} style={{ textDecoration: 'none', marginLeft: '8px' }}> */}
+              <Button variant="outlined" size="small" color="primary">View</Button>
+              </Link>
+          </Box></TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -256,33 +272,6 @@ const Feedback = () => {
           }}
         />
       </Box>
-          <TableBody sx={{backgroundColor:"#FFFFF"}}>
-            {dataTable
-            .filter((e)=>{
-              // return true
-              return roleMember==='ALL'?true: e.role===roleMember 
-            // if(e.status===statusTicket)
-            }
-            )
-              .map((dataTable) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowsPerPage.code}>
-                    {headCells.map((column) => {
-                      const value = rowsPerPage[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                            {rowsPerPage.status}
-
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
   </Grid>
   </Container>
   )

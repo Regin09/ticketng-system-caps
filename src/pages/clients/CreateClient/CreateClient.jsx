@@ -15,7 +15,11 @@ const CreateClient = () => {
                 borderRadius: "10px", 
                 padding:"16px",
                 }}>
-                <Grid container spacing={10}>
+                <div style={{display:'flex',
+                  alignItems:'center',
+                  flexDirection:'column',
+                  gap:'30px 0px'}}>
+                <Grid container spacing={2}>
                   <Grid item xs={12} md={6} xl={6}> 
                     <Typography variant="body2" sx={{fontSize:"17px"}}>
                       Client Name
@@ -41,8 +45,8 @@ const CreateClient = () => {
                       }}/>
                     </Grid>
                     </Grid>
-                    <br/><br/>
-                    <Grid container spacing={10}>
+                    
+                    <Grid container spacing={2}>
                       <Grid item xs={12} md={6} xl={6}> 
                       <Typography variant="body2" sx={{fontSize:"17px"}}>
                         Client Code
@@ -68,8 +72,8 @@ const CreateClient = () => {
                       }}/>
                     </Grid>
                     </Grid>
-                    <br/><br/>
-                    <Grid container spacing={10}>
+                    
+                    <Grid container spacing={2}>
                       <Grid item xs={12} md={6} xl={6}> 
                       <Typography variant="body2" sx={{fontSize:"17px"}}>
                         Client Regional
@@ -95,6 +99,7 @@ const CreateClient = () => {
                       }}/>
                     </Grid>
                     </Grid>
+                    </div>
                     <br/><br/>
                     <div style={{display:"flex",justifyContent:"flex-start",marginTop:"10px"}}> 
                     <Link to="/clients" style={{textDecoration:"none",color:"black"}}>

@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 const DetailFeedback = () => {
   return (
     <Container>
-    <h2 style={{paddingBottom:"15px"}}>Create Ticket</h2>
+    <h1>Detail Feedback</h1>
     
       <Card sx={{ 
         width: "100%",
@@ -25,19 +25,19 @@ const DetailFeedback = () => {
           <Typography variant="body2" sx={{fontSize:"17px"}}>
             ID
           </Typography>
-          <TextField id="outlined-basic" variant="outlined"  size='small' 
+          <TextField id="outlined-basic" variant="outlined"  size='small' defaultValue="1"
                 sx={{
                   width:"100%", 
                   height:"35px",  
                   background:"#FFFFFF",
-                  borderRadius: "7px"
+                  borderRadius: "7px",
                  }}/>
       </Grid>
       <Grid item xs={12} md={4} xl={4}>
                <Typography variant="body2" sx={{fontSize:"17px"}}>
                Sender Username
                </Typography>
-               <TextField id="outlined-basic" variant="outlined" size='small' 
+               <TextField id="outlined-basic" variant="outlined" size='small' defaultValue="jim24" 
                 sx={{
                   width:"100%", 
                   height:"35px",  
@@ -49,7 +49,7 @@ const DetailFeedback = () => {
           <Typography variant="body2" sx={{fontSize:"17px"}}>
           Sender Name
           </Typography>
-          <TextField id="outlined-basic" variant="outlined"  size='small' 
+          <TextField id="outlined-basic" variant="outlined"  size='small'  defaultValue='Jimmy Haryono'
             sx={{
               width:"100%", 
               height:"35px",  
@@ -65,7 +65,7 @@ const DetailFeedback = () => {
           <Typography variant="body2" sx={{fontSize:"17px"}}>
             Sender Client
           </Typography>
-          <TextField id="outlined-basic" variant="outlined" size='small'  
+          <TextField id="outlined-basic" variant="outlined" size='small'  defaultValue='DST'
             sx={{
               width:"100%", 
               height:"35px",  
@@ -77,7 +77,7 @@ const DetailFeedback = () => {
           <Typography variant="body2" sx={{fontSize:"17px"}}>
             Engineer Username
           </Typography>
-          <TextField id="outlined-basic" variant="outlined" size='small'  
+          <TextField id="outlined-basic" variant="outlined" size='small'  defaultValue='adikuncoro'
             sx={{
               width:"100%", 
               height:"35px",  
@@ -93,6 +93,7 @@ const DetailFeedback = () => {
             id="outlined-basic"
             size='small'
             variant='outlined'
+            defaultValue='adikuncoro'
             sx={{width:'100%'}}
           >
           </TextField>
@@ -108,6 +109,7 @@ const DetailFeedback = () => {
           id="outlined-multiline-static"
           multiline
           rows={10}
+          defaultValue='Checkin yuk'
           sx={{
             width:"100%", 
             height:"100%",  
