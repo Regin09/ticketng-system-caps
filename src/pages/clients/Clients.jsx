@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { Fragment,useState } from 'react'
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import {styled, useTheme } from '@mui/material';
@@ -12,9 +12,30 @@ import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import MuiToggleButton from '@mui/material/ToggleButton';
 import { Link } from "react-router-dom";
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import WarningIcon from "../../assets/images/iconwarning.png"
+
+const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
+  background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'
+}));
 
 const Clients = () => {
   const theme=useTheme()
+
+  const [open, setOpen] = useState(false);
+
+  function handleDeleteClick() {
+    setOpen(true);
+  }
+
+  function handleDeleteConfirm() {
+    // Perform the deletion action here
+    setOpen(false);
+  }
+
+  function handleDeleteCancel() {
+    setOpen(false);
+  }
 
   React.useEffect(() => {
     document.title = 'Menu Klien';
@@ -132,13 +153,42 @@ const Clients = () => {
             <br />
           <div style={{width:'100%',display:'flex'}}>
           <Link to="editClient" style={{textDecoration:"none",color:"black"}}>
-            <Button size="small" sx={{display:'flex',color:'green'}}>
+            <Button size="small" sx={{display:'flex',color:'green'}} >
             <BorderColorOutlinedIcon/>
            </Button> 
            </Link>
-            <Button size="small" sx={{width:"10px",color:'red'}}>
+            <Button size="small" sx={{width:"10px",color:'red'}} onClick={handleDeleteClick}>
             <DeleteOutlineOutlinedIcon/>
             </Button>
+            <Dialog open={open} onClose={handleDeleteCancel}>
+                 <DialogContent sx={{display:'flex',justifyContent:'center'}}>
+                  <img src={WarningIcon} alt="Logo" style={{height: "75px",
+                    
+                    width:'80px'}}
+                  />
+                </DialogContent>
+                 <DialogTitleStyled>Are you sure you want to delete this item?</DialogTitleStyled>
+                <DialogActions>
+                  <Button onClick={handleDeleteCancel} sx={{
+                    backgroundColor: "grey", 
+                    color: "#fff",
+                     "&:hover":{
+                      backgroundColor:"grey"
+                    }
+                    }} >
+                      Cancel
+                    </Button>
+                  <Button onClick={handleDeleteConfirm} sx={{
+                    backgroundColor: "#FF0000", 
+                    color: "#fff",
+                     "&:hover":{
+                      backgroundColor:"red"
+                    }
+                    }} >
+                      Delete
+                  </Button>
+                </DialogActions>
+              </Dialog>
           </div>
           </CardContent>
         </Card> 

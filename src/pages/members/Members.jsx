@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment,useState } from 'react'
 import "./members.css"
 import { Container } from '@mui/material'
 import Grid from '@mui/material/Grid';
@@ -18,6 +18,12 @@ import Box from '@mui/material/Box';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'; 
 import PageviewIcon from '@mui/icons-material/Pageview';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import WarningIcon from "../../assets/images/iconwarning.png"
+
+const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
+  background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'
+}));
 
 const headCells = [
   {
@@ -116,9 +122,23 @@ function stableSort(array, comparator) {
 function RowItem(props) {
   const [openCell, setOpenCell] = React.useState(false);
   const [data, setData] = React.useState(dataTable);
-  const handleDeleteClick = (id) => {
-    setData((prevData) => prevData.filter((item) => item.id !== id));
-  };
+  const [open, setOpen] = useState(false);
+
+  function handleDeleteClick() {
+    setOpen(true);
+  }
+
+  function handleDeleteConfirm() {
+    // Perform the deletion action here
+    setOpen(false);
+  }
+
+  function handleDeleteCancel() {
+    setOpen(false);
+  }
+  // const handleDeleteClick = (id) => {
+  //   setData((prevData) => prevData.filter((item) => item.id !== id));
+  // };
   return (
     <React.Fragment>
       <TableRow hover>
@@ -138,6 +158,32 @@ function RowItem(props) {
               >
                 Delete
               </Button>
+              <Dialog open={open} onClose={handleDeleteCancel}>
+                 <DialogContent sx={{display:'flex',justifyContent:'center'}}>
+                  <img src={WarningIcon} alt="Logo" style={{height: "75px",
+                    
+                    width:'80px'}}
+                  />
+                </DialogContent>
+                 <DialogTitleStyled>Are you sure you want to delete this item?</DialogTitleStyled>
+                <DialogActions>
+                  <Button onClick={handleDeleteCancel} sx={{
+                    backgroundColor: "grey", 
+                    color: "#fff",
+                     "&:hover":{
+                      backgroundColor:"grey"
+                    }
+                    }} >Cancel</Button>
+                  <Button onClick={handleDeleteConfirm} sx={{
+                    backgroundColor: "#FF0000", 
+                    color: "#fff",
+                     "&:hover":{
+                      backgroundColor:"red"
+                    }
+                    }} >
+                      Delete</Button>
+                </DialogActions>
+              </Dialog>
               <Link to={`userPerformance/`} style={{ textDecoration: 'none', marginLeft: '8px' }}>
               {/* <Link to={`DetailTickets/${props.item.id}`} style={{ textDecoration: 'none', marginLeft: '8px' }}> */}
               <Button variant="outlined" size="small" color="primary">View</Button>
