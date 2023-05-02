@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { Fragment } from 'react';
+import DateTime from '../../../components/DateTime/DateTime';
 const prior = [
   {
     value: 'low',
@@ -74,77 +75,88 @@ const User =[
 const CreateTickets = () => {
   return (
     <Fragment>
-        <h1>Create Ticket</h1>
-          <Card sx={{ 
-            minWidth: "100%",
-            border:"1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "10px", 
-            padding:"16px",
-            }}>
-            <div>  
-            <Typography variant="body2" sx={{fontSize:"17px"}}>
-              Title
-            </Typography>
-            
-            <TextField id="outlined-basic" variant="outlined" size='small' 
+      <h1>Create Ticket</h1>
+      <Card
+        sx={{
+          minWidth: "100%",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          borderRadius: "10px",
+          padding: "16px",
+        }}
+      >
+        <div>
+          <Typography variant="body2" sx={{ fontSize: "17px" }}>
+            Title
+          </Typography>
+
+          <TextField
+            id="outlined-basic"
+            variant="outlined"
+            size="small"
             sx={{
-                width:"100%", 
-                height:"5px",  
-                background:"#FFFFFF",
-                borderRadius: "7px"
-            }}/>
-            </div>
-            <br/>
-            <div>  
-            <Typography variant="body2" sx={{fontSize:"17px"}}>
-              Description
-              <br />
-            </Typography>
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              rows={5}
-              sx={{
-                width:"100%", 
-                height:"5px",  
-                background:"#FFFFFF",
-                borderRadius: "7px"
-              }}
-            />
-            </div>
-            <br/><br/><br/><br/><br/><br/>
-          <div>
+              width: "100%",
+              height: "5px",
+              background: "#FFFFFF",
+              borderRadius: "7px",
+            }}
+          />
+        </div>
+        <br />
+        <div>
+          <Typography variant="body2" sx={{ fontSize: "17px" }}>
+            Description
+            <br />
+          </Typography>
+          <TextField
+            id="outlined-multiline-static"
+            multiline
+            rows={5}
+            sx={{
+              width: "100%",
+              height: "5px",
+              background: "#FFFFFF",
+              borderRadius: "7px",
+            }}
+          />
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <div>
           <Grid container spacing={2}>
-          <Grid item xs={12} md={6} xl={3}> 
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
+            <Grid item xs={12} md={6} xl={3}>
+              <Typography variant="body2" sx={{ fontSize: "17px" }}>
                 Asignee
               </Typography>
               <TextField
                 id="outlined-select-currency"
-                size='small'
+                size="small"
                 select
                 defaultValue="Selected"
                 helperText="Please select the user"
-                sx={{width:"100%"}}
+                sx={{ width: "100%" }}
               >
                 {User.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
                 ))}
-                </TextField>
-          </Grid>
-          <Grid item xs={12} md={6} xl={3}>
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
+              </TextField>
+            </Grid>
+            <Grid item xs={12} md={6} xl={3}>
+              <Typography variant="body2" sx={{ fontSize: "17px" }}>
                 Priority
               </Typography>
               <TextField
                 id="outlined-select-currency"
-                size='small'
+                size="small"
                 select
                 defaultValue="Selected"
                 helperText="Please select your urgency"
-                sx={{width:"100%"}}
+                sx={{ width: "100%" }}
               >
                 {prior.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -152,100 +164,126 @@ const CreateTickets = () => {
                   </MenuItem>
                 ))}
               </TextField>
-          </Grid>
-          <Grid item xs={12} md={6} xl={3}>
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-              Estimated Resolution Time
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined"  size='small' 
-                sx={{
-                  width:"100%", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px"
-                 }}/>
-          </Grid>
-          <Grid item xs={12} md={6} xl={3}>
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                Labels
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined" size='small' 
-                sx={{
-                  width:"100%", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px"
-                 }}/>
-          </Grid>
-          </Grid>
-          </div>
-          <br/>
-          <Grid container spacing={2}>
-          <Grid item xs={12} md={6} xl={3}>
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                Client Code
-              </Typography>
-              <TextField id="outlined-basic" defaultValue="Unassigned" variant="outlined" size='small'  
-                sx={{
-                  width:"100%", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px",
-                 }}/>
-          </Grid>
-          <Grid item xs={12} md={6} xl={3}>
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                Reporter
-              </Typography>
-              <TextField id="outlined-basic" defaultValue="Unassigned" variant="outlined" size='small'  
-                sx={{
-                  width:"100%", 
-                  height:"35px",  
-                  background:"#FFFFFF",
-                  borderRadius: "7px",
-                 }}/>
-          </Grid>
-          <Grid item xs={12} md={6} xl={3}>
-              <Typography variant="body2" sx={{fontSize:"17px"}}>
-                 Status
+            </Grid>
+            <Grid item xs={12} md={6} xl={3}>
+              <Typography variant="body2" sx={{ fontSize: "17px" }}>
+                Estimated Resolution Time
               </Typography>
               <TextField
-                id="outlined-select-currency"
-                size='small'
-                select
-                defaultValue="Selected"
-                sx={{width:'100%'}}
-              >
-                {Stat.map((option) => (
+                id="outlined-basic"
+                variant="outlined"
+                size="small"
+                sx={{
+                  width: "100%",
+                  height: "35px",
+                  background: "#FFFFFF",
+                  borderRadius: "7px",
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6} xl={3}>
+              <Typography variant="body2" sx={{ fontSize: "17px" }}>
+                Labels
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                size="small"
+                sx={{
+                  width: "100%",
+                  height: "35px",
+                  background: "#FFFFFF",
+                  borderRadius: "7px",
+                }}
+              />
+            </Grid>
+          </Grid>
+        </div>
+        <br />
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6} xl={3}>
+            <Typography variant="body2" sx={{ fontSize: "17px" }}>
+              Client Code
+            </Typography>
+            <TextField
+              id="outlined-basic"
+              defaultValue="Unassigned"
+              variant="outlined"
+              size="small"
+              sx={{
+                width: "100%",
+                height: "35px",
+                background: "#FFFFFF",
+                borderRadius: "7px",
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} xl={3}>
+            <Typography variant="body2" sx={{ fontSize: "17px" }}>
+              Reporter
+            </Typography>
+            <TextField
+              id="outlined-basic"
+              defaultValue="Unassigned"
+              variant="outlined"
+              size="small"
+              sx={{
+                width: "100%",
+                height: "35px",
+                background: "#FFFFFF",
+                borderRadius: "7px",
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} xl={3}>
+            <Typography variant="body2" sx={{ fontSize: "17px" }}>
+              Status
+            </Typography>
+            <TextField
+              id="outlined-select-currency"
+              size="small"
+              select
+              defaultValue="Selected"
+              sx={{ width: "100%" }}
+            >
+              {Stat.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                  {option.label}
                 </MenuItem>
-                ))}
-              </TextField>
+              ))}
+            </TextField>
           </Grid>
-          </Grid>
-          <div style={{display:"flex",justifyContent:"flex-end",marginTop:"10px"}}> 
-          <Link to="/tickets" style={{textDecoration:"none",color:"black"}}>
-          <Button 
-            variant="contained"
-            sx={{
-              color:"black",
-              background:"#BFFF58",
-              height:"53px",
-              width:"fix-content",
-              "&:hover":{
-                backgroundColor:"green"
-              }
-              }}>
+        </Grid>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "10px",
+          }}
+        >
+          <Link
+            to="/tickets"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                color: "black",
+                background: "#BFFF58",
+                height: "53px",
+                width: "fix-content",
+                "&:hover": {
+                  backgroundColor: "green",
+                },
+              }}
+            >
               Create Tickets
-           </Button>
-           </Link>
-           </div>     
-          
-          </Card>
-        
-          </Fragment>
-  )
+            </Button>
+          </Link>
+        </div>
+      </Card>
+    </Fragment>
+  );
 }
 
 export default CreateTickets
