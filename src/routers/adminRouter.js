@@ -18,6 +18,7 @@ import EditClient from '../pages/clients/EditClient/EditClient';
 import DetailFeedback from '../pages/Feedback/DetailFeedback/DetailFeedback';
 import EditTickets from '../pages/tickets/DetailTickets/EditTickets/EditTickets';
 import { ToggleTickets } from '../components/toggle-button/ToggleTickets';
+import DetailClient from '../pages/clients/DetailClient/DetailClient';
 
 function AdminRouter() {
   return (
@@ -39,7 +40,7 @@ function AdminRouter() {
                 <Route path="clients/createClient" element={<CreateClient/>} />
                 <Route path="clients/clientAnalysis" element={<ClientAnalysis/>} />
                 <Route path="clients/editClient" element={<EditClient/>} />
-                <Route path="clients/detailClient" element={<Overview/>} />
+                <Route path="clients/detailClient" element={<DetailClient/>} />
                 <Route path="feedbacks" element={<Feedback/>} />
                 <Route path="feedbacks/detailFeedback" element={<DetailFeedback/>} />
             </Route>
