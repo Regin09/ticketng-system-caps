@@ -1,0 +1,104 @@
+/* .container {
+    min-height: calc(100vh - 80px);
+    display: grid;
+    grid-template-columns: 50% 50%;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .login-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 100;
+    background-color: white;
+  }
+  
+  .login-right {
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+  }
+  .login-right img {
+    width: 80%;
+  }
+  
+  .login-form {
+    width: 450px;
+  }
+  .login-form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+  .login-form-footer {
+    display: flex;
+    gap: 30px;
+    margin-top: 70px;
+  }
+  .login-form-footer a {
+    flex: 6;
+    border: 1px solid black;
+    border-radius: 100px;
+    padding: 0.6rem;
+    justify-content: center;
+    display: flex;
+    color: black;
+    align-items: center;
+    text-decoration: none;
+  }
+  .login-form-footer a:hover {
+    background-color: #eee;
+  }
+  
+  
+  input[type=text],
+  input[type=password] {
+    border: 1px solid black;
+    height: 55px;
+    padding: 0 2rem;
+    width: 100%;
+    outline: none;
+    transition: background 0.5s;
+    font-size: 18px;
+    border-radius: 100px;
+  }
+  
+  .checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    accent-color: #8DF35D;
+  } */
+  
+  
+  /* Responsive */
+
+  /* @media (max-width: 1350px) {
+    .login-left {
+      padding: 50px !important;
+    }
+    .login-form {
+      width: 100%;
+    }
+    .login-form-footer {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+  @media (max-width: 768px) {
+    body {
+      padding: 20px;
+    }
+    .container {
+      grid-template-columns: auto;
+    }
+    .login-right {
+      display: none;
+    }
+} */

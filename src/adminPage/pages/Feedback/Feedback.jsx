@@ -15,7 +15,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Link } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import WarningIcon from "../../assets/images/iconwarning.png"
+import WarningIcon from "../../../assets/images/iconwarning.png"
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'
@@ -219,26 +219,6 @@ const Feedback = () => {
       setRowsPerPage(+event.target.value);
       setPage(0);
     };
-  // const [data, setData] = useState(userRows)
-
-  // const handleDelete = (id)=>{
-  //   setData(data.filter(item=>item.id !== id));
-  // };
-
-  // const actionColumn = [
-  //   {
-  //     field:"action", 
-  //     headerName: "Action", 
-  //     width:100, 
-  //     renderCell:(params)=> {
-  //       return (
-  //         <div className="cellAction">
-  //         <div className="deleteButton" onClick={()=>handleDelete(params.row.id)}>Delete</div>
-  //     </div>
-  //     );
-  //   },
-  // },
-  // ];
   return (
   <Container>
     <Grid item md={12} xl={12} sm={12} >

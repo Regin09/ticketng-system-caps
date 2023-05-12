@@ -1,40 +1,67 @@
-// import { Fragment } from 'react';
-// import { BrowserRouter, Route, Routes } from 'react-router-dom';
-// import Choose from '../../pages/choose/Choose';
-// import Login from '../../pages/login/Login';
-// import Overview from '../../pages/overview/Overview';
-// import Tickets from '../../pages/tickets/Tickets';
-// import Members from '../../pages/members/Members';
-// import Clients from '../../pages/clients/Clients';
-// import UserProfile from '../../pages/userProfile/UserProfile';
-// import Feedback from '../../pages/Feedback/Feedback';
+import { Fragment } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ChooseEngineer from "../choose/Choose";
+import OverviewEngineer from "../engineerPage/pages/overview/Overview";
+import TicketsEngineer from "../engineerPage/pages/tickets/Tickets";
+import MembersEngineer from "../engineerPage/pages/members/Members";
+import LoginEngineer from "../engineerPage/pages/login/Login";
+import ClientsEngineer from "../engineerPage/pages/clients/Clients";
+import UserProfileEngineer from "../engineerPage/pages/userProfile/UserProfile";
+import FeedbackEngineer from "../engineerPage/pages/Feedback/Feedback";
+import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
+import CreateTicketsEngineer from "../engineerPage/pages/tickets/CreateTickets/CreateTickets";
+import DetailTicketsEngineer from "../engineerPage/pages/tickets/DetailTickets/DetailTickets";
+import DetailEngineerPerformanceEngineer from "../engineerPage/pages/members/DetailEngineerPerformance/DetailEngineerPerformance";
+import CreateClientEngineer from "../engineerPage/pages/clients/CreateClient/CreateClient";
+import ClientAnalysisEngineer from "../engineerPage/pages/clients/ClientAnalysis/ClientAnalysis";
+import EditClientEngineer from "../engineerPage/pages/clients/EditClient/EditClient";
+import DetailFeedbackEngineer from "../engineerPage/pages/Feedback/DetailFeedback/DetailFeedback";
+import EditTicketsEngineer from "../engineerPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
+import DetailClientEngineer from "../engineerPage/pages/clients/DetailClient/DetailClient";
 
-// function EngineerRouter() {
-//   return (
-       
-//           <Routes>
-//       {/* Router Engineer  */}
-//             <Route path= "/" element={<Choose/>} />
-//             <Route path="login" element={<Login/>} />
-//             <Route path="overview" element={<Overview />} />
-//             <Route path="tickets" element={<Tickets/>} />
-//             <Route path="userProfile" element={<UserProfile />} />
-//               <Route path="tickets/createTickets" element={<Overview/>} />
-//               <Route path="tickets/detailTickets" element={<Overview/>} />
-//                 <Route path="tickets/detailTickets/editTickets" element={<Overview/>} />
-//             <Route path="members" element={<Members />} />
-//             <Route path="members/userPerformance" element={<Overview/>} />
-//             <Route path="clients" element={<Clients />} />
-//               <Route path="clients/createClient" element={<Overview/>} />
-//               <Route path="clients/clientAnalysis" element={<Overview/>} />
-//               <Route path="clients/editClient" element={<Overview/>} />
-//               <Route path="clients/detailClient" element={<Overview/>} />
-//             <Route path="feedbacks" element={<Feedback/>} />
-//               <Route path="feedbacks/detailFeedback" element={<Feedback/>} />  
-//            </Routes>
-      
-//   );
-// }
+function EngineerRouter() {
+  return (
+    <Routes>
+      {/* Router Admin */}
+      <Route path="/" element={<ChooseEngineer />} />
+      <Route path="engineer-login" element={<LoginEngineer />} />
+      <Route element={<DashboardLayout />}>
+        <Route path="overview" element={<OverviewEngineer />} />
+        <Route path="userProfile" element={<UserProfileEngineer />} />
+        <Route path="tickets" element={<TicketsEngineer />} />
+        <Route
+          path="tickets/createTickets"
+          element={<CreateTicketsEngineer />}
+        />
+        <Route
+          path="tickets/detailTickets"
+          element={<DetailTicketsEngineer />}
+        />
+        <Route
+          path="tickets/detailTickets/editTickets"
+          element={<EditTicketsEngineer />}
+        />
+        <Route path="members" element={<MembersEngineer />} />
+        <Route
+          path="members/userPerformance"
+          element={<DetailEngineerPerformanceEngineer />}
+        />
+        <Route path="clients" element={<ClientsEngineer />} />
+        <Route path="clients/createClient" element={<CreateClientEngineer />} />
+        <Route
+          path="clients/clientAnalysis"
+          element={<ClientAnalysisEngineer />}
+        />
+        <Route path="clients/editClient" element={<EditClientEngineer />} />
+        <Route path="clients/detailClient" element={<DetailClientEngineer />} />
+        <Route path="feedbacks" element={<FeedbackEngineer />} />
+        <Route
+          path="feedbacks/detailFeedback"
+          element={<DetailFeedbackEngineer />}
+        />
+      </Route>
+    </Routes>
+  );
+}
 
-
-// export default EngineerRouter;
+export default EngineerRouter;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { makeStyles } from "@mui/styles";
-import LogoLogin from "../../assets/images/BtechForLogin.png"
+import LogoLogin from "../assets/images/BtechForLogin.png"
 import { Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -74,7 +74,7 @@ function Choose() {
                 <br/>
               <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                 <div>
-            <Link to="/login" style={{textDecoration:"none",color:"black"}}>
+            <Link to="/admin-login" style={{textDecoration:"none",color:"black"}}>
               <Button type="submit" variant="contained" fullWidth sx={{
                 display:'flex',
                 borderRadius: '40px'
@@ -85,7 +85,7 @@ function Choose() {
             </Link>
             <br/>
             </div>
-            <Link to="/login" style={{textDecoration:"none",color:"black"}}>
+            <Link to="/engineer-login" style={{textDecoration:"none",color:"black"}}>
               <Button type="submit" variant="contained" fullWidth sx={{
                 display:'flex',
                 borderRadius: '40px'
@@ -95,7 +95,7 @@ function Choose() {
               </Button>
             </Link>
             <br/>
-            <Link to="/login" style={{textDecoration:"none",color:"black"}}>
+            <Link to="/user-login" style={{textDecoration:"none",color:"black"}}>
             <Button type="submit" variant="contained" fullWidth sx={{
                 display:'flex',
                 borderRadius: '40px'

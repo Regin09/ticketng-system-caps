@@ -1,0 +1,36 @@
+h1{
+    font-size: 33px;
+}
+h3{
+    font-size: 60px;
+}
+
+.h1-pad{
+    padding-bottom: 50px;
+}
+.card-example {
+    background-color: #FFFFFF!important;
+    width: 100%;
+    max-width: 330px;
+    height: 280px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+}
+
+.card-alasan{
+    background-color: aliceblue;
+    height: fit-content;
+}
+
+.centerGrid{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

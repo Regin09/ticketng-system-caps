@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { makeStyles } from "@mui/styles";
-import LogoLogin from "../../assets/images/BtechForLogin.png"
+import LogoLogin from "../assets/images/BtechForLogin.png"
 import { Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -68,7 +68,6 @@ function Login() {
           maxWidth:'500px',
           height:'100%',
           maxHeight:'500px',
-          height: "100%",
           boxSizing: "border-box",
           border: "1px solid rgba(0, 0, 0, 0.1)",
           borderRadius: "20px",

@@ -1,26 +1,32 @@
-import React, { Fragment,useState } from 'react'
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import {styled, useTheme } from '@mui/material';
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
+import React, { Fragment, useState } from "react";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import { styled, useTheme } from "@mui/material";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import "./clients.css";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import MuiToggleButton from '@mui/material/ToggleButton';
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import MuiToggleButton from "@mui/material/ToggleButton";
 import { Link } from "react-router-dom";
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import WarningIcon from "../../assets/images/iconwarning.png"
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import WarningIcon from "../../../assets/images/iconwarning.png";
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
-  background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'
+  background:
+    "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
 }));
 
 const Clients = () => {
-  const theme=useTheme()
+  const theme = useTheme();
 
   const [open, setOpen] = useState(false);
 
@@ -29,7 +35,6 @@ const Clients = () => {
   }
 
   function handleDeleteConfirm() {
-    // Perform the deletion action here
     setOpen(false);
   }
 
@@ -38,13 +43,13 @@ const Clients = () => {
   }
 
   React.useEffect(() => {
-    document.title = 'Menu Klien';
+    document.title = "Menu Klien";
   }, []);
 
   const ToggleButton = styled(MuiToggleButton)({
-    '&.Mui-selected, &.Mui-selected:hover': {
-      color: '#1F305C !important',
-      backgroundColor: 'rgba(31, 48, 92, 0.25)',
+    "&.Mui-selected, &.Mui-selected:hover": {
+      color: "#1F305C !important",
+      backgroundColor: "rgba(31, 48, 92, 0.25)",
     },
   });
   return (
@@ -286,7 +291,6 @@ const Clients = () => {
       </Grid>
     </React.Fragment>
   );
-}
+};
 
-
-export default Clients
+export default Clients;
