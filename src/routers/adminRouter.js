@@ -7,7 +7,7 @@ import Login from "../adminPage/pages/login/Login";
 import Clients from "../adminPage/pages/clients/Clients";
 import UserProfile from "../adminPage/pages/userProfile/UserProfile";
 import Feedback from "../adminPage/pages/Feedback/Feedback";
-import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
+import DashboardLayout from "../components/DashboardLayout1/DashboardLayout1";
 import CreateTickets from "../adminPage/pages/tickets/CreateTickets/CreateTickets";
 import DetailTickets from "../adminPage/pages/tickets/DetailTickets/DetailTickets";
 import CreateMember from "../adminPage/pages/members/Create-Member/CreateMember";
@@ -18,19 +18,20 @@ import EditClient from "../adminPage/pages/clients/EditClient/EditClient";
 import DetailFeedback from "../adminPage/pages/Feedback/DetailFeedback/DetailFeedback";
 import EditTickets from "../adminPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
 import DetailClient from "../adminPage/pages/clients/DetailClient/DetailClient";
+import { ToggleTickets } from "../components/toggle-button/ToggleTickets";
 
 function AdminRouter() {
   return (
     <Routes>
       {/* Router Admin */}
-      <Route path="/" element={<Choose />} />
+      <Route path="/" element={<Tickets />} />
       <Route path="admin-login" element={<Login />} />
       <Route element={<DashboardLayout />}>
         <Route path="overview" element={<Overview />} />
         <Route path="userProfile" element={<UserProfile />} />
         <Route path="tickets" element={<Tickets />} />
         <Route path="tickets/createTickets" element={<CreateTickets />} />
-        <Route path="tickets/detailTickets" element={<DetailTickets />} />
+        <Route path="tickets/:id" element={<DetailTickets />} />
         <Route
           path="tickets/detailTickets/editTickets"
           element={<EditTickets />}

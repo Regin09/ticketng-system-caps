@@ -12,7 +12,15 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { Fragment } from 'react';
-import DateTime from '../../../components/DateTime/DateTime';
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { useState } from "react";
+import dayjs from "dayjs";
+import {
+  LocalizationProvider,
+  MobileDatePicker,
+  MobileTimePicker,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 const prior = [
   {
     value: 'low',
@@ -73,6 +81,10 @@ const User =[
 ];
 
 const CreateTickets = () => {
+  const [DateandTime, setDateandTime] = useState({
+    title: "",
+    entryDate: dayjs(),
+  });
   return (
     <Fragment>
       <h1>Create Ticket</h1>
@@ -169,17 +181,37 @@ const CreateTickets = () => {
               <Typography variant="body2" sx={{ fontSize: "17px" }}>
                 Estimated Resolution Time
               </Typography>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                size="small"
-                sx={{
-                  width: "100%",
-                  height: "35px",
-                  background: "#FFFFFF",
-                  borderRadius: "7px",
-                }}
-              />
+              <LocalizationProvider dateAdapter={AdapterDayjs} >
+                <MobileDatePicker
+                  
+                  value={DateandTime.title}
+                  onChange={(value) => {
+                    setDateandTime({
+                      ...DateandTime,
+                      entryDate: value,
+                    });
+
+                    console.log("Tanggal: " + value.$D);
+                    console.log("Bulan: " + value.$M);
+                    console.log("Tahun: " + value.$y);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  slotProps={{
+                    textField: {
+                      size:'small',
+                      error: false,
+                      // helperText: 'MM / DD / YYYY',
+                    },
+                  }}
+                  sx={{
+                    width: "100%",
+                    "& .MuiDialog-root .MuiModal-root .css-3dah0e-MuiModal-root-MuiDialog-root":
+                      {
+                        zIndex: 100000,
+                      },
+                  }}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <Typography variant="body2" sx={{ fontSize: "17px" }}>

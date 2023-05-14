@@ -1,16 +1,16 @@
 import { Fragment } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import AdminRouter from './routers/adminRouter';
-// import EngineerRouter from './routers/engineerRouter/engineerRouter';
-// import UserRouter from './routers/userRouter/userRouter';
+import EngineerRouter from './routers/engineerRouter';
+import UserRouter from './routers/userRouter';
 
 function App() {
   return (
     <Fragment>
       <BrowserRouter>      
         <AdminRouter />
-        {/* <EngineerRouter />
-        <UserRouter /> */}
+        <EngineerRouter/>
+        <UserRouter />
       </BrowserRouter>
     </Fragment>
   );

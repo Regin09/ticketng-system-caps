@@ -19,7 +19,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'; 
 import PageviewIcon from '@mui/icons-material/Pageview';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import WarningIcon from "../../assets/images/iconwarning.png"
+import WarningIcon from "../../../assets/images/iconwarning.png"
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'

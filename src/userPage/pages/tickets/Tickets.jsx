@@ -17,7 +17,7 @@ import Box from '@mui/material/Box';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { Container } from '@mui/material';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import WarningIcon from "../../assets/images/iconwarning.png"
+import WarningIcon from "../../../assets/images/iconwarning.png"
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'

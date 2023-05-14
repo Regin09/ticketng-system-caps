@@ -1,78 +1,90 @@
-import * as React from "react";
-import { Container } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import * as React from 'react';
+import { Container } from '@mui/material'
+import Grid from '@mui/material/Grid';
 import { Link } from "react-router-dom";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import { Fragment } from "react";
-import DateTime from "../../../../components/DateTime/DateTime";
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import { Fragment } from 'react';
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { useState } from "react";
+import dayjs from "dayjs";
+import {
+  LocalizationProvider,
+  MobileDatePicker,
+  MobileTimePicker,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 const prior = [
   {
-    value: "low",
-    label: "Low",
+    value: 'low',
+    label: 'Low',
   },
   {
-    value: "medium",
-    label: "Medium",
+    value: 'medium',
+    label: 'Medium',
   },
   {
-    value: "high",
-    label: "High",
+    value: 'high',
+    label: 'High',
   },
   {
-    value: "critical",
-    label: "Critical",
+    value: 'critical',
+    label: 'Critical',
   },
 ];
-const Stat = [
+const Stat =[
   {
-    value: "selected",
-    label: "Selected",
+    value: 'selected',
+    label: 'Selected',
   },
   {
-    value: "toDo",
-    label: "To-Do",
+    value: 'toDo',
+    label: 'To-Do',
   },
   {
-    value: "inprogress",
-    label: "In-Progress",
+    value: 'inprogress',
+    label: 'In-Progress',
   },
   {
-    value: "done",
-    label: "Done",
+    value: 'done',
+    label: 'Done',
   },
 ];
-const User = [
+const User =[
   {
-    value: "unassigned",
-    label: "Unassigned",
+    value: 'unassigned',
+    label: 'Unassigned',
   },
   {
-    value: "user1",
-    label: "Regin",
+    value: 'user1',
+    label: 'Regin',
   },
   {
-    value: "user2",
-    label: "Nathan",
+    value: 'user2',
+    label: 'Nathan',
   },
   {
-    value: "user3",
-    label: "Gilang",
+    value: 'user3',
+    label: 'Gilang',
   },
   {
-    value: "user3",
-    label: "Daus",
-  },
+    value: 'user3',
+    label: 'Daus'
+  }
 ];
 
 const CreateTickets = () => {
+  const [DateandTime, setDateandTime] = useState({
+    title: "",
+    entryDate: dayjs(),
+  });
   return (
     <Fragment>
       <h1>Create Ticket</h1>
@@ -169,17 +181,37 @@ const CreateTickets = () => {
               <Typography variant="body2" sx={{ fontSize: "17px" }}>
                 Estimated Resolution Time
               </Typography>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                size="small"
-                sx={{
-                  width: "100%",
-                  height: "35px",
-                  background: "#FFFFFF",
-                  borderRadius: "7px",
-                }}
-              />
+              <LocalizationProvider dateAdapter={AdapterDayjs} >
+                <MobileDatePicker
+                  
+                  value={DateandTime.title}
+                  onChange={(value) => {
+                    setDateandTime({
+                      ...DateandTime,
+                      entryDate: value,
+                    });
+
+                    console.log("Tanggal: " + value.$D);
+                    console.log("Bulan: " + value.$M);
+                    console.log("Tahun: " + value.$y);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                  slotProps={{
+                    textField: {
+                      size:'small',
+                      error: false,
+                      // helperText: 'MM / DD / YYYY',
+                    },
+                  }}
+                  sx={{
+                    width: "100%",
+                    "& .MuiDialog-root .MuiModal-root .css-3dah0e-MuiModal-root-MuiDialog-root":
+                      {
+                        zIndex: 100000,
+                      },
+                  }}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
               <Typography variant="body2" sx={{ fontSize: "17px" }}>
@@ -284,6 +316,6 @@ const CreateTickets = () => {
       </Card>
     </Fragment>
   );
-};
+}
 
-export default CreateTickets;
+export default CreateTickets

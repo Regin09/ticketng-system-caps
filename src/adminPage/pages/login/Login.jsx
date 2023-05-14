@@ -57,7 +57,7 @@ function Login() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     axios({
       method: "POST",
       url: "https://stg.capstone.adaptivenetworklab.org/api/member/admin-login",
@@ -76,6 +76,24 @@ function Login() {
         console.log(error);
       });
   };
+
+  const submitHandler = async () => {
+    try {
+      const res = await axios({
+        method: 'POST',
+        url: 'https://stg.capstone.adaptivenetworklab.org/api/member/admin-login',
+        data: {
+          username: 'regin090',
+          password: 'Georgiu!1234',
+        },
+      });
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
   
 
   return (
@@ -116,7 +134,7 @@ function Login() {
             <div style={{ display: "flex", justifyContent: "center" }}>
               <h2 style={{ fontSize: "20px" }}>Page</h2>
             </div>
-            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            
               <TextField
                 label="Username"
                 value={username}
@@ -151,10 +169,11 @@ function Login() {
               Login
             </Button>
             </Link> */}
-            </form>
+          
           </Grid>
         </Grid>
       </Card>
+
       {/* <Card className={classes.card}>
       <img src={LogoLogin} alt="Logo" className={classes.logo} />
         <CardContent className={classes.form}>

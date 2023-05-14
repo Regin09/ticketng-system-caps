@@ -5,9 +5,10 @@ import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { makeStyles } from "@mui/styles";
-import LogoLogin from "../assets/images/BtechForLogin.png"
+import LogoLogin from "../../../assets/images/BtechForLogin.png"
 import { Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+
 
 const useStyles = makeStyles({
   root: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles({
   },
 });
 
-function Login() {
+function LoginEngineer() {
   const classes = useStyles();
 
   const [username, setUsername] = useState("");
@@ -153,5 +154,5 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginEngineer;
 
