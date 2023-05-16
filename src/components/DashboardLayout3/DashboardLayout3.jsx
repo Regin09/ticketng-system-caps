@@ -206,7 +206,7 @@ const DashboardLayout = () => {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
               <Link
-                to="/userProfile-user"
+                to="/userProfile-Engineer"
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={handleClose}>
@@ -270,17 +270,27 @@ const DashboardLayout = () => {
                 {
                   title: "Overview",
                   icon: <RemoveRedEyeOutlinedIcon />,
-                  link: "/overview-user",
+                  link: "/overview-Engineer",
                 },
                 {
                   title: "Tickets",
                   icon: <LocalActivityOutlinedIcon />,
-                  link: "/tickets-user",
+                  link: "/tickets-Engineer",
+                },
+                {
+                  title: "Members",
+                  icon: <GroupOutlinedIcon />,
+                  link: "/members-Engineer",
+                },
+                {
+                  title: "Clients",
+                  icon: <BusinessIcon />,
+                  link: "/clients-Engineer",
                 },
                 {
                   title: "Feedback",
                   icon: <ModeCommentOutlinedIcon />,
-                  link: "/feedbacks-user",
+                  link: "/feedbacks-Engineer",
                 },
               ].map((listNavbar, index) => (
                 <Link to={listNavbar.link} className="disable-link-style">

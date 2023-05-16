@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Outlet } from "react-router-dom";
 import Choose from "../choose/Choose";
 import Overview from "../adminPage/pages/overview/Overview";
 import Tickets from "../adminPage/pages/tickets/Tickets";
@@ -20,35 +20,58 @@ import EditTickets from "../adminPage/pages/tickets/DetailTickets/EditTickets/Ed
 import DetailClient from "../adminPage/pages/clients/DetailClient/DetailClient";
 import { ToggleTickets } from "../components/toggle-button/ToggleTickets";
 
+  const ProtectedAdminRoute = () => {
+    if (
+      localStorage.getItem("access_token") &&
+      localStorage.getItem("role") === "admin"
+    ) {
+      return <Outlet />;
+    }
+    return alert("Kamu bukan Admin!");
+  };
 function AdminRouter() {
   return (
     <Routes>
       {/* Router Admin */}
-      <Route path="/" element={<Tickets />} />
+      <Route path="/" element={<Choose />} />
       <Route path="admin-login" element={<Login />} />
-      <Route element={<DashboardLayout />}>
-        <Route path="overview" element={<Overview />} />
-        <Route path="userProfile" element={<UserProfile />} />
-        <Route path="tickets" element={<Tickets />} />
-        <Route path="tickets/createTickets" element={<CreateTickets />} />
-        <Route path="tickets/:id" element={<DetailTickets />} />
-        <Route
-          path="tickets/detailTickets/editTickets"
-          element={<EditTickets />}
-        />
-        <Route path="members" element={<Members />} />
-        <Route path="members/createAccount" element={<CreateMember />} />
-        <Route
-          path="members/userPerformance"
-          element={<DetailEngineerPerformance />}
-        />
-        <Route path="clients" element={<Clients />} />
-        <Route path="clients/createClient" element={<CreateClient />} />
-        <Route path="clients/clientAnalysis" element={<ClientAnalysis />} />
-        <Route path="clients/editClient" element={<EditClient />} />
-        <Route path="clients/detailClient" element={<DetailClient />} />
-        <Route path="feedbacks" element={<Feedback />} />
-        <Route path="feedbacks/detailFeedback" element={<DetailFeedback />} />
+      <Route element={<ProtectedAdminRoute />}>
+        <Route element={<DashboardLayout />}>
+          <Route path="overview-admin" element={<Overview />} />
+          <Route path="userProfile-admin" element={<UserProfile />} />
+          <Route path="tickets-admin" element={<Tickets />} />
+          <Route
+            path="tickets-admin/createTickets"
+            element={<CreateTickets />}
+          />
+          <Route path="tickets-admin/:id" element={<DetailTickets />} />
+          <Route
+            path="tickets-admin/detailTickets/editTickets"
+            element={<EditTickets />}
+          />
+          <Route path="members-admin" element={<Members />} />
+          <Route
+            path="members-admin/createAccount"
+            element={<CreateMember />}
+          />
+          <Route
+            path="members-admin/userPerformance"
+            element={<DetailEngineerPerformance />}
+          />
+          <Route path="clients-admin" element={<Clients />} />
+          <Route path="clients-admin/createClient" element={<CreateClient />} />
+          <Route
+            path="clients-admin/clientAnalysis"
+            element={<ClientAnalysis />}
+          />
+          <Route path="clients-admin/editClient" element={<EditClient />} />
+          <Route path="clients-admin/detailClient" element={<DetailClient />} />
+          <Route path="feedbacks-admin" element={<Feedback />} />
+          <Route
+            path="feedbacks-admin/detailFeedback"
+            element={<DetailFeedback />}
+          />
+        </Route>
       </Route>
     </Routes>
   );
