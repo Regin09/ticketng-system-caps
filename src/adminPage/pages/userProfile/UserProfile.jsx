@@ -1,87 +1,99 @@
-import * as React from 'react';
-import { Container } from '@mui/material'
-import Grid from '@mui/material/Grid';
+import * as React from "react";
+import { Container } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import { Fragment } from 'react';
-import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
-import { deepOrange, green } from '@mui/material/colors';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import Avatar from '@mui/material/Avatar';
-import "./UserProfile.css"
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import { Fragment,useState } from "react";
+import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import { deepOrange, green } from "@mui/material/colors";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import Avatar from "@mui/material/Avatar";
+import "./UserProfile.css";
+import axios from "axios";
 
 const UserProfile = () => {
+ 
+  const [userProfile, setUserProfile] = useState({});
+   React.useEffect(() => {
+     document.title = "User Profile";
+     getUserProfileHandler();
+   }, []);
+  const getUserProfileHandler = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile/",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Response GET");
+      console.log(res);
+      setUserProfile(res.data.data);
+      // console.log(userProfile);
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
   return (
     <Fragment>
-        <h1>User Profile</h1>
-        <Card sx={{ 
-            minWidth: "100%",
-            border:"1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "10px", 
-            padding:"16px",
-            // height:"100%",
-            }}>
+      <h1>User Profile</h1>
+      <Card
+        sx={{
+          minWidth: "100%",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          borderRadius: "10px",
+          padding: "16px",
+          // height:"100%",
+        }}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12} md={4} xl={6}>
-            <div className='item'>
+            <div className="item">
               <img
-              src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tiny"
-              alt=""
-              className='itemImg'
+                src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tiny"
+                alt=""
+                className="itemImg"
               />
             </div>
           </Grid>
           <Grid item xs={12} md={8} xl={6}>
-          <CardContent>
-            <div style={{display:'flex'}}>
-              <div style={{width:'100%',maxWidth:'200px'}}>
-                Fullname
-              </div> 
-              <div style={{paddingLeft:'15px'}}>
-               Regin Ganteng
+            <CardContent>
+              <div style={{ display: "flex" }}>
+                <div style={{ width: "100%", maxWidth: "200px" }}>Fullname</div>
+                <div style={{ paddingLeft: "15px" }}>{userProfile.name} </div>
               </div>
-            </div>
-            <br/>
-            <div style={{display:'flex'}}>
-              <div style={{width:'100%',maxWidth:'200px'}}>
-                Username
-              </div> 
-              <div style={{paddingLeft:'15px'}}>
-               regus090
+              <br />
+              <div style={{ display: "flex" }}>
+                <div style={{ width: "100%", maxWidth: "200px" }}>Username</div>
+                <div style={{ paddingLeft: "15px" }}>{userProfile.username}</div>
               </div>
-            </div>
-            <br />
-            <div style={{display:'flex'}}>
-              <div style={{width:'100%',maxWidth:'200px'}}>
-                Email
-              </div> 
-              <div style={{paddingLeft:'15px'}}>
-               deltasoft@tech.com
+              <br />
+              <div style={{ display: "flex" }}>
+                <div style={{ width: "100%", maxWidth: "200px" }}>Email</div>
+                <div style={{ paddingLeft: "15px" }}>{userProfile.email}</div>
               </div>
-            </div>
-            <br />
-            <div style={{display:'flex'}}>
-              <div style={{width:'100%',maxWidth:'200px'}}>
-                Role
-              </div> 
-              <div style={{paddingLeft:'15px'}}>
-               Engineer
+              <br />
+              <div style={{ display: "flex" }}>
+                <div style={{ width: "100%", maxWidth: "200px" }}>Role</div>
+                <div style={{ paddingLeft: "15px" }}>{userProfile.role}</div>
               </div>
-            </div>
-          </CardContent>
+            </CardContent>
           </Grid>
         </Grid>
-        </Card>
-        {/* USER PROFILE 1
+      </Card>
+      {/* USER PROFILE 1
           <Card sx={{ 
             minWidth: "100%",
             border:"1px solid rgba(0, 0, 0, 0.2)",
@@ -150,7 +162,7 @@ const UserProfile = () => {
               </div>
           </Card>  */}
     </Fragment>
-  )
-}
+  );
+};
 
-export default UserProfile
+export default UserProfile;

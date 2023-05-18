@@ -10,7 +10,6 @@ import DashboardLayoutUser from "../components/DashboardLayout2/DashboardLayout2
 import CreateTicketsUser from "../userPage/pages/tickets/CreateTickets/CreateTickets";
 import DetailTicketsUser from "../userPage/pages/tickets/DetailTickets/DetailTickets";
 import EditTicketsUser from "../userPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
-import DetailFeedbackUser from "../userPage/pages/Feedback/DetailFeedback/DetailFeedback";
 
  const ProtectedUserRoute = () => {
    if (
@@ -43,10 +42,7 @@ function UserRouter() {
             element={<EditTicketsUser />}
           />
           <Route path="feedbacks-user" element={<FeedbackUser />} />
-          <Route
-            path="feedbacks-user/detailFeedback"
-            element={<DetailFeedbackUser />}
-          />
+          
         </Route>
       </Route>
     </Routes>

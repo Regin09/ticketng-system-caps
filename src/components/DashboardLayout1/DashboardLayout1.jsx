@@ -212,15 +212,14 @@ const DashboardLayout = () => {
             </Link>
             <Divider />
             <Link to={`/`} style={{ textDecoration: "none", color: "black" }}>
-              <MenuItem onClick={handleClose}>
+              <MenuItem
+                onClick={() => {
+                  localStorage.removeItem("access_token");
+                  localStorage.removeItem("role");
+                }}
+              >
                 <ListItemIcon>
-                  <Logout
-                    fontSize="small"
-                    onClick={() => {
-                      localStorage.removeItem("access_token");
-                      localStorage.removeItem("role");
-                    }}
-                  />
+                  <Logout fontSize="small" />
                 </ListItemIcon>
                 Logout
               </MenuItem>
