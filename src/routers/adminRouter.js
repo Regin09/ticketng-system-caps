@@ -1,4 +1,9 @@
-import { Route, Routes, Outlet } from "react-router-dom";
+import {
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Choose from "../choose/Choose";
 import Overview from "../adminPage/pages/overview/Overview";
 import Tickets from "../adminPage/pages/tickets/Tickets";
@@ -19,24 +24,34 @@ import DetailFeedback from "../adminPage/pages/Feedback/DetailFeedback/DetailFee
 import EditTickets from "../adminPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
 import DetailClient from "../adminPage/pages/clients/DetailClient/DetailClient";
 import { ToggleTickets } from "../components/toggle-button/ToggleTickets";
+import SearchTicket from "../adminPage/pages/searching/SearchTicket";
 
-  const ProtectedAdminRoute = () => {
-    if (
-      localStorage.getItem("access_token") &&
-      localStorage.getItem("role") === "admin"
-    ) {
-      return <Outlet />;
-    }
-    return alert("Kamu bukan Admin!");
-  };
+const ProtectedAdminRoute = () => {
+  if (
+    !localStorage.getItem("access_token") &&
+    !localStorage.getItem("role") === "admin"
+  ) {
+    return <Navigate to="/" replace />;
+  }
+  return <DashboardLayout/>
+};
+
+const HandleLoginSuccessfully = () => {
+  if (localStorage.getItem("access_token")) {
+    return <Navigate to={-1} replace />;
+  }
+  return <Outlet />;
+};
 function AdminRouter() {
   return (
     <Routes>
       {/* Router Admin */}
-      <Route path="/" element={<Choose />} />
-      <Route path="admin-login" element={<Login />} />
+      <Route element={<HandleLoginSuccessfully />}>
+        <Route path="/" element={<Choose />} />
+        <Route path="admin-login" element={<Login />} />
+      </Route>
       <Route element={<ProtectedAdminRoute />}>
-        <Route element={<DashboardLayout />}>
+          <Route path="searching-admin/:key" element={<SearchTicket />}/>
           <Route path="overview-admin" element={<Overview />} />
           <Route path="userProfile-admin" element={<UserProfile />} />
           <Route path="tickets-admin" element={<Tickets />} />
@@ -44,9 +59,9 @@ function AdminRouter() {
             path="tickets-admin/createTickets"
             element={<CreateTickets />}
           />
-          <Route path="tickets-admin/:id" element={<DetailTickets />} />
+          <Route path="tickets-admin/detailTickets/:id" element={<DetailTickets />} />
           <Route
-            path="tickets-admin/detailTickets/editTickets"
+            path="tickets-admin/detailTickets/editTickets/:id"
             element={<EditTickets />}
           />
           <Route path="members-admin" element={<Members />} />
@@ -72,7 +87,6 @@ function AdminRouter() {
             element={<DetailFeedback />}
           />
         </Route>
-      </Route>
     </Routes>
   );
 }
