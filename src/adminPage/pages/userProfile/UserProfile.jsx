@@ -22,11 +22,12 @@ import axios from "axios";
 
 const UserProfile = () => {
  
-  const [userProfile, setUserProfile] = useState({});
+  const [userProfile, setUserProfile] = useState([]);
    React.useEffect(() => {
      document.title = "User Profile";
      getUserProfileHandler();
    }, []);
+
   const getUserProfileHandler = async () => {
     try {
       const res = await axios({

@@ -10,8 +10,8 @@ import { Fragment } from "react";
 import { useState } from "react";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import dayjs, { Dayjs } from "dayjs";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { IconButton, Select, Stack } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
@@ -20,17 +20,34 @@ import Box from "@mui/material/Box";
 
 const EditTickets = () => {
   const navigate = useNavigate();
+  let { id } = useParams();
   const [formEdit, setFormEdit] = useState({
-    subject: "",
-    description: "",
-    reporter: "",
-    clientCode: "",
-    assignee: "",
+    id: null,
+    subject: '',
+    description: '',
+    reporter: '',
+    clientCode: '',
+    assignee: '',
     duedate: dayjs(),
-    priority: "",
-    status: "",
+    priority: '',
+    status: '',
     labels: [],
   });
+  const [loading, setLoading] = useState(false);
+
+  const handleDateChange = async (value) => {
+    setLoading(true);
+
+    // Simulate an asynchronous operation
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Perform your actual logic here
+    console.log("Tanggal: " + value.$D);
+    console.log("Bulan: " + value.$M);
+    console.log("Tahun: " + value.$y);
+
+    setLoading(false);
+  };
 
   const [adminRole, setAdminRole] = useState([]);
   const [clientCode, setClientCode] = useState([]);
@@ -63,8 +80,68 @@ const EditTickets = () => {
     document.title = "Client Analytics";
     getAllAdminHandler();
     getAllClientCodeHandler();
+    getAllTickets(id);
   }, []);
 
+  const getAllTickets = async (id) => {
+    try {
+      const res = await axios({
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${id}`,
+      });
+      // setFormEdit(res.data.ticket[0]);
+      // console.log(res.data.ticket);
+      // console.log(formEdit);
+      setFormEdit({
+        id: res.data.ticket[0]._id,
+        subject: res.data.ticket[0].subject,
+        description: res.data.ticket[0].description,
+        reporter: res.data.ticket[0].reporter,
+        clientCode: res.data.ticket[0].clientCode,
+        assignee: res.data.ticket[0].assignee,
+        duedate: res.data.ticket[0].duedate,
+        priority: res.data.ticket[0].priority,
+        status: res.data.ticket[0].status,
+        labels: [...res.data.ticket[0].labels],
+      });
+      console.log(res.data.ticket[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+    const handleEditTickets = async (data) => {
+      try {
+        const res = await axios({
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${data.id}`,
+          data: data,
+          // data: {
+          //   subject: formEdit.subject,
+          //   description: formEdit.description,
+          //   reporter: formEdit.reporter,
+          //   clientCode: formEdit.clientCode,
+          //   assignee: formEdit.assignee,
+          //   duedate: formEdit.duedate,
+          //   priority: formEdit.priority,
+          //   status: formEdit.status,
+          //   labels: [...formEdit.labels],
+          //   lastUpdatedAt: formEdit.lastUpdatedAt,
+          //   createdAt: formEdit.createdAt,
+          // },
+        });
+        console.log(res.data.ticket[0]);
+        navigate("/tickets-admin/detailTickets/:id");
+      } catch (error) {
+        console.log(error);
+      }
+    };
   const getAllAdminHandler = async () => {
     try {
       const res = await axios({
@@ -105,33 +182,6 @@ const EditTickets = () => {
     }
   };
 
-  const handleEditTickets = async (_id) => {
-    try {
-      const res = await axios({
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${_id}`,
-      });
-      setFormEdit({
-        id: res.data._id,
-        subject: res.data.data.subject,
-        description: res.data.data.description,
-        reporter: res.data.data.reporter,
-        clientCode: res.data.data.clientCode,
-        assignee: res.data.data.assignee,
-        duedate: res.data.data.duedate,
-        priority: res.data.priority,
-        status: res.data.status,
-        labels: [],
-      });
-      console.log(res.data.data);
-      navigate("/tickets-admin");
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <Fragment>
@@ -153,6 +203,7 @@ const EditTickets = () => {
             id="outlined-basic"
             variant="outlined"
             size="small"
+            value={formEdit.subject}
             onChange={(e) => {
               setFormEdit({ ...formEdit, subject: e.target.value });
             }}
@@ -174,6 +225,7 @@ const EditTickets = () => {
             id="outlined-multiline-static"
             multiline
             rows={5}
+            value={formEdit.description}
             onChange={(e) => {
               setFormEdit({ ...formEdit, description: e.target.value });
             }}
@@ -258,25 +310,18 @@ const EditTickets = () => {
               </Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 {/* Input Date */}
-                <MobileDatePicker
+                {/* <MobileDatePicker
                   value={formEdit.duedate}
+                  // onChange={handleDateChange}
                   onChange={(value) => {
                     setFormEdit({ ...formEdit, duedate: dayjs(value) });
-
+                    console.log(formEdit)
                     console.log("Tanggal: " + value.$D);
-                    console.log("Bulan: " + (value.$M + 1));
+                    console.log("Bulan: " + value.$M);
                     console.log("Tahun: " + value.$y);
                     // setLoading(false);
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      sx={{
-                        fontSize: "12px", // Adjust the font size as per your requirements
-                        padding: "8px", // Adjust the padding as per your requirements
-                      }}
-                    />
-                  )}
+                  renderInput={(params) => <TextField {...params} />}
                   slotProps={{
                     textField: {
                       // helperText: 'MM / DD / YYYY',
@@ -289,7 +334,7 @@ const EditTickets = () => {
                         zIndex: 100000,
                       },
                   }}
-                />
+                /> */}
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
@@ -307,7 +352,7 @@ const EditTickets = () => {
                   id="outlined-basic"
                   variant="outlined"
                   size="small"
-                  value={labels}
+                  value={formEdit.labels}
                   onChange={(e) => setLabels(e.target.value)}
                   onKeyPress={handleTextFieldKeyPress}
                   sx={{
@@ -391,6 +436,7 @@ const EditTickets = () => {
               id="outlined-basic"
               variant="outlined"
               size="small"
+              value={formEdit.reporter}
               onChange={(e) => {
                 setFormEdit({ ...formEdit, reporter: e.target.value });
               }}
@@ -444,7 +490,7 @@ const EditTickets = () => {
           }}
         >
           <Link
-            to="/tickets-admin"
+            to={`/tickets-admin/detailTickets/${id}`}
             style={{ textDecoration: "none", color: "black" }}
           >
             <Button

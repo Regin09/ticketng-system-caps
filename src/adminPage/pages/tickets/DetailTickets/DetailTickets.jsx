@@ -12,6 +12,8 @@ import FormatUnderlinedOutlinedIcon from "@mui/icons-material/FormatUnderlinedOu
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
+import { makeStyles } from "@mui/styles";
+
 
 function formatDate(dateTimeString) {
   if (dateTimeString === null) {
@@ -54,24 +56,75 @@ function joinWords(inputArray) {
 
   return inputArray.join(", ");
 }
+const useStyles = makeStyles({
+  filledTextField: {
+    width: "100%",
+    maxWidth: "500px",
+    background: "#FF0000", // Change '#FF0000' to the desired color
+    borderRadius: "7px",
+    [`& fieldset`]: {
+      borderRadius: 30,
+    },
+  },
+});
 
 const DetailTickets = () => {
 
+  
+  const classes = useStyles();
   const navigate = useNavigate();
 
   let { id } = useParams();
   const [detailTicket,setDetailTicket] = useState([]);
-  const [formComment, setFormComment] = useState({
-    ticketID : "",
-    comment : "",
-  });
+  const [formComment, setFormComment] = useState([]);
+  const [allComment, setallComment] = useState([]);
+   const [editComment, setEditComment] = useState({
+    ticketID: "",
+    comment: "",
+   })
 
   React.useEffect(() => {
-    document.title = "Detail Ticket";
-    getAllTickets();
+    document.title = "Edit Ticket";
+    getAllTickets(id);
+    getAllComment(id);
   }, []);
 
-  const getAllTickets = async () => {
+  const handleCreateComment = async (data) => {
+    try {
+      const res = await axios({
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/create`,
+        data: data,
+      });
+      console.log(res.data.data);
+      navigate("/tickets-admin/detailTickets/:id");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAllComment = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/all`,
+      });
+      setallComment(res.data.data);
+      console.log(res.data.data);
+      console.log(allComment);
+      // console.log(res.data.ticket.);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const getAllTickets = async (id) => {
     try {
       const res = await axios({
         method: "GET",
@@ -88,6 +141,26 @@ const DetailTickets = () => {
       console.log(error);
     }
   };
+
+  const handleEditComment = async (id) => {
+    try {
+      const res = await axios({
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${id}`,
+      });
+      setEditComment({
+        ticketID: "",
+        comment: "",
+      });
+      console.log(res.data.data);
+      navigate("/tickets-admin/detailTickets/:id");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   
   const updateDoneStatusTickets = async () => {
     try {
@@ -98,7 +171,6 @@ const DetailTickets = () => {
         },
         url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${detailTicket._id}`,
         data: {
-          
           subject: detailTicket.subject,
           description: detailTicket.description,
           reporter: detailTicket.reporter,
@@ -149,7 +221,7 @@ const DetailTickets = () => {
           variant="contained"
           size="small"
           onClick={() => {
-            updateDoneStatusTickets();
+            updateDoneStatusTickets(detailTicket);
           }}
           sx={{
             color: "black",
@@ -206,6 +278,8 @@ const DetailTickets = () => {
               border: "1px solid rgba(0, 0, 0, 0.2)",
               borderRadius: "10px",
               padding: "16px",
+              maxWidth: "500px",
+              background: "#F1F6F9",
             }}
           >
             <Typography
@@ -213,74 +287,48 @@ const DetailTickets = () => {
               sx={{ fontSize: "20px", fontWeight: "700" }}
             >
               {detailTicket.length === 0 ? "Loading..." : detailTicket.reporter}
+              <hr />
             </Typography>
-
+            <br />
             <TextField
-              id="filled-basic"
-              variant="filled"
-              size="small"
+              id="outlined-multiline-static"
+              multiline
+              
               placeholder="Write a comment..."
-              className={classNames.TextField}
+              InputProps={{ sx: { borderRadius: 10 } }}
+              value={formComment.comment}
               onChange={(e) => {
-                setFormComment({ ...formComment, description: e.target.value });
+                setFormComment({ ...formComment, comment: e.target.value });
               }}
               sx={{
                 width: "100%",
                 maxWidth: "500px",
-
-                borderRadius: "100px",
-                input: { background: "#DDE6ED" },
               }}
             />
-          </Card>
-          <br />
-          <br />
-          <br />
-          <br />
-          <Card
-            sx={{
-              width: "100%",
-              border: "1px solid rgba(0, 0, 0, 0.2)",
-              borderRadius: "10px",
-              padding: "16px",
-            }}
-          >
-            <Typography
-              variant="body1"
-              sx={{ fontSize: "22px", fontWeight: "700" }}
+            <Button
+              size="small"
+              sx={{
+                color: "black",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "#F1F6F9",
+                },
+              }}
             >
-              Regin Georgius
-            </Typography>
-            <br />
-            <Typography
-              variant="body2"
-              sx={{ fontSize: "17px", fontWeight: "400" }}
+              Edit
+            </Button>
+            <Button
+              size="small"
+              sx={{
+                color: "black",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "#F1F6F9",
+                },
+              }}
             >
-              commodo felis ac, fringilla tortor. Nulla dui libero, dignissim et
-              eros id, elementum rutrum risus
-            </Typography>
-          </Card>
-          <br />
-          <Card
-            sx={{
-              width: "100%",
-              border: "1px solid rgba(0, 0, 0, 0.2)",
-              borderRadius: "10px",
-              padding: "16px",
-            }}
-          >
-            <FormatBoldOutlinedIcon />
-            <FormatItalicOutlinedIcon />
-            <FormatUnderlinedOutlinedIcon />
-            <hr />
-            <br />
-            <Typography
-              variant="body2"
-              sx={{ fontSize: "17px", fontWeight: "400" }}
-            >
-              commodo felis ac, fringilla tortor. Nulla dui libero, dignissim et
-              eros id, elementum rutrum risus
-            </Typography>
+              Delete
+            </Button>
           </Card>
           <br />
           <Link
@@ -303,6 +351,10 @@ const DetailTickets = () => {
               Comment
             </Button>
           </Link>
+          <br />
+          <br />
+          <br />
+          <br />
         </Grid>
         <Grid item xs={10} md={4} lg={3}>
           <Card

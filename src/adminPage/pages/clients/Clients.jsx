@@ -69,8 +69,24 @@ const Clients = () => {
     setOpen(false);
   }
 
+  const handleDeleteClients = async (code) => {
+    try {
+      const res = await axios({
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api//${code}`,
+      });
+      console.log(res.data.data);
+      getClientSummaryHandler();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   React.useEffect(() => {
-    document.title = "Menu Klien";
+    document.title = "Client Page";
   }, []);
 
   const ToggleButton = styled(MuiToggleButton)({
@@ -159,7 +175,7 @@ const Clients = () => {
             >
               <CardContent>
                 <Link
-                  to="detailClient"
+                  to={`detailClient/${summary.code}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <Typography
@@ -199,7 +215,7 @@ const Clients = () => {
                 <br />
                 <div style={{ width: "100%", display: "flex" }}>
                   <Link
-                    to="editClient"
+                    to={`editClient/${summary.code}`}
                     style={{ textDecoration: "none", color: "black" }}
                   >
                     <Button
@@ -212,7 +228,7 @@ const Clients = () => {
                   <Button
                     size="small"
                     sx={{ width: "10px", color: "red" }}
-                    onClick={handleDeleteClick}
+                    onClick={() => handleDeleteClick(summary.code)}
                   >
                     <DeleteOutlineOutlinedIcon />
                   </Button>
@@ -247,7 +263,10 @@ const Clients = () => {
                         Cancel
                       </Button>
                       <Button
-                        onClick={handleDeleteConfirm}
+                        onClick={() => {
+                          handleDeleteClients(summary.code);
+                          handleDeleteConfirm();
+                        }}
                         sx={{
                           backgroundColor: "#FF0000",
                           color: "#fff",

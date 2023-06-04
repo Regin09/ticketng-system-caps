@@ -153,6 +153,7 @@ function RowItem(props) {
     }
   };
 
+
   return (
     <React.Fragment>
       <TableRow hover>
@@ -313,6 +314,7 @@ const Tickets = () => {
       const res = await axios({
         method: "GET",
         headers: {
+          
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
         url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/all`,
@@ -323,6 +325,9 @@ const Tickets = () => {
       console.log(error);
     }
   };
+  
+
+  
   return (
     <Container>
       <div className="induk-toglee">

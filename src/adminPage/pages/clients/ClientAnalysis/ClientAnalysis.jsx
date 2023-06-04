@@ -39,7 +39,7 @@ const ClientAnalysis = () => {
   }
   return (
     <React.Fragment>
-      <h1>Client Analysis</h1>
+      <h1>Client Analytics</h1>
       <br />
       <Grid container spacing={10}>
         {clientAnalytics.map((analytics, index) => (

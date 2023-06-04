@@ -1,9 +1,4 @@
-import {
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Choose from "../choose/Choose";
 import Overview from "../adminPage/pages/overview/Overview";
 import Tickets from "../adminPage/pages/tickets/Tickets";
@@ -33,7 +28,7 @@ const ProtectedAdminRoute = () => {
   ) {
     return <Navigate to="/" replace />;
   }
-  return <DashboardLayout/>
+  return <DashboardLayout />;
 };
 
 const HandleLoginSuccessfully = () => {
@@ -51,42 +46,42 @@ function AdminRouter() {
         <Route path="admin-login" element={<Login />} />
       </Route>
       <Route element={<ProtectedAdminRoute />}>
-          <Route path="searching-admin/:key" element={<SearchTicket />}/>
-          <Route path="overview-admin" element={<Overview />} />
-          <Route path="userProfile-admin" element={<UserProfile />} />
-          <Route path="tickets-admin" element={<Tickets />} />
-          <Route
-            path="tickets-admin/createTickets"
-            element={<CreateTickets />}
-          />
-          <Route path="tickets-admin/detailTickets/:id" element={<DetailTickets />} />
-          <Route
-            path="tickets-admin/detailTickets/editTickets/:id"
-            element={<EditTickets />}
-          />
-          <Route path="members-admin" element={<Members />} />
-          <Route
-            path="members-admin/createAccount"
-            element={<CreateMember />}
-          />
-          <Route
-            path="members-admin/userPerformance"
-            element={<DetailEngineerPerformance />}
-          />
-          <Route path="clients-admin" element={<Clients />} />
-          <Route path="clients-admin/createClient" element={<CreateClient />} />
-          <Route
-            path="clients-admin/clientAnalysis"
-            element={<ClientAnalysis />}
-          />
-          <Route path="clients-admin/editClient" element={<EditClient />} />
-          <Route path="clients-admin/detailClient" element={<DetailClient />} />
-          <Route path="feedbacks-admin" element={<Feedback />} />
-          <Route
-            path="feedbacks-admin/detailFeedback"
-            element={<DetailFeedback />}
-          />
-        </Route>
+        <Route path="searching-admin/:key" element={<SearchTicket />} />
+        <Route path="overview-admin" element={<Overview />} />
+        <Route path="userProfile-admin" element={<UserProfile />} />
+        <Route path="tickets-admin" element={<Tickets />} />
+        <Route path="tickets-admin/createTickets" element={<CreateTickets />} />
+        <Route
+          path="tickets-admin/detailTickets/:id"
+          element={<DetailTickets />}
+        />
+        <Route
+          path="tickets-admin/detailTickets/editTickets/:id"
+          element={<EditTickets />}
+        />
+        <Route path="members-admin" element={<Members />} />
+        <Route path="members-admin/createAccount" element={<CreateMember />} />
+        <Route
+          path="members-admin/userPerformance/:username"
+          element={<DetailEngineerPerformance />}
+        />
+        <Route path="clients-admin" element={<Clients />} />
+        <Route path="clients-admin/createClient" element={<CreateClient />} />
+        <Route
+          path="clients-admin/clientAnalysis"
+          element={<ClientAnalysis />}
+        />
+        <Route path="clients-admin/editClient/:code" element={<EditClient />} />
+        <Route
+          path="clients-admin/detailClient/:code"
+          element={<DetailClient />}
+        />
+        <Route path="feedbacks-admin" element={<Feedback />} />
+        <Route
+          path="feedbacks-admin/detailFeedback/:id"
+          element={<DetailFeedback />}
+        />
+      </Route>
     </Routes>
   );
 }

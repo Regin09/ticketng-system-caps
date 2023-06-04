@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Container } from '@mui/material'
+import { Container, Select } from '@mui/material'
 import Grid from '@mui/material/Grid';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -19,12 +19,62 @@ import {
   DialogActions,
 } from "@mui/material";
 import WarningIcon from "../../../assets/images/iconwarning.png";
+import axios from 'axios';
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'
 }));
 
+
+
 const Feedback = () => {
+  const navigate = useNavigate();
+
+  const [formCreate, setFormCreate] = React.useState({
+    receiverUsername: "",
+    message: "",
+  });
+
+//  React.useEffect(() => {
+//    document.title = "Feedback Page";
+//    getAllEngineer();
+//  }, []);
+
+  const [engineerData, setEngineerData] = React.useState()
+
+   const handleCreateFeedbacks = async (data) => {
+     try {
+       const res = await axios({
+         method: "POST",
+         headers: {
+           Authorization: `${localStorage.getItem("access_token")}`,
+         },
+         url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback`,
+         data: data,
+       });
+       console.log(res.data.data);
+       navigate("/feedbacks-user");
+     } catch (error) {
+       console.log(error);
+     }
+   };
+
+    // const getAllEngineer = async () => {
+    //   try {
+    //     const res = await axios({
+    //       method: "GET",
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    //       },
+    //       url: `https://stg.capstone.adaptivenetworklab.org/api/member/all`,
+    //     });
+    //     setEngineerData(res.data.data);
+    //     console.log(res.data);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+
   return (
     <Fragment>
       <h1>Give Feedback to The Engineer</h1>
@@ -42,19 +92,40 @@ const Feedback = () => {
             <Typography variant="body2" sx={{ fontSize: "17px" }}>
               Engineer Username
             </Typography>
-
             <TextField
               id="outlined-basic"
               variant="outlined"
               size="small"
+              onChange={(e) => {
+                setFormCreate({
+                  ...formCreate,
+                  receiverUsername: e.target.value,
+                });
+              }}
               sx={{
                 width: "100%",
-                maxWidth: "300px",
                 height: "5px",
                 background: "#FFFFFF",
                 borderRadius: "7px",
               }}
             />
+            {/* <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              size="small"
+              value={formCreate.assignee}
+              onChange={(e) => {
+                setFormCreate({ ...formCreate, assignee: e.target.value });
+              }}
+              sx={{ width: "100%" }}
+            > */}
+            {/* Nambahin method get */}
+            {/* {engineerData.map((engineer) => (
+                <MenuItem key={engineer._id} value={engineer.name}>
+                  {engineer.name}
+                </MenuItem>
+              ))}
+            </Select> */}
           </Grid>
           <br />
           <br />
@@ -68,6 +139,9 @@ const Feedback = () => {
               id="outlined-multiline-static"
               multiline
               rows={10}
+              onChange={(e) => {
+                setFormCreate({ ...formCreate, message: e.target.value });
+              }}
               sx={{
                 width: "100%",
                 height: "10px",
@@ -88,14 +162,17 @@ const Feedback = () => {
           <br />
           <br />
           <br />
-          
           <Grid item xs={12} md={12} xl={12}>
             <Button
               variant="contained"
+              onClick={() => {
+                handleCreateFeedbacks(formCreate);
+              }}
               sx={{
                 color: "black",
                 background: "#BFFF58",
                 height: "53px",
+
                 width: "fix-content",
                 "&:hover": {
                   backgroundColor: "green",

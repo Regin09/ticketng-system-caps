@@ -35,6 +35,7 @@ const CreateTickets = () => {
   const [adminRole, setAdminRole] = useState([]);
   const [clientCode, setClientCode] = useState([]);
   const [labels, setLabels] = useState("");
+  
   const handleTextFieldKeyPress = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -60,7 +61,7 @@ const CreateTickets = () => {
   };
 
   React.useEffect(() => {
-    document.title = "Client Analytics";
+    document.title = "Create Tickets";
     getAllAdminHandler();
     getAllClientCodeHandler();
   }, []);
