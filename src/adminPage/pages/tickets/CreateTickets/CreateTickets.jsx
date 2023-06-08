@@ -32,7 +32,8 @@ const CreateTickets = () => {
     labels: [],
   });
 
-  const [adminRole, setAdminRole] = useState([]);
+  const [engineerRole, setEngineerRole] = useState([]);
+  const [userRole, setUserRole] = useState([]);
   const [clientCode, setClientCode] = useState([]);
   const [labels, setLabels] = useState("");
   
@@ -62,23 +63,44 @@ const CreateTickets = () => {
 
   React.useEffect(() => {
     document.title = "Create Tickets";
-    getAllAdminHandler();
+    getAllEngineerHandler();
+    getAllUserHandler();
     getAllClientCodeHandler();
   }, []);
 
-  const getAllAdminHandler = async () => {
+  const getAllUserHandler = async () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-admin",
+        url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-user",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
       console.log("Response GET");
       console.log(res);
-      setAdminRole(res.data.data);
-      console.log(adminRole);
+      setUserRole(res.data.data);
+      console.log(userRole);
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
+
+  const getAllEngineerHandler = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-engineer",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Response GET");
+      console.log(res);
+      setEngineerRole(res.data.data);
+      console.log(engineerRole);
     } catch (error) {
       if (error.response.status === 404) {
       }
@@ -190,7 +212,6 @@ const CreateTickets = () => {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                
                 size="small"
                 value={formCreate.assignee}
                 onChange={(e) => {
@@ -199,9 +220,14 @@ const CreateTickets = () => {
                 sx={{ width: "100%" }}
               >
                 {/* Nambahin method get */}
-                {adminRole.map((admin) => (
-                  <MenuItem key={admin._id} value={admin.name}>
-                    {admin.name}
+                {engineerRole.map((engineer) => (
+                  <MenuItem key={engineer._id} value={engineer.name}>
+                    {engineer.name}
+                  </MenuItem>
+                ))}
+                {userRole.map((user) => (
+                  <MenuItem key={user._id} value={user.name}>
+                    {user.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -213,7 +239,6 @@ const CreateTickets = () => {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                
                 value={formCreate.priority}
                 // value={formCreate.priority}
                 size="small"
@@ -254,7 +279,6 @@ const CreateTickets = () => {
                   value={formCreate.duedate}
                   onChange={(value) => {
                     setFormCreate({ ...formCreate, duedate: dayjs(value) });
-                    
 
                     // console.log("Tanggal: " + value.$D);
                     // console.log("Bulan: " + (value.$M + 1));
@@ -361,7 +385,6 @@ const CreateTickets = () => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              
               size="small"
               value={formCreate.clientCode}
               onChange={(e) => {
@@ -404,7 +427,6 @@ const CreateTickets = () => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              
               value={formCreate.status}
               onChange={(e) => {
                 setFormCreate({ ...formCreate, status: e.target.value });

@@ -1,9 +1,7 @@
 import React, { Fragment, useState } from "react";
-import { Container } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import { Card, Container, Grid, Typography } from "@mui/material";
 import { Button, styled, useTheme } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,8 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import MuiToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Box from "@mui/material/Box";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import axios from "axios";
@@ -121,10 +117,10 @@ function RowItem(props) {
       <TableRow hover>
         <TableCell align="center">{props.item._id}</TableCell>
         <TableCell align="center">{props.item.status}</TableCell>
+        <TableCell align="center">{formatDate(props.item.startedAt)}</TableCell>
         <TableCell align="center">
-          {formatDate(props.item.startedAt)}
+          {formatDate(props.item.finishedAt)}
         </TableCell>
-        <TableCell align="center">{formatDate(props.item.finishedAt)}</TableCell>
         <TableCell align="center">{props.item.score}</TableCell>
         <TableCell align="center">{props.item.processingTime}</TableCell>
       </TableRow>
@@ -163,13 +159,6 @@ const DetailEngineerPerformance = () => {
     }
   };
 
-  const ToggleButton = styled(MuiToggleButton)({
-    "&.Mui-selected, &.Mui-selected:hover": {
-      color: "#000000 !important",
-      backgroundColor: "#F5B6FF",
-    },
-  });
-
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
 
@@ -190,9 +179,81 @@ const DetailEngineerPerformance = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const renderTableBody = () => {
+    if (detailEngineer.length === 0) {
+      return (
+        
+        <TableRow>
+          <TableCell colSpan={6} align="center">
+            <Card
+              sx={{
+                width: "100%",
+                height: "200px",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+                padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: 1000,
+                }}
+              >
+                This engineer doesn't have any ticket done.
+              </Typography>
+            </Card>
+          </TableCell>
+        </TableRow>
+      );
+    }
+
+    return stableSort(
+      detailEngineer.filter((e) => {
+        return roleMember === "ALL" ? true : e.role === roleMember;
+      }),
+      getComparator(order, orderBy)
+    )
+      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      .map((rowItem, index) => {
+        return (
+          <RowItem
+            key={rowItem.code}
+            item={rowItem}
+            detailEngineer={detailEngineer}
+            getEngineerPerformance={getEngineerPerformance}
+          />
+        );
+      });
+  };
+
   return (
     <Container>
-      <h1>Performance of {nameUsers.name} </h1>
+      <div style={{display:'flex', justifyContent:'space-between'}}>
+          <h1>Performance of {nameUsers.name} </h1>
+          <Link
+            to="engineerAnalytics"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                color: "black",
+                background: "#FFFFFF",
+                height: "36px",
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+              }}
+            >
+              <Typography>{nameUsers.name} Analytics</Typography>
+            </Button>
+          </Link>
+          </div>
       <br />
       <TableContainer sx={{ maxHeight: rowsPerPage !== 10 ? 800 : "none" }}>
         <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -224,27 +285,7 @@ const DetailEngineerPerformance = () => {
             </TableRow>
           </TableHead>
           {/* Table Content */}
-          <TableBody>
-            {stableSort(
-              detailEngineer.filter((e) => {
-                // return true
-                return roleMember === "ALL" ? true : e.role === roleMember;
-                // if(e.status===statusTicket)
-              }),
-              getComparator(order, orderBy)
-            )
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((rowItem, index) => {
-                return (
-                  <RowItem
-                    key={rowItem.code}
-                    item={rowItem}
-                    detailEngineer={detailEngineer}
-                    getEngineerPerformance={getEngineerPerformance}
-                  />
-                );
-              })}
-          </TableBody>
+          <TableBody>{renderTableBody()}</TableBody>
         </Table>
       </TableContainer>
       {/* Table Pagination */}

@@ -37,12 +37,22 @@ const ProtectedEngineeringRoute = () => {
   return <Navigate to="/" replace />;
 };
 
+const HandleLoginSuccessfully = () => {
+  if (localStorage.getItem("access_token")) {
+    return <Navigate to={-1} replace />;
+  }
+  return <Outlet />;
+};
+
 function EngineerRouter() {
   return (
     <Routes>
       {/* Router Engineer */}
       {/* <Route path="/" element={<Choose />} /> */}
-      <Route path="engineer-login" element={<LoginEngineer />} />
+      <Route element={<HandleLoginSuccessfully />}>
+        <Route path="/" element={<Choose />} />
+        <Route path="engineer-login" element={<LoginEngineer />} />
+      </Route>
       <Route element={<ProtectedEngineeringRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="overview-Engineer" element={<OverviewEngineer />} />

@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { styled, useTheme } from "@mui/material";
+import { CircularProgress, styled, useTheme } from "@mui/material";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import "./clients.css";
@@ -76,7 +76,7 @@ const Clients = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api//${code}`,
+        url: `https://stg.capstone.adaptivenetworklab.org/api/member/client/${code}`,
       });
       console.log(res.data.data);
       getClientSummaryHandler();
@@ -228,7 +228,7 @@ const Clients = () => {
                   <Button
                     size="small"
                     sx={{ width: "10px", color: "red" }}
-                    onClick={() => handleDeleteClick(summary.code)}
+                    onClick={() => handleDeleteClick()}
                   >
                     <DeleteOutlineOutlinedIcon />
                   </Button>
@@ -263,10 +263,7 @@ const Clients = () => {
                         Cancel
                       </Button>
                       <Button
-                        onClick={() => {
-                          handleDeleteClients(summary.code);
-                          handleDeleteConfirm();
-                        }}
+                        onClick={() => handleDeleteClients(summary.code)}
                         sx={{
                           backgroundColor: "#FF0000",
                           color: "#fff",

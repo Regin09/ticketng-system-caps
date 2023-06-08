@@ -32,7 +32,7 @@ import LogoWebsite from "../../assets/images/Logo Btech.png";
 import { Helmet } from "react-helmet";
 import SearchBar from "../SearchBar/searchbar";
 
-const drawerWidth = 230;
+const drawerWidth = 220;
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -73,7 +73,7 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  background: "transparent !important",
+  background: "#CDE990!important",
   boxShadow: "none",
   ...(open && {
     marginLeft: drawerWidth,
@@ -155,9 +155,9 @@ const DashboardLayout = () => {
               <MenuIcon />
             </IconButton>
 
-            <div className="searh-bar">
+            {/* <div className="searh-bar">
               <SearchBar />
-            </div>
+            </div> */}
           </div>
           <IconButton color="inherit">
             <Avatar
@@ -233,8 +233,7 @@ const DashboardLayout = () => {
             border: "none",
             display: "flex",
             justifyContent: "flex-start",
-            background:
-              "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
+            background: "#CDE990",
           }}
         >
           {open ? (
@@ -256,8 +255,7 @@ const DashboardLayout = () => {
         </DrawerHeader>
         <div
           style={{
-            background:
-              "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
+            background: "#CDE990",
             height: "100%",
           }}
         >

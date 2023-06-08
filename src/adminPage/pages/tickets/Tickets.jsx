@@ -33,7 +33,7 @@ const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
 const headCells = [
   {
     id: "_id",
-    numeric: false,
+    numeric: true,
     label: "Ticket ID",
   },
   {
@@ -284,7 +284,7 @@ const Tickets = () => {
   const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
       color: "#000000  !important",
-      backgroundColor: "#F5B6FF",
+      backgroundColor: "#94B49F",
     },
   });
 
@@ -427,7 +427,7 @@ const Tickets = () => {
               {headCells.map((headCell) => (
                 <TableCell
                   key={headCell._id}
-                  align={headCell.numeric ? "center" : "center"}
+                  align={headCell.numeric ? "left" : "center"}
                   sortDirection={orderBy === headCell._id ? order : false}
                 >
                   <TableSortLabel

@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import { makeStyles } from "@mui/styles";
 import LogoLogin from "../../../assets/images/BtechForLogin.png";
-import { Grid, Typography } from "@mui/material";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button, styled, useTheme } from "@mui/material";
@@ -57,6 +57,7 @@ const useStyles = makeStyles({
 
 function Login() {
   const [open, setOpen] = useState(false);
+  const [showProgress, setShowProgress] = React.useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -80,7 +81,6 @@ function Login() {
 
   const submitHandlerAdmin = async (data) => {
     try {
-      
       const res = await axios({
         method: "POST",
         url: `https://stg.capstone.adaptivenetworklab.org/api/member/admin-login/`,
@@ -90,13 +90,15 @@ function Login() {
         },
       });
       console.log(res.data.data);
-      let token = res.data.token.split(" ")
+      let token = res.data.token.split(" ");
       // localStorage.setItem("access_token");
       localStorage.setItem("access_token", token[1]);
       localStorage.setItem("role", res.data.data.role);
       navigate("/overview-admin");
     } catch (error) {
       handleDialogOpen();
+    } finally {
+      setShowProgress(false); // Hide the progress indicator
     }
   };
 
@@ -173,6 +175,46 @@ function Login() {
             >
               Login
             </Button>
+            {showProgress && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100vh",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "50vh",
+                    height: "50vh",
+                  }}
+                >
+                  <CircularProgress
+                    style={{
+                      position: "absolute",
+                      top: "26%",
+                      left: "45%",
+                      transform: "translate(-50%, -50%)",
+                      zIndex: 1,
+                    }}
+                    color="success"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      animation: "rotate 2s linear infinite",
+                      zIndex: 0,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
               <DialogTitle>Invalid Username or Password</DialogTitle>
               <DialogContent>

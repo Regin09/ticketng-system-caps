@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container } from "@mui/material";
+import { CircularProgress, Container } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import Stack from "@mui/material/Stack";
@@ -47,6 +47,51 @@ const UserProfile = () => {
       console.log(error);
     }
   };
+
+   if (userProfile.length === 0) {
+     return (
+       <div
+         style={{
+           display: "flex",
+           justifyContent: "center",
+           alignItems: "center",
+           height: "100vh",
+         }}
+       >
+         <div
+           style={{
+             position: "relative",
+             width: "50vh",
+             height: "50vh",
+           }}
+         >
+           <CircularProgress
+             style={{
+               position: "absolute",
+               top: "26%",
+               left: "45%",
+               transform: "translate(-50%, -50%)",
+               zIndex: 1,
+             }}
+             color="success"
+           />
+           <div
+             style={{
+               position: "absolute",
+               top: 0,
+               left: 0,
+               width: "100%",
+               height: "100%",
+
+               animation: "rotate 2s linear infinite",
+               zIndex: 0,
+             }}
+           ></div>
+         </div>
+       </div>
+     );
+   }
+
   return (
     <Fragment>
       <h1>User Profile</h1>

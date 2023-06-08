@@ -11,11 +11,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
+import { CircularProgress } from "@mui/material";
 const CreateClient = () => {
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
+
+  const [showProgress, setShowProgress] = React.useState(false);
 
   const [formCreate, setFormCreate] = React.useState({
     name: "",
@@ -28,6 +31,7 @@ const CreateClient = () => {
 
   const handleCreateClients = async (data) => {
     try {
+      setShowProgress(true);
       const res = await axios({
         method: "POST",
         headers: {
@@ -40,6 +44,8 @@ const CreateClient = () => {
       navigate("/clients-admin");
     } catch (error) {
       console.log(error);
+    } finally {
+      setShowProgress(false); // Hide the progress indicator
     }
   };
 
@@ -242,6 +248,47 @@ const CreateClient = () => {
             >
               Create Client
             </Button>
+            {showProgress && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100vh",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "50vh",
+                    height: "50vh",
+                  }}
+                >
+                  <CircularProgress
+                    style={{
+                      position: "absolute",
+                      top: "26%",
+                      left: "45%",
+                      transform: "translate(-50%, -50%)",
+                      zIndex: 1,
+                    }}
+                    color="success"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      animation: "rotate 2s linear infinite",
+                      zIndex: 0,
+                    }}
+                  >
+                  </div>
+                </div>
+              </div>
+            )}
           </Link>
         </div>
         <br />

@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import axios from "axios";
+import { CircularProgress } from "@mui/material";
 const EditClient = () => {
   const navigate = useNavigate();
   let { code } = useParams();
@@ -17,6 +18,8 @@ const EditClient = () => {
     phone: "",
     email: "",
   });
+
+  const [showProgress, setShowProgress] = React.useState(false);
 
   React.useEffect(() => {
     document.title = "Edit Client";
@@ -76,6 +79,8 @@ const EditClient = () => {
       navigate("/clients-admin");
     } catch (error) {
       console.log(error);
+    }finally {
+      setShowProgress(false); // Hide the progress indicator
     }
   };
 
@@ -250,6 +255,46 @@ const EditClient = () => {
             >
               Edit Client
             </Button>
+            {showProgress && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100vh",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "50vh",
+                    height: "50vh",
+                  }}
+                >
+                  <CircularProgress
+                    style={{
+                      position: "absolute",
+                      top: "26%",
+                      left: "45%",
+                      transform: "translate(-50%, -50%)",
+                      zIndex: 1,
+                    }}
+                    color="success"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      animation: "rotate 2s linear infinite",
+                      zIndex: 0,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </Link>
         </div>
         <br />

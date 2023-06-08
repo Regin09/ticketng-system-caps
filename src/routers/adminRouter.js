@@ -18,8 +18,7 @@ import EditClient from "../adminPage/pages/clients/EditClient/EditClient";
 import DetailFeedback from "../adminPage/pages/Feedback/DetailFeedback/DetailFeedback";
 import EditTickets from "../adminPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
 import DetailClient from "../adminPage/pages/clients/DetailClient/DetailClient";
-import { ToggleTickets } from "../components/toggle-button/ToggleTickets";
-import SearchTicket from "../adminPage/pages/searching/SearchTicket";
+import DetailEngineerAnalytics from "../adminPage/pages/members/DetailEngineerPerformance/DetailEngineerAnalytics/DetailEngineerAnalytics";
 
 const ProtectedAdminRoute = () => {
   if (
@@ -46,7 +45,6 @@ function AdminRouter() {
         <Route path="admin-login" element={<Login />} />
       </Route>
       <Route element={<ProtectedAdminRoute />}>
-        <Route path="searching-admin/:key" element={<SearchTicket />} />
         <Route path="overview-admin" element={<Overview />} />
         <Route path="userProfile-admin" element={<UserProfile />} />
         <Route path="tickets-admin" element={<Tickets />} />
@@ -64,6 +62,10 @@ function AdminRouter() {
         <Route
           path="members-admin/userPerformance/:username"
           element={<DetailEngineerPerformance />}
+        />
+        <Route
+          path="members-admin/userPerformance/:username/engineerAnalytics"
+          element={<DetailEngineerAnalytics />}
         />
         <Route path="clients-admin" element={<Clients />} />
         <Route path="clients-admin/createClient" element={<CreateClient />} />

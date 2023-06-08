@@ -17,12 +17,8 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Box from "@mui/material/Box";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import {
-  Dialog,
   DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@mui/material";
-import WarningIcon from "../../../assets/images/iconwarning.png";
 import axios from "axios";
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
@@ -320,7 +316,7 @@ const [statusTicket, setStatusTicket] = React.useState("ALL");
   const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
       color: "#000000 !important",
-      backgroundColor: "#F5B6FF",
+      backgroundColor: "#94B49F",
     },
   });
 
@@ -490,25 +486,7 @@ const [statusTicket, setStatusTicket] = React.useState("ALL");
             </Table>
           </TableContainer>
           {/* Table Pagination */}
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              [theme.breakpoints.down("sm")]: {
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              },
-            }}
-          >
-            <span>
-              <Button sx={{ width: "max-content" }}>
-                Pagination 1 (1-100)
-              </Button>
-            </span>
+            
             <TablePagination
               rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
@@ -524,7 +502,7 @@ const [statusTicket, setStatusTicket] = React.useState("ALL");
                 [theme.breakpoints.up("sm")]: { justifyContent: "right" },
               }}
             />
-          </Box>
+          
         </>
       )}
       {roleMember !== "Admin" ? null : (

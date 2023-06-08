@@ -1,5 +1,5 @@
-import React, { Fragment,useState } from "react";
-import { Container, TextField } from "@mui/material";
+import React, { Fragment, useState } from "react";
+import { CircularProgress, Container, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -13,7 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 import { makeStyles } from "@mui/styles";
-
 
 function formatDate(dateTimeString) {
   if (dateTimeString === null) {
@@ -69,25 +68,63 @@ const useStyles = makeStyles({
 });
 
 const DetailTickets = () => {
-
-  
   const classes = useStyles();
   const navigate = useNavigate();
 
   let { id } = useParams();
-  const [detailTicket,setDetailTicket] = useState([]);
-  const [formComment, setFormComment] = useState([]);
-  const [allComment, setallComment] = useState([]);
-   const [editComment, setEditComment] = useState({
-    ticketID: "",
+  const [detailTicket, setDetailTicket] = useState([]);
+  const [formComment, setFormComment] = useState({
+    _id: null,
+    ticketID: id,
     comment: "",
-   })
+  });
+  const [allComment, setallComment] = useState([]);
+  const [userProfile, setUserProfile] = useState();
 
   React.useEffect(() => {
-    document.title = "Edit Ticket";
+    document.title = "Detail Ticket";
     getAllTickets(id);
-    getAllComment(id);
+    getAllCommentbySpecificID();
+    getUserProfileHandler();
   }, []);
+
+  const getUserProfileHandler = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile/",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Response GET");
+      console.log(res);
+      setUserProfile(res.data.data);
+      // console.log(userProfile);
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
+
+  const getAllCommentbySpecificID = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/ticketID/${id}`,
+      });
+      setallComment(res.data.data);
+      console.log(res.data.data);
+      console.log(allComment);
+      // console.log(res.data.ticket.);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleCreateComment = async (data) => {
     try {
@@ -99,31 +136,57 @@ const DetailTickets = () => {
         url: `https://stg.capstone.adaptivenetworklab.org/api/comment/create`,
         data: data,
       });
+      setFormComment({
+        ticketID: id,
+        comment: "",
+      });
       console.log(res.data.data);
-      navigate("/tickets-admin/detailTickets/:id");
+      getAllCommentbySpecificID();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getAllComment = async () => {
+  const handleEditComment = async (data) => {
     try {
       const res = await axios({
-        method: "GET",
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/all`,
+        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${data._id}`,
+        data: {
+          comment: data.comment,
+        },
       });
-      setallComment(res.data.data);
+      setFormComment({
+        _id:null,
+        ticketID: id,
+        comment: "",
+      });
       console.log(res.data.data);
-      console.log(allComment);
-      // console.log(res.data.ticket.);
+      getAllCommentbySpecificID();
     } catch (error) {
       console.log(error);
     }
   };
-  
+
+   const handleDeleteComment = async (data) => {
+     try {
+       const res = await axios({
+         method: "DELETE",
+         headers: {
+           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+         },
+         url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${data._id}`,
+       });
+       console.log(res.data.data);
+       getAllCommentbySpecificID();
+     } catch (error) {
+       console.log(error);
+     }
+   };
+
   const getAllTickets = async (id) => {
     try {
       const res = await axios({
@@ -133,35 +196,15 @@ const DetailTickets = () => {
         },
         url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${id}`,
       });
-      setDetailTicket(res.data.ticket[0])
+      setDetailTicket(res.data.ticket[0]);
       console.log(res.data.ticket);
-      console.log(detailTicket)
+      console.log(detailTicket);
       // console.log(res.data.ticket.);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleEditComment = async (id) => {
-    try {
-      const res = await axios({
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${id}`,
-      });
-      setEditComment({
-        ticketID: "",
-        comment: "",
-      });
-      console.log(res.data.data);
-      navigate("/tickets-admin/detailTickets/:id");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
   const updateDoneStatusTickets = async () => {
     try {
       const res = await axios({
@@ -169,7 +212,7 @@ const DetailTickets = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${detailTicket._id}`,
+        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${id}`,
         data: {
           subject: detailTicket.subject,
           description: detailTicket.description,
@@ -178,19 +221,60 @@ const DetailTickets = () => {
           assignee: detailTicket.assignee,
           duedate: detailTicket.duedate,
           priority: detailTicket.priority,
-          status: 'Done',
+          status: "Done",
           labels: [...detailTicket.labels],
-          lastUpdatedAt: detailTicket.lastUpdatedAt,
-          createdAt: detailTicket.createdAt,
-          
         },
       });
-      
+
       console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  if (detailTicket.length === 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            width: "50vh",
+            height: "50vh",
+          }}
+        >
+          <CircularProgress
+            style={{
+              position: "absolute",
+              top: "26%",
+              left: "45%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 1,
+            }}
+            color="success"
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+
+              animation: "rotate 2s linear infinite",
+              zIndex: 0,
+            }}
+          ></div>
+        </div>
+      </div>
+    );
+  }
   return (
     <Fragment>
       <Link
@@ -217,25 +301,27 @@ const DetailTickets = () => {
         to="/tickets-admin"
         style={{ textDecoration: "none", color: "black" }}
       >
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => {
-            updateDoneStatusTickets(detailTicket);
-          }}
-          sx={{
-            color: "black",
-            background: "#FFFFFF",
-            height: "36px",
-            cursor: "pointer",
-            marginLeft: "16px",
-            "&:hover": {
-              backgroundColor: "white",
-            },
-          }}
-        >
-          Done Ticket
-        </Button>
+        {detailTicket.status === "Done" ? null : (
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => {
+              updateDoneStatusTickets(detailTicket);
+            }}
+            sx={{
+              color: "black",
+              background: "#FFFFFF",
+              height: "36px",
+              cursor: "pointer",
+              marginLeft: "16px",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          >
+            Done Ticket
+          </Button>
+        )}
       </Link>
       <br />
 
@@ -290,10 +376,39 @@ const DetailTickets = () => {
               <hr />
             </Typography>
             <br />
+            {allComment.map((item) => (
+              <Fragment>
+                <h5>{item.comment}</h5>
+                <div
+                  style={{
+                    display: item.name === userProfile.name ? "block" : "none",
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setFormComment({
+                        ...formComment,
+                        _id: item._id,
+                        comment: item.comment,
+                      });
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleDeleteComment(item);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Fragment>
+            ))}
+
             <TextField
               id="outlined-multiline-static"
               multiline
-              
               placeholder="Write a comment..."
               InputProps={{ sx: { borderRadius: 10 } }}
               value={formComment.comment}
@@ -305,52 +420,46 @@ const DetailTickets = () => {
                 maxWidth: "500px",
               }}
             />
-            <Button
-              size="small"
-              sx={{
-                color: "black",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: "#F1F6F9",
-                },
-              }}
-            >
-              Edit
-            </Button>
-            <Button
-              size="small"
-              sx={{
-                color: "black",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: "#F1F6F9",
-                },
-              }}
-            >
-              Delete
-            </Button>
           </Card>
+
           <br />
-          <Link
-            to="/tickets"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <Button
-              variant="contained"
-              sx={{
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (!formComment._id) {
+                handleCreateComment(formComment);
+              } else {
+                handleEditComment(formComment);
+              }
+            }}
+            sx={{
+              backgroundColor: "white",
+              color: "black",
+              border: "1px solid rgba(0, 0, 0, 0.2)",
+              borderRadius: "7px",
+              cursor: "pointer",
+              "&:hover": {
                 backgroundColor: "white",
-                color: "black",
-                border: "1px solid rgba(0, 0, 0, 0.2)",
-                borderRadius: "7px",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: "white",
-                },
+              },
+            }}
+          >
+            {!formComment._id ? "Comment" : "Edit"}
+          </Button>
+
+          {!formComment._id ? null : (
+            <Button
+              onClick={() => {
+                setFormComment({
+                  ...formComment,
+                  _id: null,
+                  comment: "",
+                });
               }}
             >
-              Comment
+              Discard Changes
             </Button>
-          </Link>
+          )}
+
           <br />
           <br />
           <br />

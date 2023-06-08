@@ -10,13 +10,13 @@ import { Fragment } from "react";
 import { useState } from "react";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { IconButton, Select, Stack } from "@mui/material";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import { CircularProgress, IconButton, Select, Stack } from "@mui/material";
+
 import Chip from "@mui/material/Chip";
-import Box from "@mui/material/Box";
+
 
 const EditTickets = () => {
   const navigate = useNavigate();
@@ -49,8 +49,10 @@ const EditTickets = () => {
     setLoading(false);
   };
 
-  const [adminRole, setAdminRole] = useState([]);
+  const [engineerRole, setEngineerRole] = useState([]);
+  const [userRole, setUserRole] = useState([]);
   const [clientCode, setClientCode] = useState([]);
+  const [showProgress, setShowProgress] = React.useState(false);
   const [labels, setLabels] = useState("");
   const handleTextFieldKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -78,7 +80,8 @@ const EditTickets = () => {
 
   React.useEffect(() => {
     document.title = "Client Analytics";
-    getAllAdminHandler();
+    getAllEngineerHandler();
+    getAllUserHandler();
     getAllClientCodeHandler();
     getAllTickets(id);
   }, []);
@@ -96,13 +99,13 @@ const EditTickets = () => {
       // console.log(res.data.ticket);
       // console.log(formEdit);
       setFormEdit({
-        id: res.data.ticket[0]._id,
+        // id: res.data.ticket[0]._id,
         subject: res.data.ticket[0].subject,
         description: res.data.ticket[0].description,
         reporter: res.data.ticket[0].reporter,
         clientCode: res.data.ticket[0].clientCode,
         assignee: res.data.ticket[0].assignee,
-        duedate: res.data.ticket[0].duedate,
+        duedate: dayjs(res.data.ticket[0].duedate),
         priority: res.data.ticket[0].priority,
         status: res.data.ticket[0].status,
         labels: [...res.data.ticket[0].labels],
@@ -120,41 +123,51 @@ const EditTickets = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
-          url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${data.id}`,
+          url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${id}`,
           data: data,
-          // data: {
-          //   subject: formEdit.subject,
-          //   description: formEdit.description,
-          //   reporter: formEdit.reporter,
-          //   clientCode: formEdit.clientCode,
-          //   assignee: formEdit.assignee,
-          //   duedate: formEdit.duedate,
-          //   priority: formEdit.priority,
-          //   status: formEdit.status,
-          //   labels: [...formEdit.labels],
-          //   lastUpdatedAt: formEdit.lastUpdatedAt,
-          //   createdAt: formEdit.createdAt,
-          // },
         });
         console.log(res.data.ticket[0]);
         navigate("/tickets-admin/detailTickets/:id");
       } catch (error) {
         console.log(error);
+      } finally {
+        setShowProgress(false); // Hide the progress indicator
       }
     };
-  const getAllAdminHandler = async () => {
+
+  const getAllUserHandler = async () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-admin",
+        url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-user",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
       console.log("Response GET");
       console.log(res);
-      setAdminRole(res.data.data);
-      console.log(adminRole);
+      setUserRole(res.data.data);
+      console.log(userRole);
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
+
+  const getAllEngineerHandler = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-engineer",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Response GET");
+      console.log(res);
+      setEngineerRole(res.data.data);
+      console.log(engineerRole);
     } catch (error) {
       if (error.response.status === 404) {
       }
@@ -260,9 +273,14 @@ const EditTickets = () => {
                 sx={{ width: "100%" }}
               >
                 {/* Nambahin method get */}
-                {adminRole.map((admin) => (
-                  <MenuItem key={admin._id} value={admin.name}>
-                    {admin.name}
+                {engineerRole.map((engineer) => (
+                  <MenuItem key={engineer._id} value={engineer.name}>
+                    {engineer.name}
+                  </MenuItem>
+                ))}
+                {userRole.map((user) => (
+                  <MenuItem key={user._id} value={user.name}>
+                    {user.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -309,13 +327,12 @@ const EditTickets = () => {
                 Estimated Resolution Time
               </Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                {/* Input Date */}
-                {/* <MobileDatePicker
+                <MobileDatePicker
                   value={formEdit.duedate}
                   // onChange={handleDateChange}
                   onChange={(value) => {
                     setFormEdit({ ...formEdit, duedate: dayjs(value) });
-                    console.log(formEdit)
+                    console.log(formEdit);
                     console.log("Tanggal: " + value.$D);
                     console.log("Bulan: " + value.$M);
                     console.log("Tahun: " + value.$y);
@@ -334,7 +351,7 @@ const EditTickets = () => {
                         zIndex: 100000,
                       },
                   }}
-                /> */}
+                />
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6} xl={3}>
@@ -510,6 +527,46 @@ const EditTickets = () => {
             >
               Edit Tickets
             </Button>
+            {showProgress && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100vh",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "50vh",
+                    height: "50vh",
+                  }}
+                >
+                  <CircularProgress
+                    style={{
+                      position: "absolute",
+                      top: "26%",
+                      left: "45%",
+                      transform: "translate(-50%, -50%)",
+                      zIndex: 1,
+                    }}
+                    color="success"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      animation: "rotate 2s linear infinite",
+                      zIndex: 0,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </Link>
         </div>
       </Card>

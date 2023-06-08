@@ -123,14 +123,14 @@ function RowItem(props) {
     setOpen(false);
   }
 
-  const handleDeleteFeedbacks = async () => {
+  const handleDeleteFeedbacks = async (_id) => {
     try {
       const res = await axios({
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback/`,
+        url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback?id=${_id}`,
       });
       console.log(res.data.data);
       props.getAllFeedbacks();
@@ -168,7 +168,7 @@ function RowItem(props) {
               variant="outlined"
               color="secondary"
               size="small"
-              onClick={() => handleDeleteClick(props.item.id)}
+              onClick={() => handleDeleteClick()}
             >
               <DeleteForeverIcon />
             </Button>
@@ -201,7 +201,7 @@ function RowItem(props) {
                   Cancel
                 </Button>
                 <Button
-                  onClick={handleDeleteConfirm}
+                  onClick={()=>handleDeleteFeedbacks(props.item._id)}
                   sx={{
                     backgroundColor: "#FF0000",
                     color: "#fff",

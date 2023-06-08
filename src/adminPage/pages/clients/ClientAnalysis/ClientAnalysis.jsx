@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { CircularProgress } from "@mui/material";
 
 const ClientAnalysis = () => {
   const [clientAnalytics, setClientAnalytics] = useState([]);
@@ -33,10 +34,49 @@ const ClientAnalysis = () => {
       console.log(error);
     }
   };
-  if (clientAnalytics.length === 0) {
-    // You can show a loading indicator or message while data is being fetched
-    return <p>Loading...</p>;
-  }
+   if (clientAnalytics.length === 0) {
+     return (
+       <div
+         style={{
+           display: "flex",
+           justifyContent: "center",
+           alignItems: "center",
+           height: "100vh",
+         }}
+       >
+         <div
+           style={{
+             position: "relative",
+             width: "50vh",
+             height: "50vh",
+           }}
+         >
+           <CircularProgress
+             style={{
+               position: "absolute",
+               top: "26%",
+               left: "45%",
+               transform: "translate(-50%, -50%)",
+               zIndex: 1,
+             }}
+             color="success"
+           />
+           <div
+             style={{
+               position: "absolute",
+               top: 0,
+               left: 0,
+               width: "100%",
+               height: "100%",
+
+               animation: "rotate 2s linear infinite",
+               zIndex: 0,
+             }}
+           ></div>
+         </div>
+       </div>
+     );
+   }
   return (
     <React.Fragment>
       <h1>Client Analytics</h1>
