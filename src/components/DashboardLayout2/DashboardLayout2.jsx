@@ -191,7 +191,7 @@ const DashboardLayout = () => {
             </div>
             <IconButton color="inherit">
               <Avatar
-                alt={userProfile.name}
+                alt={userProfile.name ? userProfile.name.toUpperCase() : ""}
                 onClick={handleClick}
                 src="/static/images/avatar/1.jpg"
               >

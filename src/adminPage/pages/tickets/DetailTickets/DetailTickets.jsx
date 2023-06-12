@@ -1,5 +1,10 @@
 import React, { Fragment, useState } from "react";
-import { CircularProgress, Container, TextField } from "@mui/material";
+import {
+  CardContent,
+  CircularProgress,
+  Container,
+  TextField,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -74,7 +79,7 @@ const DetailTickets = () => {
   let { id } = useParams();
   const [detailTicket, setDetailTicket] = useState([]);
   const [formComment, setFormComment] = useState({
-    _id: null,
+    // _id: null,
     ticketID: id,
     comment: "",
   });
@@ -160,7 +165,7 @@ const DetailTickets = () => {
         },
       });
       setFormComment({
-        _id:null,
+        _id: null,
         ticketID: id,
         comment: "",
       });
@@ -171,21 +176,21 @@ const DetailTickets = () => {
     }
   };
 
-   const handleDeleteComment = async (data) => {
-     try {
-       const res = await axios({
-         method: "DELETE",
-         headers: {
-           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-         },
-         url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${data._id}`,
-       });
-       console.log(res.data.data);
-       getAllCommentbySpecificID();
-     } catch (error) {
-       console.log(error);
-     }
-   };
+  const handleDeleteComment = async (data) => {
+    try {
+      const res = await axios({
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${data._id}`,
+      });
+      console.log(res.data.data);
+      getAllCommentbySpecificID();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getAllTickets = async (id) => {
     try {
@@ -222,7 +227,7 @@ const DetailTickets = () => {
           duedate: detailTicket.duedate,
           priority: detailTicket.priority,
           status: "Done",
-          labels: [...detailTicket.labels],
+          labels: [detailTicket.labels],
         },
       });
 
@@ -372,14 +377,144 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "20px", fontWeight: "700" }}
             >
-              {detailTicket.length === 0 ? "Loading..." : detailTicket.reporter}
+              {detailTicket.length === 0 ? (
+                "Loading..."
+              ) : (
+                <span>{userProfile.name}</span>
+              )}
               <hr />
             </Typography>
             <br />
-            {allComment.map((item) => (
-              <Fragment>
-                <h5>{item.comment}</h5>
-                <div
+            <TextField
+              id="outlined-multiline-static"
+              multiline
+              placeholder="Write a comment..."
+              InputProps={{ sx: { borderRadius: 10 } }}
+              value={formComment.comment}
+              onChange={(e) => {
+                setFormComment({ ...formComment, comment: e.target.value });
+              }}
+              sx={{
+                width: "100%",
+                maxWidth: "500px",
+              }}
+            />
+          </Card>
+          <br />
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (!formComment._id) {
+                handleCreateComment(formComment);
+              } else {
+                handleEditComment(formComment);
+              }
+            }}
+            sx={{
+              backgroundColor: "white",
+              color: "black",
+              border: "1px solid rgba(0, 0, 0, 0.2)",
+              borderRadius: "7px",
+              cursor: "pointer",
+              marginBottom: "15px",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+              marginRight: "10px",
+            }}
+          >
+            {!formComment._id ? "Comment" : "Edit"}
+          </Button>
+
+          {!formComment._id ? null : (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "white",
+                color: "black",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "7px",
+                marginBottom: "14px",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+              }}
+              onClick={() => {
+                setFormComment({
+                  ...formComment,
+                  _id: null,
+                  comment: "",
+                });
+              }}
+            >
+              Discard Changes
+            </Button>
+          )}
+          {allComment.map((item) => (
+            <Fragment>
+              <Card
+                sx={{
+                  width: "100%",
+                  border: "1px solid rgba(0, 0, 0, 0.2)",
+                  borderRadius: "10px",
+                  padding: "16px",
+                  maxWidth: "500px",
+                  background: "#F1F6F9",
+                  marginBottom: "15px",
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{ fontSize: "20px", fontWeight: "700" }}
+                >
+                  {detailTicket.length === 0 ? "Loading..." : item.name}
+
+                  {/* {detailTicket.length === 0
+                    ? "Loading..."
+                    : !formComment._id
+                    ? detailTicket.reporter
+                    : detailTicket.assignee} */}
+                  <hr />
+                </Typography>
+                <br />
+                <TextField
+                  id="outlined-multiline-static"
+                  disabled
+                  multiline
+                  value={item.comment}
+                  InputProps={{ sx: { borderRadius: 10 } }}
+                  sx={{
+                    width: "100%",
+                    maxWidth: "500px",
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#000000",
+                    },
+                  }}
+                />
+                {item.name === userProfile.name && (
+                  <div>
+                    <Button
+                      onClick={() => {
+                        setFormComment({
+                          ...formComment,
+                          _id: item._id,
+                          comment: item.comment,
+                        });
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleDeleteComment(item);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                )}
+                {/* <div
                   style={{
                     display: item.name === userProfile.name ? "block" : "none",
                   }}
@@ -402,63 +537,10 @@ const DetailTickets = () => {
                   >
                     Delete
                   </Button>
-                </div>
-              </Fragment>
-            ))}
-
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              placeholder="Write a comment..."
-              InputProps={{ sx: { borderRadius: 10 } }}
-              value={formComment.comment}
-              onChange={(e) => {
-                setFormComment({ ...formComment, comment: e.target.value });
-              }}
-              sx={{
-                width: "100%",
-                maxWidth: "500px",
-              }}
-            />
-          </Card>
-
-          <br />
-          <Button
-            variant="contained"
-            onClick={() => {
-              if (!formComment._id) {
-                handleCreateComment(formComment);
-              } else {
-                handleEditComment(formComment);
-              }
-            }}
-            sx={{
-              backgroundColor: "white",
-              color: "black",
-              border: "1px solid rgba(0, 0, 0, 0.2)",
-              borderRadius: "7px",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "white",
-              },
-            }}
-          >
-            {!formComment._id ? "Comment" : "Edit"}
-          </Button>
-
-          {!formComment._id ? null : (
-            <Button
-              onClick={() => {
-                setFormComment({
-                  ...formComment,
-                  _id: null,
-                  comment: "",
-                });
-              }}
-            >
-              Discard Changes
-            </Button>
-          )}
+                </div> */}
+              </Card>
+            </Fragment>
+          ))}
 
           <br />
           <br />

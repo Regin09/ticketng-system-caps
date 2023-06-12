@@ -36,7 +36,7 @@ const CreateTickets = () => {
   const [userRole, setUserRole] = useState([]);
   const [clientCode, setClientCode] = useState([]);
   const [labels, setLabels] = useState("");
-  
+
   const handleTextFieldKeyPress = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -210,6 +210,7 @@ const CreateTickets = () => {
                 Assignee
               </Typography>
               <Select
+                required
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 size="small"
@@ -237,6 +238,7 @@ const CreateTickets = () => {
                 Priority
               </Typography>
               <Select
+                required
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={formCreate.priority}
@@ -353,26 +355,6 @@ const CreateTickets = () => {
                   }}
                 />
               </div>
-
-              {/* {formCreate.labels.length === 0
-                ? null
-                : formCreate.labels.map((item, index) => (
-                    <div>
-                      {item}
-                      <IconButton
-                        onClick={() => {
-                          const updatedLabels = [...formCreate.labels];
-                          updatedLabels.splice(index, 1); // Delete element at the specified index
-                          setFormCreate({
-                            ...formCreate,
-                            labels: updatedLabels,
-                          });
-                        }}
-                      >
-                        <CancelOutlinedIcon />
-                      </IconButton>
-                    </div>
-                  ))} */}
             </Grid>
           </Grid>
         </div>
@@ -383,6 +365,7 @@ const CreateTickets = () => {
               Client Code
             </Typography>
             <Select
+              required
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               size="small"
@@ -425,6 +408,7 @@ const CreateTickets = () => {
             </Typography>
 
             <Select
+              required
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={formCreate.status}

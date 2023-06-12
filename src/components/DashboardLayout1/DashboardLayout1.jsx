@@ -12,7 +12,7 @@ import {
   MenuItem,
   Toolbar,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -31,6 +31,7 @@ import { Link, Outlet } from "react-router-dom";
 import LogoWebsite from "../../assets/images/Logo Btech.png";
 import { Helmet } from "react-helmet";
 import SearchBar from "../SearchBar/searchbar";
+import axios from "axios";
 
 const drawerWidth = 220;
 const openedMixin = (theme) => ({
@@ -104,6 +105,30 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const DashboardLayout = () => {
+  const [userProfile, setUserProfile] = useState({});
+  React.useEffect(() => {
+    document.title = "User Profile";
+    getUserProfileHandler();
+  }, []);
+  const getUserProfileHandler = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Response GET");
+      console.log(res);
+      setUserProfile(res.data.data);
+      console.log(userProfile);
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -161,7 +186,8 @@ const DashboardLayout = () => {
           </div>
           <IconButton color="inherit">
             <Avatar
-              alt="Remy Sharp"
+              alt={userProfile.name ? userProfile.name.toUpperCase() : ""}
+              // alt={userProfile.name.toUpperCase()}
               onClick={handleClick}
               src="/static/images/avatar/1.jpg"
             />

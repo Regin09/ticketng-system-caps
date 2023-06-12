@@ -114,29 +114,7 @@ function RowItem(props) {
   function handleDeleteCancel() {
     setOpen(false);
   }
-
-  // const handleDeleteClick = () => {
-  //   setOpen(true);
-  //   // setData((prevData) => prevData.filter((item) => item.id !== id));
-
-  //   function handleDeleteConfirm() {
-  //     // Perform the deletion action here
-  //     setOpen(false);
-  //   }
-
-  //   function handleDeleteCancel() {
-  //     setOpen(false);
-  //   }
-
-  // const handleDelete = async () => {
-  //   try {
-  //     await axios.delete(`/api/tickets/${props.item.id}`);
-  //     setTickets(prevTickets => prevTickets.filter(ticket => ticket.id !== props.item.id));
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
+  
   const handleDeleteTickets = async (_id) => {
     try {
       const res = await axios({

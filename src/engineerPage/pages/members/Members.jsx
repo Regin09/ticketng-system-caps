@@ -1,10 +1,9 @@
 import React, { Fragment, useState } from "react";
 import "./members.css";
-import { Container } from "@mui/material";
+import { Container, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Button, styled, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -16,15 +15,8 @@ import MuiToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Box from "@mui/material/Box";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import PageviewIcon from "@mui/icons-material/Pageview";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
-import WarningIcon from "../../../assets/images/iconwarning.png";
+import { DialogTitle } from "@mui/material";
+import axios from "axios";
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background:
@@ -164,7 +156,7 @@ function RowItem(props) {
             >
               Delete
             </Button>
-            <Dialog open={open} onClose={handleDeleteCancel}>
+            {/* <Dialog open={open} onClose={handleDeleteCancel}>
               <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
                 <img
                   src={WarningIcon}
@@ -205,7 +197,7 @@ function RowItem(props) {
                   Delete
                 </Button>
               </DialogActions>
-            </Dialog>
+            </Dialog> */}
             <Link
               to={`userPerformance/`}
               style={{ textDecoration: "none", marginLeft: "8px" }}

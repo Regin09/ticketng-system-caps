@@ -82,7 +82,9 @@ function LoginEngineer() {
         },
       });
       console.log(res.data.data);
-      localStorage.setItem("access_token", res.data.token);
+      let token = res.data.token.split(" ");
+      // localStorage.setItem("access_token");
+      localStorage.setItem("access_token", token[1]);
       localStorage.setItem("role", res.data.data.role);
       navigate("/overview-engineer");
     } catch (error) {

@@ -16,9 +16,10 @@ import MuiToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Box from "@mui/material/Box";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import {
-  DialogTitle,
-} from "@mui/material";
+import { DialogTitle } from "@mui/material";
+
+import { Dialog, DialogContent, DialogActions } from "@mui/material";
+import WarningIcon from "../../../assets/images/iconwarning.png";
 import axios from "axios";
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
@@ -80,6 +81,11 @@ const headCells2 = [
     numeric: false,
     label: "Role",
   },
+  {
+    id: "actions",
+    numeric: false,
+    label: "Actions",
+  },
 ];
 
 const headCells3 = [
@@ -102,6 +108,11 @@ const headCells3 = [
     id: "role",
     numeric: false,
     label: "Role",
+  },
+  {
+    id: "actions",
+    numeric: false,
+    label: "Actions",
   },
 ];
 
@@ -152,14 +163,14 @@ function RowItem1(props) {
     setOpen(false);
   }
 
-  const handleDeleteMembers = async () => {
+  const handleDeleteMembers = async (role,username) => {
     try {
       const res = await axios({
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/delete/`,
+        url: `https://stg.capstone.adaptivenetworklab.org/api/member/delete?role=${role}&username=${username}`,
       });
       console.log(res.data.data);
       props.getAllMembers();
@@ -177,8 +188,63 @@ function RowItem1(props) {
         <TableCell align="center">{props.item.username}</TableCell>
         <TableCell align="center">{props.item.email}</TableCell>
         <TableCell align="center">{props.item.role}</TableCell>
-        <TableCell align="center">
+        <TableCell align="center" style={{ width: "198px" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              onClick={() =>
+                handleDeleteClick(props.item.role, props.item.username)
+              }
+            >
+              Delete
+            </Button>
+            <Dialog open={open} onClose={handleDeleteCancel}>
+              <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={WarningIcon}
+                  alt="Logo"
+                  style={{
+                    height: "75px",
+
+                    width: "80px",
+                  }}
+                />
+              </DialogContent>
+              <DialogTitleStyled>
+                Are you sure you want to delete this item?
+              </DialogTitleStyled>
+              <DialogActions>
+                <Button
+                  onClick={handleDeleteCancel}
+                  sx={{
+                    backgroundColor: "grey",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "grey",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleDeleteMembers(props.item.role, props.item.username);
+                    handleDeleteConfirm();
+                  }}
+                  sx={{
+                    backgroundColor: "#FF0000",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "red",
+                    },
+                  }}
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Link
               to={`userPerformance/${props.item.username}`}
               style={{ textDecoration: "none", marginLeft: "8px" }}
@@ -211,6 +277,23 @@ function RowItem2(props) {
   function handleDeleteCancel() {
     setOpen(false);
   }
+
+  const handleDeleteMembers = async (role, username) => {
+    try {
+      const res = await axios({
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/member/delete?role=${role}&username=${username}`,
+      });
+      console.log(res.data.data);
+      props.getAllMembers();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <React.Fragment>
       <TableRow hover>
@@ -219,6 +302,65 @@ function RowItem2(props) {
         <TableCell align="center">{props.item.email}</TableCell>
         <TableCell align="center">{props.item.clientCode}</TableCell>
         <TableCell align="center">{props.item.role}</TableCell>
+        <TableCell align="center" style={{ width: "100px" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              onClick={() =>
+                handleDeleteClick(props.item.role, props.item.username)
+              }
+            >
+              Delete
+            </Button>
+            <Dialog open={open} onClose={handleDeleteCancel}>
+              <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={WarningIcon}
+                  alt="Logo"
+                  style={{
+                    height: "75px",
+
+                    width: "80px",
+                  }}
+                />
+              </DialogContent>
+              <DialogTitleStyled>
+                Are you sure you want to delete this item?
+              </DialogTitleStyled>
+              <DialogActions>
+                <Button
+                  onClick={handleDeleteCancel}
+                  sx={{
+                    backgroundColor: "grey",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "grey",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleDeleteMembers(props.item.role, props.item.username);
+                    handleDeleteConfirm();
+                  }}
+                  sx={{
+                    backgroundColor: "#FF0000",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "red",
+                    },
+                  }}
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        </TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -241,6 +383,23 @@ function RowItem3(props) {
   function handleDeleteCancel() {
     setOpen(false);
   }
+
+  
+  const handleDeleteMembers = async (role, username) => {
+    try {
+      const res = await axios({
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/member/delete?role=${role}&username=${username}`,
+      });
+      console.log(res.data.data);
+      props.getAllMembers();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <React.Fragment>
       <TableRow hover>
@@ -248,13 +407,72 @@ function RowItem3(props) {
         <TableCell align="center">{props.item.username}</TableCell>
         <TableCell align="center">{props.item.email}</TableCell>
         <TableCell align="center">{props.item.role}</TableCell>
+        <TableCell align="center" style={{ width: "100px" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              onClick={() =>
+                handleDeleteClick(props.item.role, props.item.username)
+              }
+            >
+              Delete
+            </Button>
+            <Dialog open={open} onClose={handleDeleteCancel}>
+              <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={WarningIcon}
+                  alt="Logo"
+                  style={{
+                    height: "75px",
+
+                    width: "80px",
+                  }}
+                />
+              </DialogContent>
+              <DialogTitleStyled>
+                Are you sure you want to delete this item?
+              </DialogTitleStyled>
+              <DialogActions>
+                <Button
+                  onClick={handleDeleteCancel}
+                  sx={{
+                    backgroundColor: "grey",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "grey",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleDeleteMembers(props.item.role, props.item.username);
+                    handleDeleteConfirm();
+                  }}
+                  sx={{
+                    backgroundColor: "#FF0000",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "red",
+                    },
+                  }}
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        </TableCell>
       </TableRow>
     </React.Fragment>
   );
 }
 const Members = () => {
   const theme = useTheme();
-const [statusTicket, setStatusTicket] = React.useState("ALL");
+  const [statusTicket, setStatusTicket] = React.useState("ALL");
   React.useEffect(() => {
     document.title = "Members Page";
     handleGetEngineer();
@@ -486,23 +704,22 @@ const [statusTicket, setStatusTicket] = React.useState("ALL");
             </Table>
           </TableContainer>
           {/* Table Pagination */}
-            
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 50, 100]}
-              component="div"
-              count={engineerData.length === 0 ? null : engineerData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-              }}
-            />
-          
+
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component="div"
+            count={engineerData.length === 0 ? null : engineerData.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              [theme.breakpoints.up("sm")]: { justifyContent: "right" },
+            }}
+          />
         </>
       )}
       {roleMember !== "Admin" ? null : (

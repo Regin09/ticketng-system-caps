@@ -99,54 +99,7 @@ const Overview = () => {
       console.log(error);
     }
   };
-  // axios.get(
-  //   "https://stg.capstone.adaptivenetworklab.org/api/analytics/member/admin",
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-  //     },
-  //   }
-  // );
-
-  //         .catch(function (error) {
-  //           if (error.response) {
-  //             // The request was made and the server responded with a status code
-  //             // that falls out of the range of 2xx
-  //             console.log(error.response.data);
-  //             console.log(error.response.status);
-  //             console.log(error.response.headers);
-  //           } else if (error.request) {
-  //             // The request was made but no response was received
-  //             // `error.request` is an instance of XMLHttpRequest in the browser
-  //             // and an instance of http.ClientRequest in node.js
-  //             console.log(error.request);
-  //           } else {
-  //             // Something happened in setting up the request that triggered an Error
-  //             console.log("Error", error.message);
-  //           }
-  //         });
-  // }
-  //   try {
-  //     const res = await axios({
-  //       method: "GET",
-  //       url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile",
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-  //       },
-  //     });
-
-  //     console.log('Response GET');
-  //     console.log(res);
-  //     setTotalAdmins(res.data);
-  //     console.log(totalAdmins);
-  //   } catch (error) {
-  //     if (error.response.status === 404) {
-  //       // Handle 404 error
-  //     }
-  //     console.log(error);
-  //   }
-  // };
-
+ 
   return (
     <Container>
       <Grid container spacing={5}>

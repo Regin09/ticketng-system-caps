@@ -29,6 +29,7 @@ const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
 const Clients = () => {
   const theme = useTheme();
   const [clientSummary, setClientSummary] = useState([]);
+   const [currentPage, setCurrentPage] = useState(0);
 
   React.useEffect(() => {
     document.title = "Client Analytics";

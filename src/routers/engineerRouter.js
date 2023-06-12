@@ -25,6 +25,7 @@ import EditClientEngineer from "../engineerPage/pages/clients/EditClient/EditCli
 import DetailFeedbackEngineer from "../engineerPage/pages/Feedback/DetailFeedback/DetailFeedback";
 import EditTicketsEngineer from "../engineerPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
 import DetailClientEngineer from "../engineerPage/pages/clients/DetailClient/DetailClient";
+import DetailEngineerAnalyticsEngineer from "../engineerPage/pages/members/DetailEngineerPerformance/DetailEngineerAnalytics/DetailEngineerAnalytics";
 import Choose from "../choose/Choose";
 
 const ProtectedEngineeringRoute = () => {
@@ -66,17 +67,21 @@ function EngineerRouter() {
             element={<CreateTicketsEngineer />}
           />
           <Route
-            path="tickets-Engineer/detailTickets"
+            path="tickets-Engineer/detailTickets/:id"
             element={<DetailTicketsEngineer />}
           />
           <Route
-            path="tickets-Engineer/detailTickets/editTickets"
+            path="tickets-Engineer/detailTickets/editTickets/:id"
             element={<EditTicketsEngineer />}
           />
           <Route path="members-Engineer" element={<MembersEngineer />} />
           <Route
-            path="members-Engineer/userPerformance"
+            path="members-Engineer/userPerformance:username"
             element={<DetailEngineerPerformanceEngineer />}
+          />
+          <Route
+            path="members-Engineer/userPerformance/:username/engineerAnalytics"
+            element={<DetailEngineerAnalyticsEngineer />}
           />
           <Route path="clients-engineer" element={<ClientsEngineer />} />
           <Route
@@ -88,11 +93,11 @@ function EngineerRouter() {
             element={<ClientAnalysisEngineer />}
           />
           <Route
-            path="clients-engineer/editClient"
+            path="clients-engineer/editClient/:code"
             element={<EditClientEngineer />}
           />
           <Route
-            path="clients-engineer/detailClient"
+            path="clients-engineer/detailClient/:code"
             element={<DetailClientEngineer />}
           />
           <Route path="feedbacks-engineer" element={<FeedbackEngineer />} />
