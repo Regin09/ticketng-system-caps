@@ -36,45 +36,27 @@ const DetailEngineerAnalytics = () => {
   };
   if (engineerAnalytics.length === 0) {
     return (
-      <div
-        style={{
+      <Card
+        sx={{
+          width: "100%",
+          height: "200px",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          borderRadius: "10px",
+          padding: "16px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
         }}
       >
-        <div
-          style={{
-            position: "relative",
-            width: "50vh",
-            height: "50vh",
+        <Typography
+          sx={{
+            fontSize: "35px",
+            fontWeight: 1000,
           }}
         >
-          <CircularProgress
-            style={{
-              position: "absolute",
-              top: "26%",
-              left: "45%",
-              transform: "translate(-50%, -50%)",
-              zIndex: 1,
-            }}
-            color="success"
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-
-              animation: "rotate 2s linear infinite",
-              zIndex: 0,
-            }}
-          ></div>
-        </div>
-      </div>
+          You must complete at least one ticket first
+        </Typography>
+      </Card>
     );
   }
   return (

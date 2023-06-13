@@ -1,6 +1,13 @@
 import { Fragment } from "react";
-import { BrowserRouter, Route, Routes,Outlet, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import ChooseUser from "../choose/Choose";
+import Choose from "../choose/Choose";
 import OverviewUser from "../userPage/pages/overview/Overview";
 import TicketsUser from "../userPage/pages/tickets/Tickets";
 import LoginUser from "../userPage/pages/login/Login";
@@ -11,22 +18,32 @@ import CreateTicketsUser from "../userPage/pages/tickets/CreateTickets/CreateTic
 import DetailTicketsUser from "../userPage/pages/tickets/DetailTickets/DetailTickets";
 import EditTicketsUser from "../userPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
 
- const ProtectedUserRoute = () => {
-   if (
-     localStorage.getItem("access_token") &&
-     localStorage.getItem("role") === "user"
-   ) {
-     return <Outlet />;
-   }
-   return <Navigate to="/" replace />;
- };
+const ProtectedUserRoute = () => {
+  if (
+    !localStorage.getItem("access_token") &&
+    !localStorage.getItem("role") === "user"
+  ) {
+    return <Navigate to="/" replace />;
+  }
+  return <Outlet />;
+};
+
+const HandleLoginSuccessfully = () => {
+  if (localStorage.getItem("access_token")) {
+    return <Navigate to={-1} replace />;
+  }
+  return <Outlet />;
+};
 
 function UserRouter() {
   return (
     <Routes>
       {/* Router user */}
       {/* <Route path="/" element={<ChooseUser />} /> */}
-      <Route path="user-login" element={<LoginUser />} />
+      <Route element={<HandleLoginSuccessfully />}>
+        <Route path="/" element={<Choose />} />
+        <Route path="user-login" element={<LoginUser />} />
+      </Route>
       <Route element={<ProtectedUserRoute />}>
         <Route element={<DashboardLayoutUser />}>
           <Route path="overview-user" element={<OverviewUser />} />
@@ -36,18 +53,16 @@ function UserRouter() {
             path="tickets-user/createTickets"
             element={<CreateTicketsUser />}
           />
-          <Route path="tickets-user/:id" element={<DetailTicketsUser />} />
+          <Route path="tickets-user/detailTickets/:id" element={<DetailTicketsUser />} />
           <Route
-            path="tickets-user/detailTickets/editTickets"
+            path="tickets-user/detailTickets/editTickets/:id"
             element={<EditTicketsUser />}
           />
           <Route path="feedbacks-user" element={<FeedbackUser />} />
-          
         </Route>
       </Route>
     </Routes>
   );
 }
-
 
 export default UserRouter;

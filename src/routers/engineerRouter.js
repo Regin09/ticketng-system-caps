@@ -1,10 +1,8 @@
 import { Fragment } from "react";
 import {
-  BrowserRouter,
   Route,
   Routes,
   Outlet,
-  useNavigate,
   Navigate,
 } from "react-router-dom";
 // import ChooseEngineer from "../choose/Choose";
@@ -30,12 +28,13 @@ import Choose from "../choose/Choose";
 
 const ProtectedEngineeringRoute = () => {
   if (
-    localStorage.getItem("access_token") &&
-    localStorage.getItem("role") === "engineer"
+    !localStorage.getItem("access_token") &&
+    !localStorage.getItem("role") === "engineer"
   ) {
-    return <Outlet />;
+    return <Navigate to="/" replace />;
   }
-  return <Navigate to="/" replace />;
+  return <Outlet />;
+    // return <DashboardLayout />;
 };
 
 const HandleLoginSuccessfully = () => {
@@ -76,7 +75,7 @@ function EngineerRouter() {
           />
           <Route path="members-Engineer" element={<MembersEngineer />} />
           <Route
-            path="members-Engineer/userPerformance:username"
+            path="members-Engineer/userPerformance/:username"
             element={<DetailEngineerPerformanceEngineer />}
           />
           <Route
@@ -100,7 +99,10 @@ function EngineerRouter() {
             path="clients-engineer/detailClient/:code"
             element={<DetailClientEngineer />}
           />
-          <Route path="feedbacks-engineer" element={<FeedbackEngineer />} />
+          <Route
+            path="feedbacks-engineer"
+            element={<FeedbackEngineer />}
+          />
           <Route
             path="feedbacks-engineer/detailFeedback"
             element={<DetailFeedbackEngineer />}

@@ -32,7 +32,7 @@ const Clients = () => {
    const [currentPage, setCurrentPage] = useState(0);
 
   React.useEffect(() => {
-    document.title = "Client Analytics";
+    document.title = "Client Page";
     getClientSummaryHandler();
   }, []);
 
@@ -86,9 +86,6 @@ const Clients = () => {
     }
   };
 
-  React.useEffect(() => {
-    document.title = "Client Page";
-  }, []);
 
   const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {

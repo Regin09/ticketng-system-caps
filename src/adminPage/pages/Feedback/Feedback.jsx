@@ -231,6 +231,22 @@ const Feedback = () => {
     getAllFeedbacks();
   }, []);
 
+  // const getEngineerFeedbacks = async (receiver) => {
+  //   try {
+  //     const res = await axios({
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //       },
+  //       url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback?receiver=${receiver}&username`,
+  //     });
+  //     setFeedbackData(res.data.data);
+  //     console.log(res.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const getAllFeedbacks = async () => {
     try {
       const res = await axios({

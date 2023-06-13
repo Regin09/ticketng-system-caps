@@ -178,9 +178,7 @@ function RowItem1(props) {
       console.log(error);
     }
   };
-  // const handleDeleteClick = (id) => {
-  //   setData((prevData) => prevData.filter((item) => item.id !== id));
-  // };
+ 
   return (
     <React.Fragment>
       <TableRow hover>

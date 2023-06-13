@@ -1,22 +1,9 @@
 import * as React from 'react';
 import { CircularProgress, Container } from '@mui/material'
 import Grid from '@mui/material/Grid';
-import { Link } from "react-router-dom";
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import { Fragment } from 'react';
-import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
-import { deepOrange, green } from '@mui/material/colors';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import Avatar from '@mui/material/Avatar';
 import "./UserProfile.css"
 import axios from 'axios';
 
@@ -139,74 +126,6 @@ const UserProfile = () => {
           </Grid>
         </Grid>
       </Card>
-      {/* USER PROFILE 1
-          <Card sx={{ 
-            minWidth: "100%",
-            border:"1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "10px", 
-            padding:"16px",
-            // height:"100%",
-            height:"500px",
-            }}>
-
-              <Grid container spacing={10}>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Fullname
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                </Grid>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Username
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                </Grid>
-              </Grid>
-              <br/><br/><br/>
-              <Grid container spacing={10}>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Email
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                </Grid>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Role
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                  
-                </Grid>
-              </Grid>
-              <div style={{position:'fixed', bottom:'0', right:'0'}}> 
-              <ArrowBackOutlinedIcon sx={{objectPosition: '25% 75%'}}/>
-              </div>
-          </Card>  */}
     </Fragment>
   );
 }

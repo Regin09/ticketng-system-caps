@@ -101,7 +101,7 @@ function Choose() {
                 borderRadius: '40px'
               }} 
               style={{background:"linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)"}}>
-              Login as Client
+              Login as User
             </Button>
             </Link>
           </form>

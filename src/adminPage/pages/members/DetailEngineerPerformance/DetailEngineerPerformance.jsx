@@ -289,23 +289,7 @@ const DetailEngineerPerformance = () => {
         </Table>
       </TableContainer>
       {/* Table Pagination */}
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          [theme.breakpoints.down("sm")]: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-        }}
-      >
-        <span>
-          <Button sx={{ width: "max-content" }}>Pagination 1 (1-100)</Button>
-        </span>
+     
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
@@ -321,7 +305,7 @@ const DetailEngineerPerformance = () => {
             [theme.breakpoints.up("sm")]: { justifyContent: "right" },
           }}
         />
-      </Box>
+     
     </Container>
   );
 };

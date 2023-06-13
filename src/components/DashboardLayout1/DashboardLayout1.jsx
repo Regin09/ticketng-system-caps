@@ -30,7 +30,6 @@ import { Logout } from "@mui/icons-material";
 import { Link, Outlet } from "react-router-dom";
 import LogoWebsite from "../../assets/images/Logo Btech.png";
 import { Helmet } from "react-helmet";
-import SearchBar from "../SearchBar/searchbar";
 import axios from "axios";
 
 const drawerWidth = 220;
@@ -180,9 +179,6 @@ const DashboardLayout = () => {
               <MenuIcon />
             </IconButton>
 
-            {/* <div className="searh-bar">
-              <SearchBar />
-            </div> */}
           </div>
           <IconButton color="inherit">
             <Avatar

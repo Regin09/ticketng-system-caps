@@ -302,7 +302,28 @@ const DetailTickets = () => {
           Edit Ticket
         </Button>
       </Link>
-      <Link
+      <Button
+        variant="contained"
+        size="small"
+        onClick={() => {
+          updateDoneStatusTickets(detailTicket);
+          navigate("/tickets-admin");
+        }}
+        sx={{
+          color: "black",
+          background: "#FFFFFF",
+          height: "36px",
+          cursor: "pointer",
+          marginLeft: "16px",
+          "&:hover": {
+            backgroundColor: "white",
+          },
+        }}
+        disabled={detailTicket.status === "Done"}
+      >
+        Done Ticket
+      </Button>
+      {/* <Link
         to="/tickets-admin"
         style={{ textDecoration: "none", color: "black" }}
       >
@@ -327,7 +348,7 @@ const DetailTickets = () => {
             Done Ticket
           </Button>
         )}
-      </Link>
+      </Link> */}
       <br />
 
       <Grid container spacing={2} style={{ paddingTop: "16px" }}>
@@ -468,7 +489,7 @@ const DetailTickets = () => {
                   variant="body1"
                   sx={{ fontSize: "20px", fontWeight: "700" }}
                 >
-                  {detailTicket.length === 0 ? "Loading..." : item.name}
+                  {detailTicket.length === 0 ? "Loading..." : detailTicket.reporter}
 
                   {/* {detailTicket.length === 0
                     ? "Loading..."

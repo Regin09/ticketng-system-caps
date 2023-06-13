@@ -1,64 +1,84 @@
-import React, { Fragment } from 'react'
-import { Container } from '@mui/material'
-import Grid from '@mui/material/Grid';
-import {Button,styled, useTheme }  from '@mui/material'
-import { Link } from "react-router-dom";
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import MuiToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Box from '@mui/material/Box';
-import TableSortLabel from '@mui/material/TableSortLabel';
+import React, { Fragment, useState } from "react";
+import { Card, Container, Grid, Typography } from "@mui/material";
+import { Button, styled, useTheme } from "@mui/material";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import Box from "@mui/material/Box";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import axios from "axios";
 
 const headCells = [
   {
-    id: 'id',
+    id: "_id",
     numeric: false,
-    label: 'ID',
+    label: "ID",
   },
   {
-    id: 'status',
+    id: "status",
     numeric: false,
-    label: 'Status',
+    label: "Status",
   },
   {
-    id: 'startedDate',
+    id: "startedAt",
     numeric: false,
-    label: 'Started',
+    label: "Started",
   },
   {
-    id: 'finishedDate',
+    id: "finishedAt",
     numeric: true,
-    label: 'Finished',
+    label: "Finished",
   },
   {
-    id: 'score',
+    id: "score",
     numeric: false,
-    label: 'Score',
+    label: "Score",
   },
   {
-    id: 'processingTime',
+    id: "processingTime",
     numeric: false,
-    label: 'Created Date',
+    label: "Processing Time (In Minute)",
   },
 ];
 
-const dataTable = [
-  {
-    id: '1',
-    status: 'Done',
-    startedDate: '07:38 - 21/06/2022',
-    finishedDate: '19:38 - 25/06/2022',
-    score: '5',
-    processingTime: '70 Minutes',
-  },
-];
+function formatDate(dateTimeString) {
+  if (dateTimeString === null) {
+    return "Null";
+  }
+  const dateTime = new Date(dateTimeString);
+
+  const date = dateTime.getDate();
+  const month = dateTime.getMonth() + 1;
+  const year = dateTime.getFullYear();
+
+  const hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes();
+  const seconds = dateTime.getSeconds();
+
+  const formattedDate = `${date}/${month}/${year}`;
+  const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+  return ` ${formattedTime} - ${formattedDate} `;
+}
+
+function formatCreatedAt(dateTimeString) {
+  const dateTime = new Date(dateTimeString);
+
+  const date = dateTime.getDate();
+  const month = dateTime.getMonth() + 1;
+  const year = dateTime.getFullYear();
+
+  const formattedDate = `${date < 10 ? "0" + date : date}-${
+    month < 10 ? "0" + month : month
+  }-${year}`;
+
+  return formattedDate;
+}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -72,7 +92,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -91,13 +111,16 @@ function stableSort(array, comparator) {
 
 function RowItem(props) {
   const [openCell, setOpenCell] = React.useState(false);
+  const [data, setData] = React.useState(props.detailEngineer);
   return (
     <React.Fragment>
       <TableRow hover>
-        <TableCell align="center">{props.item.id}</TableCell>
+        <TableCell align="center">{props.item._id}</TableCell>
         <TableCell align="center">{props.item.status}</TableCell>
-        <TableCell align="center">{props.item.startedDate}</TableCell>
-        <TableCell align="center">{props.item.finishedDate}</TableCell>
+        <TableCell align="center">{formatDate(props.item.startedAt)}</TableCell>
+        <TableCell align="center">
+          {formatDate(props.item.finishedAt)}
+        </TableCell>
         <TableCell align="center">{props.item.score}</TableCell>
         <TableCell align="center">{props.item.processingTime}</TableCell>
       </TableRow>
@@ -105,31 +128,68 @@ function RowItem(props) {
   );
 }
 
-
 const DetailEngineerPerformance = () => {
-  const theme=useTheme()
-  const [roleMember, setRoleMember] = React.useState('ALL');
+  let { username } = useParams();
+  const [performanceData, setPerformanceData] = useState([]);
+  const [detailEngineer, setDetailEngineer] = useState([]);
+  const [nameUsers, setNameUsers] = useState([]);
+  const theme = useTheme();
+  const [roleMember, setRoleMember] = React.useState("ALL");
+  const [userProfile, setUserProfile] = React.useState([]);
 
   React.useEffect(() => {
-    document.title = 'Detail Engineer Performance';
+    document.title = "Detail Engineer Performance";
+    getUserProfileHandler();
+    getEngineerPerformance(username);
   }, []);
 
-  const ToggleButton = styled(MuiToggleButton)({
-    '&.Mui-selected, &.Mui-selected:hover': {
-      color: '#000000 !important',
-      backgroundColor: '#F5B6FF',
-    },
-  });
+  const getEngineerPerformance = async (username) => {
+    try {
+      const res = await axios({
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/performance/engineer/${username}`,
+      });
+      setDetailEngineer(res.data.data);
+      setNameUsers(res.data);
+      console.log(res.data.data);
+      console.log(detailEngineer);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+   const getUserProfileHandler = async () => {
+     try {
+       const res = await axios({
+         method: "GET",
+         url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile/",
+         headers: {
+           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+         },
+       });
+       console.log("Response GET");
+       console.log(res);
+       setUserProfile(res.data.data);
+       // console.log(userProfile);
+     } catch (error) {
+       if (error.response.status === 404) {
+       }
+       console.log(error);
+     }
+   };
 
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('name');
+
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("name");
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -141,89 +201,134 @@ const DetailEngineerPerformance = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const renderTableBody = () => {
+    if (detailEngineer.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={6} align="center">
+            <Card
+              sx={{
+                width: "100%",
+                height: "200px",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+                padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: 1000,
+                }}
+              >
+                You don't have any ticket done.
+              </Typography>
+            </Card>
+          </TableCell>
+        </TableRow>
+      );
+    }
+
+    return stableSort(
+      detailEngineer.filter((e) => {
+        return roleMember === "ALL" ? true : e.role === roleMember;
+      }),
+      getComparator(order, orderBy)
+    )
+      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      .map((rowItem, index) => {
+        return (
+          <RowItem
+            key={rowItem.code}
+            item={rowItem}
+            detailEngineer={detailEngineer}
+            getEngineerPerformance={getEngineerPerformance}
+          />
+        );
+      });
+  };
+
   return (
     <Container>
-      <h1>Performance of "Name of Users"</h1>
-      <br/>
-      <TableContainer sx={{ maxHeight: rowsPerPage !== 10 ? 800 : 'none' }}>
-             <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-              {/* Table Header */}
-              <TableHead>
-                <TableRow>
-                {/* {rowsPerPage.filter((e)=>{
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h1>Performance of {userProfile.name} </h1>
+        <Link
+          to="engineerAnalytics"
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              color: "black",
+              background: "#FFFFFF",
+              height: "36px",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          >
+            <Typography>{userProfile.name} Analytics</Typography>
+          </Button>
+        </Link>
+      </div>
+      <br />
+      <TableContainer sx={{ maxHeight: rowsPerPage !== 10 ? 800 : "none" }}>
+        <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+          {/* Table Header */}
+          <TableHead>
+            <TableRow>
+              {/* {rowsPerPage.filter((e)=>{
                 return roleMember==='ALL'?true: e.role===roleMember 
                 }
                 )  */}
-                  {headCells.map((headCell) => (
-                    <TableCell
-                      key={headCell.id}
-                      align={headCell.numeric ? 'center' : 'center'}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        <TableSortLabel
-                          active={orderBy === headCell.id}
-                          direction={orderBy === headCell.id ? order : 'asc'}
-                          onClick={(event) => {
-                            handleRequestSort(event, headCell.id);
-                          }}
-                          style={{ fontWeight: 'bold' }}
-                        >
-                          {headCell.label}
-                        </TableSortLabel>
-                    </TableCell>
-                  )  )}
-                </TableRow>
-              </TableHead>   
-              {/* Table Content */}
-              <TableBody>   
-                {stableSort(dataTable.filter((e)=>{
-              // return true
-              return roleMember==='ALL'?true: e.role===roleMember
-            // if(e.status===statusTicket)
-            }), getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((rowItem, index) => {
-                    return <RowItem key={rowItem.code} item={rowItem} />;
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              {headCells.map((headCell) => (
+                <TableCell
+                  key={headCell._id}
+                  align={headCell.numeric ? "center" : "center"}
+                  sortDirection={orderBy === headCell._id ? order : false}
+                >
+                  <TableSortLabel
+                    active={orderBy === headCell._id}
+                    direction={orderBy === headCell._id ? order : "asc"}
+                    onClick={(event) => {
+                      handleRequestSort(event, headCell._id);
+                    }}
+                    style={{ fontWeight: "bold" }}
+                  >
+                    {headCell.label}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          {/* Table Content */}
+          <TableBody>{renderTableBody()}</TableBody>
+        </Table>
+      </TableContainer>
       {/* Table Pagination */}
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          [theme.breakpoints.down('sm')]: {
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-        }}
-      >
-        <span>
-          <Button sx={{ width: 'max-content' }}>Pagination 1 (1-100)</Button>
-        </span>
+      
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
-          count={dataTable.length}
+          count={detailEngineer.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            width: '100%',
-            [theme.breakpoints.up('sm')]: { justifyContent: 'right' },
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            [theme.breakpoints.up("sm")]: { justifyContent: "right" },
           }}
         />
-      </Box>
+     
     </Container>
-  )
-}
+  );
+};
 
-export default DetailEngineerPerformance
+export default DetailEngineerPerformance;

@@ -30,7 +30,6 @@ import { Logout } from '@mui/icons-material';
 import { Link, Outlet } from 'react-router-dom';
 import LogoWebsite from '../../assets/images/Logo Btech.png'
 import {Helmet} from 'react-helmet';
-import SearchBar from '../SearchBar/searchbar';
 import axios
  from 'axios';
 import { useState } from 'react';
@@ -77,7 +76,7 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  background: "transparent !important",
+  background: "#CDE990!important",
   boxShadow: "none",
   ...(open && {
     marginLeft: drawerWidth,
@@ -87,7 +86,6 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
-  
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -184,10 +182,6 @@ const DashboardLayout = () => {
               >
                 <MenuIcon />
               </IconButton>
-
-              <div className="searh-bar">
-                <SearchBar />
-              </div>
             </div>
             <IconButton color="inherit">
               <Avatar
@@ -195,7 +189,6 @@ const DashboardLayout = () => {
                 onClick={handleClick}
                 src="/static/images/avatar/1.jpg"
               >
-                K
               </Avatar>
             </IconButton>
 
@@ -244,15 +237,14 @@ const DashboardLayout = () => {
               </Link>
               <Divider />
               <Link to={`/`} style={{ textDecoration: "none", color: "black" }}>
-                <MenuItem onClick={handleClose}>
+                <MenuItem
+                  onClick={() => {
+                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("role");
+                  }}
+                >
                   <ListItemIcon>
-                    <Logout
-                      fontSize="small"
-                      onClick={() => {
-                        localStorage.removeItem("access_token");
-                        localStorage.removeItem("role");
-                      }}
-                    />
+                    <Logout fontSize="small" />
                   </ListItemIcon>
                   Logout
                 </MenuItem>

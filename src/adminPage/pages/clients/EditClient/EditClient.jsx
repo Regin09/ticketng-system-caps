@@ -76,7 +76,7 @@ const EditClient = () => {
         // },
       });
       console.log(res.data.data);
-      navigate("/clients-admin");
+      navigate("/clients-Engineer");
     } catch (error) {
       console.log(error);
     }finally {

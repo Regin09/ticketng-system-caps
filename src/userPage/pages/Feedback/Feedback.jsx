@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { Container, Select } from '@mui/material'
-import Grid from '@mui/material/Grid';
+import * as React from "react";
+import { Container, Select } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { Link, useNavigate } from "react-router-dom";
-import Stack from '@mui/material/Stack';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import Stack from "@mui/material/Stack";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 import { Button, styled, useTheme } from "@mui/material";
-import { Fragment } from 'react';
+import { Fragment } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -19,13 +19,12 @@ import {
   DialogActions,
 } from "@mui/material";
 import WarningIcon from "../../../assets/images/iconwarning.png";
-import axios from 'axios';
+import axios from "axios";
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
-  background: 'linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)'
+  background:
+    "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
 }));
-
-
 
 const Feedback = () => {
   const navigate = useNavigate();
@@ -35,46 +34,50 @@ const Feedback = () => {
     message: "",
   });
 
-//  React.useEffect(() => {
-//    document.title = "Feedback Page";
-//    getAllEngineer();
-//  }, []);
+   React.useEffect(() => {
+     document.title = "Feedback Page";
+     getAllEngineerHandler();
+   }, []);
 
-  const [engineerData, setEngineerData] = React.useState()
+  const [engineerData, setEngineerData] = React.useState([]);
+  
 
-   const handleCreateFeedbacks = async (data) => {
+  const handleCreateFeedbacks = async (data) => {
+    try {
+      const res = await axios({
+        method: "POST",
+        headers: {
+          Authorization: `${localStorage.getItem("access_token")}`,
+        },
+        url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback`,
+        data: data,
+      });
+      console.log(res.data.data);
+      navigate("/feedbacks-user");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+   const getAllEngineerHandler = async () => {
      try {
        const res = await axios({
-         method: "POST",
+         method: "GET",
+         url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-engineer",
          headers: {
-           Authorization: `${localStorage.getItem("access_token")}`,
+           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
          },
-         url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback`,
-         data: data,
        });
-       console.log(res.data.data);
-       navigate("/feedbacks-user");
+       console.log("Response GET");
+       console.log(res);
+       setEngineerData(res.data.data);
+       console.log(engineerData);
      } catch (error) {
+       if (error.response.status === 404) {
+       }
        console.log(error);
      }
    };
-
-    // const getAllEngineer = async () => {
-    //   try {
-    //     const res = await axios({
-    //       method: "GET",
-    //       headers: {
-    //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    //       },
-    //       url: `https://stg.capstone.adaptivenetworklab.org/api/member/all`,
-    //     });
-    //     setEngineerData(res.data.data);
-    //     console.log(res.data);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-
   return (
     <Fragment>
       <h1>Give Feedback to The Engineer</h1>
@@ -92,7 +95,7 @@ const Feedback = () => {
             <Typography variant="body2" sx={{ fontSize: "17px" }}>
               Engineer Username
             </Typography>
-            <TextField
+            {/* <TextField
               id="outlined-basic"
               variant="outlined"
               size="small"
@@ -108,24 +111,24 @@ const Feedback = () => {
                 background: "#FFFFFF",
                 borderRadius: "7px",
               }}
-            />
-            {/* <Select
+            /> */}
+            <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               size="small"
               value={formCreate.assignee}
               onChange={(e) => {
-                setFormCreate({ ...formCreate, assignee: e.target.value });
+                setFormCreate({ ...formCreate, receiverUsername: e.target.value });
               }}
               sx={{ width: "100%" }}
-            > */}
+            >
             {/* Nambahin method get */}
-            {/* {engineerData.map((engineer) => (
+            {engineerData.map((engineer) => (
                 <MenuItem key={engineer._id} value={engineer.name}>
                   {engineer.name}
                 </MenuItem>
               ))}
-            </Select> */}
+            </Select>
           </Grid>
           <br />
           <br />
@@ -186,6 +189,6 @@ const Feedback = () => {
       </Card>
     </Fragment>
   );
-}
+};
 
-export default Feedback
+export default Feedback;

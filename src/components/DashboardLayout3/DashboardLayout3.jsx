@@ -30,7 +30,7 @@ import { Logout } from "@mui/icons-material";
 import { Link, Outlet } from "react-router-dom";
 import LogoWebsite from "../../assets/images/Logo Btech.png";
 import { Helmet } from "react-helmet";
-import SearchBar from "../SearchBar/searchbar";
+
 import axios from "axios";
 
 const drawerWidth = 230;
@@ -179,8 +179,6 @@ const DashboardLayout = () => {
             >
               <MenuIcon />
             </IconButton>
-
-            
           </div>
           <IconButton color="inherit">
             <Avatar
@@ -238,15 +236,14 @@ const DashboardLayout = () => {
             </Link>
             <Divider />
             <Link to={`/`} style={{ textDecoration: "none", color: "black" }}>
-              <MenuItem onClick={handleClose}>
+              <MenuItem
+                onClick={() => {
+                  localStorage.removeItem("access_token");
+                  localStorage.removeItem("role");
+                }}
+              >
                 <ListItemIcon>
-                  <Logout
-                    fontSize="small"
-                    onClick={() => {
-                      localStorage.removeItem("access_token");
-                      localStorage.removeItem("role");
-                    }}
-                  />
+                  <Logout fontSize="small" />
                 </ListItemIcon>
                 Logout
               </MenuItem>

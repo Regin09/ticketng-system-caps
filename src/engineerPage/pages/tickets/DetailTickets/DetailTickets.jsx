@@ -72,6 +72,7 @@ const useStyles = makeStyles({
 });
 
 const DetailTickets = () => {
+  
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -301,10 +302,10 @@ const DetailTickets = () => {
           Edit Ticket
         </Button>
       </Link>
-      <Link
+      {/* <Link
         to="/tickets-Engineer"
         style={{ textDecoration: "none", color: "black" }}
-      >
+      > */}
         {detailTicket.status === "Done" ? null : (
           <Button
             variant="contained"
@@ -326,7 +327,7 @@ const DetailTickets = () => {
             Done Ticket
           </Button>
         )}
-      </Link>
+      {/* </Link> */}
       <br />
 
       <Grid container spacing={2} style={{ paddingTop: "16px" }}>
