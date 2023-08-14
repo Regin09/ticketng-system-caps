@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import LogoLogin from "../../../assets/images/BtechForLogin.png";
 import { Grid, Typography } from "@mui/material";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Dialog,
@@ -15,6 +15,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import jwt_decode from "jwt-decode";
 
 const useStyles = makeStyles({
   root: {
@@ -27,24 +28,25 @@ const useStyles = makeStyles({
     padding: "20px",
   },
   card: {
-    maxWidth: 200,
+    maxWidth: 400,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "20px",
     background: "#FFFFFF",
     borderRadius: "30px !important",
+    height: "auto",
   },
   form: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
+    height: "auto",
   },
   logo: {
-    height: "250px",
-    marginBottom: "20px",
-    paddingRight: "10px",
+    height: "300px",
+    paddingLeft: "20px",
     maxWidth: "100%",
   },
 });
@@ -75,7 +77,7 @@ function LoginEngineer() {
     try {
       const res = await axios({
         method: "POST",
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/engineer-login`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/engineer-login`,
         data: {
           username: data.name,
           password: data.password,
@@ -86,9 +88,19 @@ function LoginEngineer() {
       // localStorage.setItem("access_token");
       localStorage.setItem("access_token", token[1]);
       localStorage.setItem("role", res.data.data.role);
+      const decodedToken = jwt_decode(token[1]);
+      console.log(decodedToken);
+      localStorage.setItem("decoded_token", JSON.stringify(decodedToken));
+      localStorage.setItem("username", decodedToken.username);
       navigate("/overview-engineer");
     } catch (error) {
       handleDialogOpen();
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      submitHandlerEngineer(formLoginEngineer);
     }
   };
 
@@ -142,6 +154,7 @@ function LoginEngineer() {
               margin="normal"
               sx={{ display: "flex" }}
               fullWidth
+              onKeyPress={handleKeyPress}
             />
             <TextField
               type="password"
@@ -155,20 +168,33 @@ function LoginEngineer() {
               margin="normal"
               sx={{ display: "flex" }}
               fullWidth
+              onKeyPress={handleKeyPress}
             />
-
             <Button
               type="submit"
               variant="contained"
               fullWidth
               onClick={() => submitHandlerEngineer(formLoginEngineer)}
               style={{
+                marginBottom: "15px",
                 background:
                   "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
               }}
             >
               Login
             </Button>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => window.history.back()}
+              style={{
+                background:
+                  "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
+              }}
+            >
+              Back
+            </Button>
+
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
               <DialogTitle>Invalid Username or Password</DialogTitle>
               <DialogContent>
@@ -185,41 +211,6 @@ function LoginEngineer() {
           </Grid>
         </Grid>
       </Card>
-      {/* <Card className={classes.card}>
-      <img src={LogoLogin} alt="Logo" className={classes.logo} />
-        <CardContent className={classes.form}>
-        <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-        <Typography variant="body1" sx={{fontSize:"30px",fontWeight:"700"}}>
-          Welcome to Login Page
-        </Typography>
-        </div>
-        
-          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <TextField
-              label="Username"
-              value={username}
-              onChange={handleUsernameChange}
-              margin="normal"
-              sx={{display:'flex'}}
-              fullWidth
-            />
-            <TextField
-              type="password"
-              label="Password"
-              value={password}
-              onChange={handlePasswordChange}
-              margin="normal"
-              sx={{display:'flex'}}
-              fullWidth
-            />
-           <Link to="/overview" style={{textDecoration:"none",color:"black"}}>
-            <Button type="submit" variant="contained" fullWidth style={{background:"linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)"}}>
-              Login
-            </Button>
-            </Link>
-          </form>
-        </CardContent>
-      </Card> */}
     </div>
   );
 }

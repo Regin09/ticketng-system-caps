@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import "./members.css";
-import { Container, Paper } from "@mui/material";
+import { Card, Container, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Button, styled, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -163,14 +163,14 @@ function RowItem1(props) {
     setOpen(false);
   }
 
-  const handleDeleteMembers = async (role,username) => {
+  const handleDeleteMembers = async (role, username) => {
     try {
       const res = await axios({
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/delete?role=${role}&username=${username}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/delete?role=${role}&username=${username}`,
       });
       console.log(res.data.data);
       props.getAllMembers();
@@ -178,7 +178,7 @@ function RowItem1(props) {
       console.log(error);
     }
   };
- 
+
   return (
     <React.Fragment>
       <TableRow hover>
@@ -283,7 +283,7 @@ function RowItem2(props) {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/delete?role=${role}&username=${username}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/delete?role=${role}&username=${username}`,
       });
       console.log(res.data.data);
       props.getAllMembers();
@@ -382,7 +382,6 @@ function RowItem3(props) {
     setOpen(false);
   }
 
-  
   const handleDeleteMembers = async (role, username) => {
     try {
       const res = await axios({
@@ -390,7 +389,7 @@ function RowItem3(props) {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/delete?role=${role}&username=${username}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/delete?role=${role}&username=${username}`,
       });
       console.log(res.data.data);
       props.getAllMembers();
@@ -488,7 +487,7 @@ const Members = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/all-engineer`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/all-engineer`,
       });
       setEngineerData(res.data.data);
       console.log(res.data.data);
@@ -504,7 +503,7 @@ const Members = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/all-admin`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/all-admin`,
       });
       setAdminData(res.data.data);
       console.log(res.data.data);
@@ -520,7 +519,7 @@ const Members = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/all-user`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/all-user`,
       });
       setUserData(res.data.data);
       console.log(res.data.data);
@@ -557,11 +556,107 @@ const Members = () => {
     setPage(0);
   };
 
+  const EngineerRenderTableBody = () => {
+    if (engineerData.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={7} align="center">
+            <Card
+              sx={{
+                width: "100%",
+                height: "200px",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+                padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: 1000,
+                }}
+              >
+                There's no Engineer Right now
+              </Typography>
+            </Card>
+          </TableCell>
+        </TableRow>
+      );
+    }
+  };
+
+  const AdminRenderTableBody = () => {
+    if (adminData.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={7} align="center">
+            <Card
+              sx={{
+                width: "100%",
+                height: "200px",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+                padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: 1000,
+                }}
+              >
+                There's no Admin Right now
+              </Typography>
+            </Card>
+          </TableCell>
+        </TableRow>
+      );
+    }
+  };
+
+  const UserRenderTableBody = () => {
+    if (userData.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={7} align="center">
+            <Card
+              sx={{
+                width: "100%",
+                height: "200px",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+                padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: 1000,
+                }}
+              >
+                There's no User Right now
+              </Typography>
+            </Card>
+          </TableCell>
+        </TableRow>
+      );
+    }
+  };
+
   return (
     <Container>
       <div className="induk-toglee">
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6} xl={4} className="induk-togle1">
+          <Grid item xs={12} md={6} xl={6} className="induk-togle1">
             <ToggleButtonGroup
               value={roleMember}
               color="primary"
@@ -664,6 +759,7 @@ const Members = () => {
                   ))}
                 </TableRow>
               </TableHead>
+              <TableBody>{EngineerRenderTableBody()}</TableBody>
               {/* Table Content */}
               <TableBody>
                 {engineerData.length === 0
@@ -678,12 +774,6 @@ const Members = () => {
                       }),
                       getComparator(order, orderBy)
                     )
-                      /* {engineerData.length === 0
-                  ? null
-                  : stableSort(
-                      engineerData.filter((e) => e.role === roleMember),
-                      getComparator(order, orderBy)
-                    ) */
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
@@ -751,6 +841,7 @@ const Members = () => {
                   ))}
                 </TableRow>
               </TableHead>
+              <TableBody>{AdminRenderTableBody()}</TableBody>
               {/* Table Content */}
               <TableBody>
                 {adminData.length === 0
@@ -782,42 +873,22 @@ const Members = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          {/* Table Pagination */}
-          <Box
+
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component="div"
+            count={adminData.length === 0 ? null : adminData.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
             sx={{
-              width: "100%",
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              [theme.breakpoints.down("sm")]: {
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              },
+              justifyContent: "center",
+              width: "100%",
+              [theme.breakpoints.up("sm")]: { justifyContent: "right" },
             }}
-          >
-            <span>
-              <Button sx={{ width: "max-content" }}>
-                Pagination 1 (1-100)
-              </Button>
-            </span>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 50, 100]}
-              component="div"
-              count={adminData.length === 0 ? null : adminData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-              }}
-            />
-          </Box>
+          />
         </>
       )}
       {roleMember !== "User" ? null : (
@@ -851,6 +922,7 @@ const Members = () => {
                   ))}
                 </TableRow>
               </TableHead>
+              <TableBody>{UserRenderTableBody()}</TableBody>
               {/* Table Content */}
               <TableBody>
                 {userData.length === 0
@@ -882,42 +954,22 @@ const Members = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          {/* Table Pagination */}
-          <Box
+
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component="div"
+            count={userData.length === 0 ? null : userData.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
             sx={{
-              width: "100%",
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              [theme.breakpoints.down("sm")]: {
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              },
+              justifyContent: "center",
+              width: "100%",
+              [theme.breakpoints.up("sm")]: { justifyContent: "right" },
             }}
-          >
-            <span>
-              <Button sx={{ width: "max-content" }}>
-                Pagination 1 (1-100)
-              </Button>
-            </span>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 50, 100]}
-              component="div"
-              count={userData.length === 0 ? null : userData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-              }}
-            />
-          </Box>
+          />
         </>
       )}
     </Container>

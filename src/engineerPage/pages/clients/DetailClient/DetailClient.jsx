@@ -8,6 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import "./detailclient.css";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
+import LogoDummy from "../../../../assets/images/profilepic.png";
 
 const DetailClient = () => {
   const [clientDetails, setClientDetails] = React.useState([]);
@@ -21,7 +22,7 @@ const DetailClient = () => {
     try {
       const res = await axios({
         method: "GET",
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/client/${code}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/client/${code}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -157,7 +158,7 @@ const DetailClient = () => {
           <Grid item xs={12} md={6} xl={6}>
             <div className="item">
               <img
-                src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tiny"
+                src={LogoDummy}
                 alt=""
                 className="itemImg"
               />

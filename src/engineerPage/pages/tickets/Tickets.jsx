@@ -1,5 +1,14 @@
 import React, { Fragment, useState } from "react";
-import { Button, styled, useTheme } from "@mui/material";
+import {
+  Button,
+  Card,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  styled,
+  useTheme,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import "./tickets.css";
 import { Link } from "react-router-dom";
@@ -24,6 +33,7 @@ import {
 } from "@mui/material";
 import WarningIcon from "../../../assets/images/iconwarning.png";
 import axios from "axios";
+import DownloadForOfflineOutlinedIcon from "@mui/icons-material/DownloadForOfflineOutlined";
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background:
@@ -45,6 +55,11 @@ const headCells = [
     id: "assignee",
     numeric: false,
     label: "Assignee",
+  },
+  {
+    id: "reporter",
+    numeric: false,
+    label: "Reporter",
   },
   {
     id: "status",
@@ -122,7 +137,7 @@ function RowItem(props) {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${_id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${_id}`,
       });
       console.log(res.data.data);
       props.getAllTickets();
@@ -137,6 +152,7 @@ function RowItem(props) {
         <TableCell align="center">{props.item._id}</TableCell>
         <TableCell align="center">{props.item.subject}</TableCell>
         <TableCell align="center">{props.item.assignee}</TableCell>
+        <TableCell align="center">{props.item.reporter}</TableCell>
         <TableCell
           align="center"
           sx={{
@@ -149,6 +165,10 @@ function RowItem(props) {
                 ? "#FF8A00"
                 : props.item.status === "In-Progress"
                 ? "#1B8500"
+                : props.item.status === "Delivered"
+                ? "#1D5D9B"
+                : props.item.status === "Need-Approval"
+                ? "#4C4B16"
                 : "none",
           }}
         >
@@ -252,9 +272,10 @@ const Tickets = () => {
   const theme = useTheme();
   const [statusTicket, setStatusTicket] = React.useState("ALL");
   React.useEffect(() => {
-    document.title = "Menu Tickets";
+    document.title = "Tickets Page";
     getAllTickets();
   }, []);
+  const [searchAssignee, setSearchAssignee] = React.useState("");
 
   const [ticketData, setTicketData] = React.useState([]);
 
@@ -286,27 +307,141 @@ const Tickets = () => {
     setPage(0);
   };
 
-  const getAllTickets = async () => {
+  const getAllTickets = async (status) => {
     try {
       const res = await axios({
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/all`,
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/all${
+          status ? `?assignee=${searchAssignee}` : ""
+        }`,
       });
-      setTicketData(res.data.data);
+      const sortedTickets = res.data.data.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      setTicketData(sortedTickets);
       console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/export/all`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        responseType: "blob", // Set the response type to 'blob' to receive a binary file
+      });
+      const downloadUrl = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.setAttribute("download", "ListTicket.csv");
+      document.body.appendChild(link);
+      link.click();
+      console.log("CSV download successful");
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
+
+  const renderTableBody = () => {
+    if (ticketData.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={8} align="center">
+            <Card
+              sx={{
+                width: "100%",
+                height: "200px",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+                padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: 1000,
+                }}
+              >
+                There's no tickets right now
+              </Typography>
+            </Card>
+          </TableCell>
+        </TableRow>
+      );
+    }
+  };
+
   return (
     <Container>
+      <Grid item xs={12} md={6} xl={6} className="induk-togle1">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            maxWidth: "500px",
+            width: "100%",
+          }}
+        >
+          <TextField
+            label="Search by Assignee"
+            onChange={(e) => {
+              setSearchAssignee(e.target.value);
+            }}
+            margin="normal"
+            sx={{
+              display: "flex",
+              "& .MuiInputBase-root": {
+                background: "white",
+              },
+            }}
+            fullWidth
+          />
+          <Button
+            sx={{
+              marginLeft: "10px",
+              "&:hover": {
+                background: "#ccc",
+              },
+            }}
+            onClick={() => {
+              getAllTickets();
+              setSearchAssignee("");
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            sx={{
+              "&:hover": {
+                background: "#ccc",
+              },
+            }}
+            onClick={() => {
+              getAllTickets(true);
+            }}
+          >
+            Search
+          </Button>
+        </div>
+      </Grid>
       <div className="induk-toglee">
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6} xl={4} className="induk-togle1">
+          <Grid item xs={12} md={8} xl={8} className="induk-togle1">
             <ToggleButtonGroup
               value={statusTicket}
               color="primary"
@@ -336,6 +471,12 @@ const Tickets = () => {
                 Selected
               </ToggleButton>
               <ToggleButton
+                value="Need-Approval"
+                sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
+              >
+                Need-Approval
+              </ToggleButton>
+              <ToggleButton
                 value="To-Do"
                 sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
               >
@@ -348,6 +489,12 @@ const Tickets = () => {
                 In-Progress
               </ToggleButton>
               <ToggleButton
+                value="Delivered"
+                sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
+              >
+                Delivered
+              </ToggleButton>
+              <ToggleButton
                 value="Done"
                 sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
               >
@@ -356,9 +503,34 @@ const Tickets = () => {
             </ToggleButtonGroup>
           </Grid>
 
-          <Grid item md={6} xl={6} sm={6} className="induk-togle2">
+          <Grid item md={4} xl={4} sm={4} className="induk-togle2">
+            <Button
+              variant="contained"
+              onClick={handleDownload}
+              sx={{
+                marginRight: "15px",
+                color: "black",
+                background: "#FFFFFF",
+                height: "36px",
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+              }}
+            >
+              <DownloadForOfflineOutlinedIcon
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "2px",
+                  cursor: "pointer",
+                  marginTop: "3.4px",
+                  marginBottom: "5px",
+                }}
+              />
+              Download CSV
+            </Button>
             <Link
-              to="/tickets-engineer/createTickets"
+              to="/tickets-Engineer/createTickets"
               style={{ textDecoration: "none", color: "black" }}
             >
               <Button
@@ -390,14 +562,10 @@ const Tickets = () => {
       </div>
 
       <TableContainer sx={{ maxHeight: rowsPerPage !== 10 ? 800 : "none" }}>
-        <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+        <Table stickyHeader sx={{ minWidth: 900 }} aria-labelledby="tableTitle">
           {/* Table Header */}
           <TableHead>
             <TableRow>
-              {/* {rowsPerPage.filter((e)=>{
-             return statusTicket==='ALL'?true: e.status===statusTicket 
-            }
-            )  */}
               {headCells.map((headCell) => (
                 <TableCell
                   key={headCell._id}
@@ -418,7 +586,7 @@ const Tickets = () => {
               ))}
             </TableRow>
           </TableHead>
-
+          <TableBody>{renderTableBody()}</TableBody>
           {/* Table Content */}
           <TableBody>
             {ticketData.length === 0
@@ -448,61 +616,21 @@ const Tickets = () => {
         </Table>
       </TableContainer>
 
-      {/* Table Pagination */}
-      <Box
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        component="div"
+        count={ticketData.length === 0 ? null : ticketData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         sx={{
-          width: "100%",
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          [theme.breakpoints.down("sm")]: {
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          },
+          justifyContent: "center",
+          width: "100%",
+          [theme.breakpoints.up("sm")]: { justifyContent: "right" },
         }}
-      >
-        <span>
-          <Button sx={{ width: "max-content" }}>Pagination 1 (1-100)</Button>
-        </span>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={ticketData.length === 0 ? null : ticketData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-          }}
-        />
-      </Box>
-      {/* <TableBody>
-            {dataTable
-              .map((dataTable) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowsPerPage.code}>
-                    {headCells.map((column) => {
-                      const value = rowsPerPage[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                            {rowsPerPage.status}
-
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody> */}
+      />
     </Container>
   );
 };

@@ -1,55 +1,31 @@
-import { Fragment } from 'react';
-import { BrowserRouter, Outlet, Navigate } from 'react-router-dom';
-import AdminRouter from './routers/adminRouter';
-import EngineerRouter from './routers/engineerRouter';
-import UserRouter from './routers/userRouter';
+import { Fragment } from "react";
+import {
+  BrowserRouter,
+  Outlet,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+import AdminRouter from "./routers/adminRouter";
+import EngineerRouter from "./routers/engineerRouter";
+import UserRouter from "./routers/userRouter";
+import Choose from "./choose/Choose";
 
- const HandleLoginSuccessfully = () => {
-    if (localStorage.getItem("access_token")) {
-        return <Navigate to={-1} replace />
-    }
-    return <Outlet />;
-  }
-
-  const ProtectedAdminRoute = () => {
-    if (localStorage.getItem("access_token") && localStorage.getItem("role") === 'admin') {
-      return <Outlet/>
-    }
-    return alert("Kamu bukan Admin!");
-  }
-
-  const ProtectedEngineeringRoute = () => {
-    if (localStorage.getItem("access_token") && localStorage.getItem("role") === 'engineer') {
-      return <Outlet/>
-    }
-    return <Navigate to="/" replace /> ;
-  }
-
-  const ProtectedUserRoute = () => {
-    if (localStorage.getItem("access_token") && localStorage.getItem("role") === 'user') {
-      return <Outlet/>
-    }
-    return <Navigate to="/" replace /> ;
-  }
-
-  const AllRoleCanAccess = () => {
-    if (localStorage.getItem("access_token")) {
-      return <Outlet/>
-    }
-    return <Navigate to="/login" replace /> ;
-  }
+const chooseElement = <Choose />;
 
 function App() {
   return (
     <Fragment>
-      <BrowserRouter>      
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={chooseElement} />
+        </Routes>
         <AdminRouter />
-        <EngineerRouter/>
+        <EngineerRouter />
         <UserRouter />
       </BrowserRouter>
     </Fragment>
   );
 }
-
 
 export default App;

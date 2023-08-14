@@ -5,10 +5,12 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 const ClientAnalysis = () => {
   const [clientAnalytics, setClientAnalytics] = useState([]);
+   const [currentPage, setCurrentPage] = useState(1);
+   const [clientsPerPage] = useState(6);
 
   React.useEffect(() => {
     document.title = "Client Analytics";
@@ -19,7 +21,7 @@ const ClientAnalysis = () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/analytics/client",
+        url: `${process.env.REACT_APP_API_URL}/api/analytics/client??page=${currentPage}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -34,6 +36,20 @@ const ClientAnalysis = () => {
       console.log(error);
     }
   };
+
+  const indexOfLastClient = currentPage * clientsPerPage;
+  const indexOfFirstClient = indexOfLastClient - clientsPerPage;
+  const currentClients = clientAnalytics.slice(
+    indexOfFirstClient,
+    indexOfLastClient
+  );
+
+  // Change page
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    getClientAnalyticsHandler();
+  };
+
    if (clientAnalytics.length === 0) {
      return (
        <div
@@ -81,8 +97,8 @@ const ClientAnalysis = () => {
     <React.Fragment>
       <h1>Client Analytics</h1>
       <br />
-      <Grid container spacing={10}>
-        {clientAnalytics.map((analytics, index) => (
+      <Grid container spacing={7} sx={{ mb: 10 }}>
+        {currentClients.map((analytics, index) => (
           <Grid item xs={12} md={4} xl={4} key={index + 1}>
             <Card
               sx={{
@@ -178,7 +194,74 @@ const ClientAnalysis = () => {
           </Grid>
         ))}
       </Grid>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {clientAnalytics.length > clientsPerPage && (
+          <ClientPagination
+            clientsPerPage={clientsPerPage}
+            totalClients={clientAnalytics.length}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
+        )}
+      </div>
     </React.Fragment>
+  );
+};
+const ClientPagination = ({
+  clientsPerPage,
+  totalClients,
+  currentPage,
+  paginate,
+}) => {
+  const pageNumbers = [];
+
+  for (let i = 1; i <= Math.ceil(totalClients / clientsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    
+    <nav
+      style={{
+        position: "fixed",
+        bottom: "0",
+        width: "100%",
+        textAlign: "center",
+        zIndex: "1000",
+        background: "white",
+        boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
+        padding: "10px 0",
+       
+      }}
+    >
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          margin: 0,
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {pageNumbers.map((number) => (
+          <li
+            key={number}
+            style={{
+              margin: "0 5px",
+            }}
+          >
+            <Button
+              variant={currentPage === number ? "contained" : "outlined"}
+              onClick={() => paginate(number)}
+              sx={{ minWidth: "30px", padding: "6px" }}
+            >
+              {number}
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 

@@ -33,7 +33,7 @@ const EditClient = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/client/${code}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/client/${code}`,
       });
       // setFormEdit(res.data.ticket[0]);
       // console.log(res.data.ticket);
@@ -59,7 +59,7 @@ const EditClient = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/client/${code}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/client/${code}`,
         data: data,
         // data: {
         //   subject: formEdit.subject,
@@ -76,7 +76,7 @@ const EditClient = () => {
         // },
       });
       console.log(res.data.data);
-      navigate("/clients-Engineer");
+      navigate("/clients-admin");
     } catch (error) {
       console.log(error);
     }finally {
@@ -140,26 +140,27 @@ const EditClient = () => {
         <br />
         <br />
         <Grid container spacing={10}>
-          <Grid item xs={12} md={6} xl={6}>
-            <Typography variant="body2" sx={{ fontSize: "17px" }}>
-              Client Code
-            </Typography>
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              size="small"
-              value={formEdit.code}
-              onChange={(e) => {
-                setFormEdit({ ...formEdit, code: e.target.value });
-              }}
-              sx={{
-                width: "100%",
-                height: "5px",
-                background: "#FFFFFF",
-                borderRadius: "7px",
-              }}
-            />
-          </Grid>
+            <Grid item xs={12} md={6} xl={6}>
+              <Typography variant="body2" sx={{ fontSize: "17px" }}>
+                Client Phone
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                size="small"
+                value={formEdit.phone}
+                onChange={(e) => {
+                  setFormEdit({ ...formEdit, phone: e.target.value });
+                }}
+                sx={{
+                  width: "100%",
+                  height: "5px",
+                  background: "#FFFFFF",
+                  borderRadius: "7px",
+                }}
+              />
+            </Grid>
+          
           <Grid item xs={12} md={6} xl={6}>
             <Typography variant="body2" sx={{ fontSize: "17px" }}>
               Client Email
@@ -195,26 +196,6 @@ const EditClient = () => {
               value={formEdit.regional}
               onChange={(e) => {
                 setFormEdit({ ...formEdit, regional: e.target.value });
-              }}
-              sx={{
-                width: "100%",
-                height: "5px",
-                background: "#FFFFFF",
-                borderRadius: "7px",
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} xl={6}>
-            <Typography variant="body2" sx={{ fontSize: "17px" }}>
-              Client Phone
-            </Typography>
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              size="small"
-              value={formEdit.phone}
-              onChange={(e) => {
-                setFormEdit({ ...formEdit, phone: e.target.value });
               }}
               sx={{
                 width: "100%",

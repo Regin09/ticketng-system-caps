@@ -1,23 +1,35 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useRef } from "react";
+
 import {
-  CardContent,
   CircularProgress,
-  Container,
+  DialogContentText,
+  MenuItem,
+  Select,
+  Snackbar,
   TextField,
 } from "@mui/material";
+
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import FormatBoldOutlinedIcon from "@mui/icons-material/FormatBoldOutlined";
-import FormatItalicOutlinedIcon from "@mui/icons-material/FormatItalicOutlined";
-import FormatUnderlinedOutlinedIcon from "@mui/icons-material/FormatUnderlinedOutlined";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import dayjs from "dayjs";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { makeStyles } from "@mui/styles";
+import ReactHtmlParser from "react-html-parser";
+import "./app.css";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import dayjs from "dayjs";
+import MuiAlert from "@mui/material/Alert";
+
 function formatDate(dateTimeString) {
   if (dateTimeString === null) {
     return "Null";
@@ -59,6 +71,7 @@ function joinWords(inputArray) {
 
   return inputArray.join(", ");
 }
+
 const useStyles = makeStyles({
   filledTextField: {
     width: "100%",
@@ -72,18 +85,86 @@ const useStyles = makeStyles({
 });
 
 const DetailTickets = () => {
-  const classes = useStyles();
+  const inputRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  function handleDeleteClick() {
+    setOpen(true);
+  }
+
+  function handleDeleteConfirm() {
+    // Perform the deletion action here
+    setOpen(false);
+  }
+
+  function handleDeleteCancel() {
+    setOpen(false);
+  }
+
+  const [isScoreRequired, setIsScoreRequired] = useState(false);
+  const decodedToken = localStorage.getItem("decoded_token");
+  const parsedToken = decodedToken ? JSON.parse(decodedToken) : null;
+
+  function handleDeleteClick() {
+    setOpen(true);
+  }
+
+  function handleDeleteConfirm() {
+    // Perform the deletion action here
+    setOpen(false);
+  }
+
+  function handleDeleteCancel() {
+    setOpen(false);
+  }
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
+  const showAlert = (severity, message) => {
+    setAlertSeverity(severity);
+    setAlertMessage(message);
+    setAlertOpen(true);
+  };
+  const handleCloseAlert = () => {
+    setAlertOpen(false);
+  };
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const navigate = useNavigate();
+
+  const [isEditing, setIsEditing] = useState(false);
 
   let { id } = useParams();
   const [detailTicket, setDetailTicket] = useState([]);
   const [formComment, setFormComment] = useState({
-    // _id: null,
     ticketID: id,
     comment: "",
   });
   const [allComment, setallComment] = useState([]);
   const [userProfile, setUserProfile] = useState();
+  const [doneClicked, setDoneClicked] = useState(false);
+
+  const [formEdit, setFormEdit] = useState({
+    id: null,
+    subject: "",
+    description: "",
+    reporter: "",
+    clientCode: "",
+    assignee: "",
+    duedate: dayjs(),
+    priority: "",
+    status: "",
+    labels: [],
+    score: "",
+  });
+
+  const handleButtonClick = () => {
+    if (formEdit.score !== "") {
+      updateScoreValue();
+    }
+    setDialogOpen(false);
+  };
 
   React.useEffect(() => {
     document.title = "Detail Ticket";
@@ -92,11 +173,39 @@ const DetailTickets = () => {
     getUserProfileHandler();
   }, []);
 
+  const updateScoreValue = async () => {
+    try {
+      const res = await axios({
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${id}`,
+        data: {
+          subject: detailTicket.subject,
+          description: detailTicket.description,
+          reporter: detailTicket.reporter,
+          clientCode: detailTicket.clientCode,
+          assignee: detailTicket.assignee,
+          duedate: detailTicket.duedate,
+          priority: detailTicket.priority,
+          status: detailTicket.status,
+          labels: detailTicket.labels,
+          score: formEdit.score,
+        },
+      });
+      console.log(res.data);
+      getAllTickets();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getUserProfileHandler = async () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile/",
+        url: `${process.env.REACT_APP_API_URL}/api/member/profile/`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -104,7 +213,6 @@ const DetailTickets = () => {
       console.log("Response GET");
       console.log(res);
       setUserProfile(res.data.data);
-      // console.log(userProfile);
     } catch (error) {
       if (error.response.status === 404) {
       }
@@ -119,12 +227,11 @@ const DetailTickets = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/ticketID/${id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/comment/ticketID/${id}`,
       });
       setallComment(res.data.data);
       console.log(res.data.data);
       console.log(allComment);
-      // console.log(res.data.ticket.);
     } catch (error) {
       console.log(error);
     }
@@ -137,7 +244,7 @@ const DetailTickets = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/create`,
+        url: `${process.env.REACT_APP_API_URL}/api/comment/create`,
         data: data,
       });
       setFormComment({
@@ -158,13 +265,13 @@ const DetailTickets = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${data._id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/comment/${data._id}`,
         data: {
           comment: data.comment,
         },
       });
       setFormComment({
-        _id: null,
+        // _id: null,
         ticketID: id,
         comment: "",
       });
@@ -182,10 +289,97 @@ const DetailTickets = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/comment/${data._id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/comment/${data._id}`,
       });
       console.log(res.data.data);
       getAllCommentbySpecificID();
+      setallComment((prevComments) =>
+        prevComments.filter((comment) => comment._id !== data._id)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllEditTickets = async (id) => {
+    try {
+      const res = await axios({
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${id}`,
+      });
+      // setFormEdit(res.data.ticket[0]);
+      // console.log(res.data.ticket);
+      // console.log(formEdit);
+      setFormEdit({
+        // id: res.data.ticket[0]._id,
+        subject: res.data.ticket[0].subject,
+        description: res.data.ticket[0].description,
+        reporter: res.data.ticket[0].reporter,
+        clientCode: res.data.ticket[0].clientCode,
+        assignee: res.data.ticket[0].assignee,
+        duedate: dayjs(res.data.ticket[0].duedate),
+        priority: res.data.ticket[0].priority,
+        status: res.data.ticket[0].status,
+        labels: [...res.data.ticket[0].labels],
+        score: res.data.ticket[0].score,
+      });
+      if (
+        res.data.ticket[0].status === "Done" &&
+        res.data.ticket[0].score === ""
+      ) {
+        setIsScoreRequired(true);
+      } else {
+        setIsScoreRequired(false);
+      }
+      console.log(res.data.ticket[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdateScore = async (data) => {
+    try {
+      const res = await axios({
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${id}`,
+        data: data,
+      });
+      console.log(res.data.ticket[0]);
+      navigate("/tickets-user/detailTickets/:id");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateScoreTickets = async () => {
+    try {
+      const res = await axios({
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${id}`,
+        data: {
+          subject: detailTicket.subject,
+          description: detailTicket.description,
+          reporter: detailTicket.reporter,
+          clientCode: detailTicket.clientCode,
+          assignee: detailTicket.assignee,
+          duedate: detailTicket.duedate,
+          priority: detailTicket.priority,
+          status: "Done",
+          labels: detailTicket.labels,
+          score: "",
+        },
+      });
+
+      console.log(res.data);
+      getAllTickets();
     } catch (error) {
       console.log(error);
     }
@@ -198,12 +392,22 @@ const DetailTickets = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${id}`,
       });
+
       setDetailTicket(res.data.ticket[0]);
       console.log(res.data.ticket);
       console.log(detailTicket);
-      // console.log(res.data.ticket.);
+
+      if (
+        (res.data.ticket[0].status === "Done" &&
+          res.data.ticket[0].score === null) ||
+        userProfile.name === res.data.ticket[0].createdBy
+      ) {
+        setDialogOpen(true);
+      } else {
+        setDialogOpen(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -216,7 +420,7 @@ const DetailTickets = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${id}`,
         data: {
           subject: detailTicket.subject,
           description: detailTicket.description,
@@ -226,17 +430,18 @@ const DetailTickets = () => {
           duedate: detailTicket.duedate,
           priority: detailTicket.priority,
           status: "Done",
-          labels: [detailTicket.labels],
+          labels: detailTicket.labels,
         },
       });
 
       console.log(res.data);
+      getAllTickets();
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (detailTicket.length === 0 || !allComment || !userProfile) {
+  if (detailTicket.length === 0) {
     return (
       <div
         style={{
@@ -279,38 +484,69 @@ const DetailTickets = () => {
       </div>
     );
   }
+  const toolbarOptions = [
+    [{ header: 1 }, { header: 2 }],
+    ["bold", "italic", "underline"],
+    [{ list: "bullet" }, { list: "ordered" }],
+    [
+      {
+        script: "sub",
+      },
+      {
+        script: "super",
+      },
+    ],
+    ["link"],
+  ];
+
+  const handleDiscardChangesClick = () => {
+    setFormComment({
+      ...formComment,
+      _id: null,
+      comment: "",
+    });
+    window.location.reload();
+    setIsEditing(false);
+  };
+
   return (
     <Fragment>
-      <Link
-        to={`/tickets-user/detailTickets/editTickets/${id}`}
-        style={{ textDecoration: "none", color: "black" }}
-      >
-        <Button
-          variant="contained"
-          size="small"
-          sx={{
-            color: "black",
-            background: "#FFFFFF",
-            height: "36px",
-            cursor: "pointer",
-            "&:hover": {
-              backgroundColor: "white",
-            },
-          }}
-        >
-          Edit Ticket
-        </Button>
-      </Link>
-      {/* <Link
-        to="/tickets-Engineer"
-        style={{ textDecoration: "none", color: "black" }}
-      > */}
       {detailTicket.status === "Done" ? null : (
+        <Link
+          to={`/tickets-user/detailTickets/editTickets/${id}`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              color: "black",
+              background: "#FFFFFF",
+              height: "36px",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          >
+            Edit Ticket
+          </Button>
+        </Link>
+      )}
+      {
+      (detailTicket.status != "Delivered" && !doneClicked) ? null : (
         <Button
           variant="contained"
           size="small"
           onClick={() => {
-            updateDoneStatusTickets(detailTicket);
+            if (!detailTicket.assignee) {
+              showAlert("error", "Please wait for an assignee");
+            } else {
+              updateDoneStatusTickets(detailTicket);
+              navigate(
+                `/tickets-user/${parsedToken && parsedToken.clientCode}`
+              );
+            }
           }}
           sx={{
             color: "black",
@@ -326,7 +562,7 @@ const DetailTickets = () => {
           Done Ticket
         </Button>
       )}
-      {/* </Link> */}
+
       <br />
 
       <Grid container spacing={2} style={{ paddingTop: "16px" }}>
@@ -343,7 +579,7 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "30px", fontWeight: "700" }}
             >
-              {detailTicket.length === 0 ? "Loading..." : detailTicket.subject}
+              {!detailTicket ? "Loading..." : detailTicket.subject}
             </Typography>
             <br />
             <Typography
@@ -356,9 +592,7 @@ const DetailTickets = () => {
               variant="body2"
               sx={{ fontSize: "18px", fontWeight: "400" }}
             >
-              {detailTicket.length === 0
-                ? "Loading..."
-                : detailTicket.description}
+              {!detailTicket ? "Loading..." : detailTicket.description}
             </Typography>
           </Card>
           <br />
@@ -376,29 +610,23 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "20px", fontWeight: "700" }}
             >
-              {detailTicket.length === 0 ? (
-                "Loading..."
-              ) : (
-                <span>{userProfile.name}</span>
-              )}
+              {!userProfile ? "Loading..." : <span>{userProfile.name}</span>}
               <hr />
             </Typography>
             <br />
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              placeholder="Write a comment..."
-              InputProps={{ sx: { borderRadius: 10 } }}
+            <ReactQuill
+              className="app"
               value={formComment.comment}
-              onChange={(e) => {
-                setFormComment({ ...formComment, comment: e.target.value });
+              onChange={(value) => {
+                setFormComment({ ...formComment, comment: value });
               }}
-              sx={{
-                width: "100%",
-                maxWidth: "500px",
-              }}
+              placeholder="Write a comment..."
+              modules={{ toolbar: { container: toolbarOptions } }}
+              style={{ maxWidth: "500px" }}
+              bounds={".app"}
             />
           </Card>
+
           <br />
           <Button
             variant="contained"
@@ -408,7 +636,20 @@ const DetailTickets = () => {
               } else {
                 handleEditComment(formComment);
               }
+              setFormComment({
+                _id: null, // Mengatur nilai _id ke null saat membuat komentar baru
+                ticketID: id,
+                comment: "",
+              });
+              setIsEditing(false); // Mengatur nilai isEditing ke false saat membuat komentar baru
             }}
+            // onClick={() => {
+            //   if (!formComment._id) {
+            //     handleCreateComment(formComment);
+            //   } else {
+            //     handleEditComment(formComment);
+            //   }
+            // }}
             sx={{
               backgroundColor: "white",
               color: "black",
@@ -422,10 +663,10 @@ const DetailTickets = () => {
               marginRight: "10px",
             }}
           >
-            {!formComment._id ? "Comment" : "Edit"}
+            {!isEditing ? (!formComment._id ? "Comment" : "Edit") : "Comment"}
           </Button>
 
-          {!formComment._id ? null : (
+          {!formComment._id || isEditing ? null : (
             <Button
               variant="contained"
               sx={{
@@ -439,107 +680,87 @@ const DetailTickets = () => {
                   backgroundColor: "white",
                 },
               }}
-              onClick={() => {
-                setFormComment({
-                  ...formComment,
-                  _id: null,
-                  comment: "",
-                });
-              }}
+              onClick={handleDiscardChangesClick}
             >
               Discard Changes
             </Button>
           )}
-          {allComment.map((item) => (
-            <Fragment>
-              <Card
-                sx={{
-                  width: "100%",
-                  border: "1px solid rgba(0, 0, 0, 0.2)",
-                  borderRadius: "10px",
-                  padding: "16px",
-                  maxWidth: "500px",
-                  background: "#F1F6F9",
-                  marginBottom: "15px",
-                }}
-              >
-                <Typography
-                  variant="body1"
-                  sx={{ fontSize: "20px", fontWeight: "700" }}
-                >
-                  {detailTicket.length === 0 ? "Loading..." : item.name}
 
-                  {/* {detailTicket.length === 0
-                    ? "Loading..."
-                    : !formComment._id
-                    ? detailTicket.reporter
-                    : detailTicket.assignee} */}
-                  <hr />
-                </Typography>
-                <br />
-                <TextField
-                  id="outlined-multiline-static"
-                  disabled
-                  multiline
-                  value={item.comment}
-                  InputProps={{ sx: { borderRadius: 10 } }}
-                  sx={{
-                    width: "100%",
-                    maxWidth: "500px",
-                    "& .MuiInputBase-input.Mui-disabled": {
-                      WebkitTextFillColor: "#000000",
-                    },
-                  }}
-                />
-                {item.name === userProfile.name && (
-                  <div>
-                    <Button
-                      onClick={() => {
-                        setFormComment({
-                          ...formComment,
-                          _id: item._id,
-                          comment: item.comment,
-                        });
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        handleDeleteComment(item);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                )}
-                {/* <div
-                  style={{
-                    display: item.name === userProfile.name ? "block" : "none",
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      setFormComment({
-                        ...formComment,
-                        _id: item._id,
-                        comment: item.comment,
-                      });
+          {allComment.length === 0
+            ? null
+            : allComment.map((item) => (
+                <Fragment>
+                  <Card
+                    key={item._id}
+                    sx={{
+                      width: "100%",
+                      border: "1px solid rgba(0, 0, 0, 0.2)",
+                      borderRadius: "10px",
+                      padding: "16px",
+                      maxWidth: "500px",
+                      background: "#F1F6F9",
+                      marginBottom: "15px",
                     }}
                   >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleDeleteComment(item);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </div> */}
-              </Card>
-            </Fragment>
-          ))}
+                    <Typography
+                      variant="body1"
+                      sx={{ fontSize: "20px", fontWeight: "700" }}
+                    >
+                      {item.name}
+                      <hr />
+                    </Typography>
+                    <br />
+                    <Card
+                      variant="outlined"
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "none",
+                        boxShadow: "none",
+                        marginLeft: "15px",
+                        marginBottom: "3px",
+                        marginTop: "-10px",
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        component="div"
+                        sx={{
+                          width: "100%",
+                          maxWidth: "500px",
+                          "& .MuiTypography-root": {
+                            display: "inline",
+                          },
+                        }}
+                      >
+                        {ReactHtmlParser(item.comment)}
+                      </Typography>
+                    </Card>
+
+                    {item.name === userProfile?.name && (
+                      <div>
+                        <Button
+                          onClick={() => {
+                            setFormComment({
+                              ...formComment,
+                              _id: item._id,
+                              comment: item.comment,
+                            });
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            handleDeleteComment(item);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    )}
+                  </Card>
+                </Fragment>
+              ))}
 
           <br />
           <br />
@@ -559,13 +780,27 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "18px", fontWeight: "700" }}
             >
+              Reporter
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "15px", fontWeight: "200" }}
+            >
+              {!detailTicket ? "Loading..." : detailTicket.reporter}
+            </Typography>
+            <hr />
+            <br />
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "18px", fontWeight: "700" }}
+            >
               Created by
             </Typography>
             <Typography
               variant="body1"
               sx={{ fontSize: "15px", fontWeight: "200" }}
             >
-              {detailTicket.length === 0 ? "Loading..." : detailTicket.reporter}
+              {!detailTicket ? "Loading..." : detailTicket.createdBy}
             </Typography>
             <hr />
             <br />
@@ -579,7 +814,9 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "15px", fontWeight: "200" }}
             >
-              {detailTicket.length === 0 ? "Loading..." : detailTicket.assignee}
+              {!detailTicket
+                ? "Loading..."
+                : detailTicket.assignee || "There's no assignee now"}
             </Typography>
             <hr />
             <br />
@@ -591,9 +828,26 @@ const DetailTickets = () => {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ fontSize: "15px", fontWeight: "200" }}
+              sx={{
+                fontSize: "15px",
+                fontWeight: "200",
+                color:
+                  detailTicket.status === "Selected"
+                    ? "black"
+                    : detailTicket.status === "Done"
+                    ? "red"
+                    : detailTicket.status === "To-Do"
+                    ? "#FF8A00"
+                    : detailTicket.status === "In-Progress"
+                    ? "#1B8500"
+                    : detailTicket.status === "Delivered"
+                    ? "#1D5D9B"
+                    : detailTicket.status === "Need-Approval"
+                    ? "#4C4B16"
+                    : "none",
+              }}
             >
-              {detailTicket.length === 0 ? "Loading..." : detailTicket.status}
+              {!detailTicket ? "Loading..." : detailTicket.status}
             </Typography>
             <hr />
             <br />
@@ -607,9 +861,7 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "15px", fontWeight: "200" }}
             >
-              {detailTicket.length === 0
-                ? "Loading..."
-                : detailTicket.clientCode}
+              {!detailTicket ? "Loading..." : detailTicket.clientCode}
             </Typography>
             <hr />
             <br />
@@ -623,7 +875,32 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "15px", fontWeight: "200" }}
             >
-              {detailTicket.length === 0 ? "Loading..." : detailTicket.priority}
+              {!detailTicket ? (
+                "Loading..."
+              ) : (
+                <div style={{ fontWeight: 700 }}>
+                  <div
+                    style={{
+                      height: "17px",
+                      width: "17px",
+                      backgroundColor:
+                        detailTicket.priority === "Critical"
+                          ? "red"
+                          : detailTicket.priority === "High"
+                          ? "orange"
+                          : detailTicket.priority === "Medium"
+                          ? "yellow"
+                          : detailTicket.priority === "Low"
+                          ? "green"
+                          : "none",
+                      borderRadius: "50%",
+                      display: "inline-block",
+                      marginRight: "5px",
+                    }}
+                  ></div>
+                  {detailTicket.priority}
+                </div>
+              )}
             </Typography>
             <hr />
             <br />
@@ -637,9 +914,7 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "15px", fontWeight: "200" }}
             >
-              {detailTicket.length === 0
-                ? "Loading..."
-                : formatDate(detailTicket.duedate)}
+              {!detailTicket ? "Loading..." : formatDate(detailTicket.duedate)}
             </Typography>
             <hr />
             <br />
@@ -654,7 +929,7 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "15px", fontWeight: "200" }}
             >
-              {detailTicket.length === 0
+              {!detailTicket
                 ? "Loading..."
                 : formatCreatedAt(detailTicket.createdAt)}
             </Typography>
@@ -670,15 +945,88 @@ const DetailTickets = () => {
               variant="body1"
               sx={{ fontSize: "15px", fontWeight: "200" }}
             >
-              {detailTicket.length === 0
+              {!detailTicket ? "Loading..." : joinWords(detailTicket.labels)}
+            </Typography>
+            <hr />
+            <br />
+
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "18px", fontWeight: "700" }}
+            >
+              Score
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: "15px", fontWeight: "200" }}
+            >
+              {!detailTicket
                 ? "Loading..."
-                : joinWords(detailTicket.labels)}
+                : detailTicket.score || "Score hasn't been entered by user"}
             </Typography>
             <hr />
             <br />
           </Card>
         </Grid>
       </Grid>
+
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle>Score Engineer</DialogTitle>
+        <hr />
+        <DialogContent>
+          <Grid item xs={12} md={12} xl={3}>
+            Please Give Score to This Engineer
+            <Select
+              required
+              size="small"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={formEdit.score}
+              onChange={(e) => {
+                setFormEdit({ ...formEdit, score: e.target.value });
+              }}
+              sx={{ width: "100%" }}
+            >
+              <MenuItem value={"1"}>1 (Very Bad)</MenuItem>
+              <MenuItem value={"2"}>2 (Bad)</MenuItem>
+              <MenuItem value={"3"}>3 (Netral)</MenuItem>
+              <MenuItem value={"4"}>4 (Good)</MenuItem>
+              <MenuItem value={"5"}>5 (Very Good)</MenuItem>
+            </Select>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            sx={{
+              color: "black",
+              background: "#BFFF58",
+              height: "30px",
+              width: "fix-content",
+              "&:hover": {
+                backgroundColor: "green",
+              },
+            }}
+            onClick={handleButtonClick}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseAlert}
+          severity={alertSeverity}
+        >
+          {alertMessage}
+        </MuiAlert>
+      </Snackbar>
     </Fragment>
   );
 };

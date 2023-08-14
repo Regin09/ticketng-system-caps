@@ -106,14 +106,13 @@ const Drawer = styled(MuiDrawer, {
 const DashboardLayout = () => {
   const [userProfile, setUserProfile] = useState({});
   React.useEffect(() => {
-    document.title = "User Profile";
     getUserProfileHandler();
   }, []);
   const getUserProfileHandler = async () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile",
+        url: `${process.env.REACT_APP_API_URL}/api/member/profile`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -128,6 +127,7 @@ const DashboardLayout = () => {
       console.log(error);
     }
   };
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -178,7 +178,6 @@ const DashboardLayout = () => {
             >
               <MenuIcon />
             </IconButton>
-
           </div>
           <IconButton color="inherit">
             <Avatar
@@ -314,6 +313,9 @@ const DashboardLayout = () => {
                   key={listNavbar.title}
                   disablePadding
                   sx={{ display: "block" }}
+                  className={`list-item-${listNavbar.title
+                    .toLowerCase()
+                    .replace(/ /g, "-")}`}
                 >
                   <ListItemButton
                     sx={{

@@ -15,6 +15,8 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import jwt_decode from "jwt-decode";
+
 
 const useStyles = makeStyles({
   root: {
@@ -27,30 +29,32 @@ const useStyles = makeStyles({
     padding: "20px",
   },
   card: {
-    maxWidth: 200,
+    maxWidth: 400,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "20px",
     background: "#FFFFFF",
     borderRadius: "30px !important",
+    height: "auto",
   },
   form: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
+    height: "auto",
   },
   logo: {
-    height: "250px",
-    marginBottom: "20px",
-    paddingRight: "10px",
+    height: "300px",
+    paddingLeft: "20px",
     maxWidth: "100%",
   },
 });
 
 function Login() {
   const classes = useStyles();
+
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleDialogOpen = () => {
@@ -75,7 +79,7 @@ function Login() {
     try {
       const res = await axios({
         method: "POST",
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/user-login`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/user-login`,
         data: {
           username: data.name,
           password: data.password,
@@ -86,11 +90,24 @@ function Login() {
       // localStorage.setItem("access_token");
       localStorage.setItem("access_token", token[1]);
       localStorage.setItem("role", res.data.data.role);
-      navigate("/overview-user");
+      const decodedToken = jwt_decode(token[1]);
+      console.log(decodedToken);
+      localStorage.setItem("decoded_token", JSON.stringify(decodedToken));
+      localStorage.setItem("clientCode", decodedToken.clientCode);
+
+      navigate(`/overview-user/${decodedToken.clientCode}`);
+
     } catch (error) {
       handleDialogOpen();
     }
   };
+
+   const handleKeyPress = (e) => {
+     if (e.key === "Enter") {
+       submitHandlerUser(formLoginUser);
+     }
+   };
+
   return (
     <div className={classes.root}>
       <Card
@@ -141,6 +158,7 @@ function Login() {
               margin="normal"
               sx={{ display: "flex" }}
               fullWidth
+              onKeyPress={handleKeyPress}
             />
             <TextField
               type="password"
@@ -154,6 +172,7 @@ function Login() {
               margin="normal"
               sx={{ display: "flex" }}
               fullWidth
+              onKeyPress={handleKeyPress}
             />
 
             <Button
@@ -162,11 +181,23 @@ function Login() {
               fullWidth
               onClick={() => submitHandlerUser(formLoginUser)}
               style={{
+                marginBottom: "15px",
                 background:
                   "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
               }}
             >
               Login
+            </Button>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => window.history.back()}
+              style={{
+                background:
+                  "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
+              }}
+            >
+              Back
             </Button>
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
               <DialogTitle>Invalid Username or Password</DialogTitle>

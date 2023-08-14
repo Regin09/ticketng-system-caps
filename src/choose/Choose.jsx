@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { makeStyles } from "@mui/styles";
 import LogoLogin from "../assets/images/BtechForLogin.png"
 import { Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+
 
 const useStyles = makeStyles({
   root: {
@@ -14,32 +15,36 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: '20px',
+    padding: "20px",
   },
   card: {
-    maxWidth: 200,
+    maxWidth: 400,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "20px",
-    background: '#FFFFFF',
-    borderRadius: '30px !important',
+    background: "#FFFFFF",
+    borderRadius: "30px !important",
+    height: "auto",
   },
   form: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width:'100%'
+    width: "100%",
+    height: "auto",
   },
   logo: {
-    height: "250px",
-    marginBottom: "20px",
-    paddingRight:'10px',
-    maxWidth:'100%'
+    height: "300px",
+    paddingLeft: "20px",
+    maxWidth: "100%",
   },
 });
 
 function Choose() {
+  React.useEffect(() => {
+    document.title = "Choose Role Page";
+  }, []);
   const classes = useStyles();
 
   const handleSubmit = (event) => {
@@ -65,6 +70,7 @@ function Choose() {
               </div>
               </Grid>
               <Grid item xs={6} md={6} xl={6} sx={{padding:'16px'}}>
+                <br/>
                 <div style={{display:'flex',justifyContent:'center',paddingTop:'10px'}}>
                   <h2 style={{fontSize:'20px'}}>Please choose your </h2>
                 </div>
@@ -72,6 +78,7 @@ function Choose() {
                   <h2 style={{fontSize:'20px'}}>Role</h2>
                 </div>
                 <br/>
+                
               <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                 <div>
             <Link to="/admin-login" style={{textDecoration:"none",color:"black"}}>

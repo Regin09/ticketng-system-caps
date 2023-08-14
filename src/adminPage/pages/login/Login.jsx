@@ -16,6 +16,8 @@ import {
   DialogActions,
 } from "@mui/material";
 import WarningIcon from "../../../assets/images/iconwarning.png";
+import jwt_decode from "jwt-decode";
+
 
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background:
@@ -33,24 +35,25 @@ const useStyles = makeStyles({
     padding: "20px",
   },
   card: {
-    maxWidth: 200,
+    maxWidth: 400,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "20px",
     background: "#FFFFFF",
     borderRadius: "30px !important",
+    height: "auto",
   },
   form: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
+    height: "auto",
   },
   logo: {
-    height: "250px",
-    marginBottom: "20px",
-    paddingRight: "10px",
+    height: "300px",
+    paddingLeft: "20px",
     maxWidth: "100%",
   },
 });
@@ -79,11 +82,13 @@ function Login() {
     password: "",
   });
 
+ 
+
   const submitHandlerAdmin = async (data) => {
     try {
       const res = await axios({
         method: "POST",
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/admin-login/`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/admin-login/`,
         data: {
           username: data.name,
           password: data.password,
@@ -94,6 +99,11 @@ function Login() {
       // localStorage.setItem("access_token");
       localStorage.setItem("access_token", token[1]);
       localStorage.setItem("role", res.data.data.role);
+
+       const decodedToken = jwt_decode(token[1]);
+       console.log(decodedToken);
+
+
       navigate("/overview-admin");
     } catch (error) {
       handleDialogOpen();
@@ -101,6 +111,12 @@ function Login() {
       setShowProgress(false); // Hide the progress indicator
     }
   };
+
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter") {
+        submitHandlerAdmin(formLoginAdmin);
+      }
+    };
 
   return (
     <div className={classes.root}>
@@ -149,6 +165,7 @@ function Login() {
               margin="normal"
               sx={{ display: "flex" }}
               fullWidth
+              onKeyPress={handleKeyPress}
             />
             <TextField
               type="password"
@@ -162,6 +179,7 @@ function Login() {
               margin="normal"
               sx={{ display: "flex" }}
               fullWidth
+              onKeyPress={handleKeyPress}
             />
             <Button
               type="submit"
@@ -169,11 +187,23 @@ function Login() {
               fullWidth
               onClick={() => submitHandlerAdmin(formLoginAdmin)}
               style={{
+                marginBottom: "15px",
                 background:
                   "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
               }}
             >
               Login
+            </Button>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => window.history.back()}
+              style={{
+                background:
+                  "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
+              }}
+            >
+              Back
             </Button>
             {showProgress && (
               <div
@@ -236,42 +266,6 @@ function Login() {
           </Grid>
         </Grid>
       </Card>
-
-      {/* <Card className={classes.card}>
-      <img src={LogoLogin} alt="Logo" className={classes.logo} />
-        <CardContent className={classes.form}>
-        <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-        <Typography variant="body1" sx={{fontSize:"30px",fontWeight:"700"}}>
-          Welcome to Login Page
-        </Typography>
-        </div>
-        
-          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <TextField
-              label="Username"
-              value={username}
-              onChange={handleUsernameChange}
-              margin="normal"
-              sx={{display:'flex'}}
-              fullWidth
-            />
-            <TextField
-              type="password"
-              label="Password"
-              value={password}
-              onChange={handlePasswordChange}
-              margin="normal"
-              sx={{display:'flex'}}
-              fullWidth
-            />
-           <Link to="/overview" style={{textDecoration:"none",color:"black"}}>
-            <Button type="submit" variant="contained" fullWidth style={{background:"linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)"}}>
-              Login
-            </Button>
-            </Link>
-          </form>
-        </CardContent>
-      </Card> */}
     </div>
   );
 }

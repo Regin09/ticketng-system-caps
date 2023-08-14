@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from "react";
-import { Button, styled, useTheme } from "@mui/material";
+import { Button, Card, Typography, styled, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import "./tickets.css";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -56,11 +56,7 @@ const headCells = [
     numeric: false,
     label: "Client",
   },
-  {
-    id: "priority",
-    numeric: false,
-    label: "Priority",
-  },
+
   {
     id: "actions",
     numeric: false,
@@ -98,9 +94,13 @@ function stableSort(array, comparator) {
 }
 
 function RowItem(props) {
+  
   const [openCell, setOpenCell] = React.useState(false);
   const [data, setData] = React.useState(props.ticketData);
   const [open, setOpen] = useState(false);
+  const decodedToken = localStorage.getItem("decoded_token");
+  const parsedToken = decodedToken ? JSON.parse(decodedToken) : null;
+  const navigate = useNavigate();
 
   function handleDeleteClick() {
     setOpen(true);
@@ -109,6 +109,7 @@ function RowItem(props) {
   function handleDeleteConfirm() {
     // Perform the deletion action here
     setOpen(false);
+    
   }
 
   function handleDeleteCancel() {
@@ -122,14 +123,18 @@ function RowItem(props) {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/${_id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/${_id}`,
       });
       console.log(res.data.data);
       props.getAllTickets();
+      navigate(`/tickets-user/${parsedToken && parsedToken.clientCode}`);
     } catch (error) {
       console.log(error);
     }
   };
+
+ 
+
 
   return (
     <React.Fragment>
@@ -149,13 +154,17 @@ function RowItem(props) {
                 ? "#FF8A00"
                 : props.item.status === "In-Progress"
                 ? "#1B8500"
+                : props.item.status === "Delivered"
+                ? "#1D5D9B"
+                : props.item.status === "Need-Approval"
+                ? "#4C4B16"
                 : "none",
           }}
         >
           {props.item.status}
         </TableCell>
         <TableCell align="center">{props.item.clientCode}</TableCell>
-        <TableCell align="center" sx={{}}>
+        {/* <TableCell align="center" >
           <div
             style={{
               height: "17px",
@@ -176,7 +185,7 @@ function RowItem(props) {
             }}
           ></div>
           {props.item.priority}
-        </TableCell>
+        </TableCell> */}
         <TableCell align="center">
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
@@ -248,12 +257,15 @@ function RowItem(props) {
   );
 }
 
+
+
 const Tickets = () => {
+  const { clientCode } = useParams();
   const theme = useTheme();
   const [statusTicket, setStatusTicket] = React.useState("ALL");
   React.useEffect(() => {
-    document.title = "Menu Tickets";
-    getAllTickets();
+    document.title = "Tickets Page";
+    getAllTickets(clientCode);
   }, []);
 
   const [ticketData, setTicketData] = React.useState([]);
@@ -286,27 +298,66 @@ const Tickets = () => {
     setPage(0);
   };
 
-  const getAllTickets = async () => {
+  const getAllTickets = async (clientCode) => {
     try {
       const res = await axios({
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/ticket/all`,
+        url: `${process.env.REACT_APP_API_URL}/api/ticket/client/${clientCode}`,
       });
-      setTicketData(res.data.data);
+      const sortedTickets = res.data.ticket.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      setTicketData(sortedTickets);
       console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  
+
+  const renderTableBody = () => {
+    if (ticketData.length === 0) {
+      return (
+        <TableRow>
+          <TableCell colSpan={7} align="center">
+            <Card
+              sx={{
+                width: "100%",
+                height: "200px",
+                border: "1px solid rgba(0, 0, 0, 0.2)",
+                borderRadius: "10px",
+                padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "35px",
+                  fontWeight: 1000,
+                }}
+              >
+                There's no tickets right now
+              </Typography>
+            </Card>
+          </TableCell>
+        </TableRow>
+      );
+    }
+  };
+
+
   return (
     <Container>
       <div className="induk-toglee">
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6} xl={4} className="induk-togle1">
+          <Grid item xs={12} md={8} xl={8} className="induk-togle1">
             <ToggleButtonGroup
               value={statusTicket}
               color="primary"
@@ -336,6 +387,12 @@ const Tickets = () => {
                 Selected
               </ToggleButton>
               <ToggleButton
+                value="Need-Approval"
+                sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
+              >
+                Need-Approval
+              </ToggleButton>
+              <ToggleButton
                 value="To-Do"
                 sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
               >
@@ -348,6 +405,12 @@ const Tickets = () => {
                 In-Progress
               </ToggleButton>
               <ToggleButton
+                value="Delivered"
+                sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
+              >
+                Delivered
+              </ToggleButton>
+              <ToggleButton
                 value="Done"
                 sx={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}
               >
@@ -356,7 +419,7 @@ const Tickets = () => {
             </ToggleButtonGroup>
           </Grid>
 
-          <Grid item md={6} xl={6} sm={6} className="induk-togle2">
+          <Grid item md={4} xl={4} sm={4} className="induk-togle2">
             <Link
               to="/tickets-user/createTickets"
               style={{ textDecoration: "none", color: "black" }}
@@ -418,7 +481,7 @@ const Tickets = () => {
               ))}
             </TableRow>
           </TableHead>
-
+          <TableBody>{renderTableBody()}</TableBody>
           {/* Table Content */}
           <TableBody>
             {ticketData.length === 0
@@ -448,27 +511,21 @@ const Tickets = () => {
         </Table>
       </TableContainer>
 
-      {/* Table Pagination */}
-      
-        <span>
-          <Button sx={{ width: "max-content" }}>Pagination 1 (1-100)</Button>
-        </span>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={ticketData.length === 0 ? null : ticketData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-          }}
-        />
-      
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        component="div"
+        count={ticketData.length === 0 ? null : ticketData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          [theme.breakpoints.up("sm")]: { justifyContent: "right" },
+        }}
+      />
     </Container>
   );
 };

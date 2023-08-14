@@ -34,50 +34,61 @@ const Feedback = () => {
     message: "",
   });
 
-   React.useEffect(() => {
-     document.title = "Feedback Page";
-     getAllEngineerHandler();
-   }, []);
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const openDialogHandler = () => {
+    setOpenDialog(true);
+  };
+
+  const closeDialogHandler = () => {
+    setOpenDialog(false);
+    window.location.reload();
+  };
+
+  React.useEffect(() => {
+    document.title = "Feedback Page";
+    getAllEngineerHandler();
+  }, []);
 
   const [engineerData, setEngineerData] = React.useState([]);
-  
 
   const handleCreateFeedbacks = async (data) => {
     try {
       const res = await axios({
         method: "POST",
         headers: {
-          Authorization: `${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/feedback`,
         data: data,
       });
       console.log(res.data.data);
       navigate("/feedbacks-user");
+      openDialogHandler();
     } catch (error) {
       console.log(error);
     }
   };
 
-   const getAllEngineerHandler = async () => {
-     try {
-       const res = await axios({
-         method: "GET",
-         url: "https://stg.capstone.adaptivenetworklab.org/api/member/all-engineer",
-         headers: {
-           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-         },
-       });
-       console.log("Response GET");
-       console.log(res);
-       setEngineerData(res.data.data);
-       console.log(engineerData);
-     } catch (error) {
-       if (error.response.status === 404) {
-       }
-       console.log(error);
-     }
-   };
+  const getAllEngineerHandler = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `${process.env.REACT_APP_API_URL}/api/member/all-engineer`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Response GET");
+      console.log(res);
+      setEngineerData(res.data.data);
+      console.log(engineerData);
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
   return (
     <Fragment>
       <h1>Give Feedback to The Engineer</h1>
@@ -95,37 +106,25 @@ const Feedback = () => {
             <Typography variant="body2" sx={{ fontSize: "17px" }}>
               Engineer Username
             </Typography>
-            {/* <TextField
-              id="outlined-basic"
-              variant="outlined"
+
+            <Select
+              required
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
               size="small"
+              value={formCreate.assignee}
               onChange={(e) => {
                 setFormCreate({
                   ...formCreate,
                   receiverUsername: e.target.value,
                 });
               }}
-              sx={{
-                width: "100%",
-                height: "5px",
-                background: "#FFFFFF",
-                borderRadius: "7px",
-              }}
-            /> */}
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              size="small"
-              value={formCreate.assignee}
-              onChange={(e) => {
-                setFormCreate({ ...formCreate, receiverUsername: e.target.value });
-              }}
               sx={{ width: "100%" }}
             >
-            {/* Nambahin method get */}
-            {engineerData.map((engineer) => (
-                <MenuItem key={engineer._id} value={engineer.name}>
-                  {engineer.name}
+              {/* Nambahin method get */}
+              {engineerData.map((engineer) => (
+                <MenuItem key={engineer._id} value={engineer.username}>
+                  {engineer.username}
                 </MenuItem>
               ))}
             </Select>
@@ -139,6 +138,7 @@ const Feedback = () => {
               <br />
             </Typography>
             <TextField
+              required
               id="outlined-multiline-static"
               multiline
               rows={10}
@@ -187,6 +187,15 @@ const Feedback = () => {
           </Grid>
         </Grid>
       </Card>
+      <Dialog open={openDialog} onClose={closeDialogHandler}>
+        <DialogTitle>Feedback Sent</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">Thank you for your feedback!</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialogHandler}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Fragment>
   );
 };

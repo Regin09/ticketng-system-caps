@@ -12,7 +12,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const DetailFeedback = () => {
   const [feedbackDetails, setFeedbackDetails] = React.useState([]);
-
   let { id } = useParams();
   React.useEffect(() => {
     document.title = "Detail Feedback Page";
@@ -23,7 +22,7 @@ const DetailFeedback = () => {
     try {
       const res = await axios({
         method: "GET",
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback/detail?id=${id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/feedback/detail?id=${id}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

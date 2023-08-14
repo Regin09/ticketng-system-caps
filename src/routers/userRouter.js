@@ -5,6 +5,7 @@ import {
   Routes,
   Outlet,
   Navigate,
+  useLocation
 } from "react-router-dom";
 import ChooseUser from "../choose/Choose";
 import Choose from "../choose/Choose";
@@ -20,40 +21,49 @@ import EditTicketsUser from "../userPage/pages/tickets/DetailTickets/EditTickets
 
 const ProtectedUserRoute = () => {
   if (
-    !localStorage.getItem("access_token") &&
-    !localStorage.getItem("role") === "user"
+    !localStorage.getItem("access_token") ||
+    localStorage.getItem("role") !== "user"
   ) {
     return <Navigate to="/" replace />;
   }
   return <Outlet />;
+  // return <DashboardLayoutUser />;
 };
 
 const HandleLoginSuccessfully = () => {
-  if (localStorage.getItem("access_token")) {
-    return <Navigate to={-1} replace />;
+  const accessToken = localStorage.getItem("access_token");
+  const role = localStorage.getItem("role");
+
+  if (accessToken && role === "user") {
+    return <Navigate to="overview-user/:clientCode" replace />;
   }
   return <Outlet />;
 };
 
-function UserRouter() {
+
+
+function UserRouter({ chooseElement }) {
   return (
     <Routes>
       {/* Router user */}
       {/* <Route path="/" element={<ChooseUser />} /> */}
       <Route element={<HandleLoginSuccessfully />}>
-        <Route path="/" element={<Choose />} />
+        <Route path="/" element={chooseElement} />
         <Route path="user-login" element={<LoginUser />} />
       </Route>
       <Route element={<ProtectedUserRoute />}>
         <Route element={<DashboardLayoutUser />}>
-          <Route path="overview-user" element={<OverviewUser />} />
+          <Route path="overview-user/:clientCode" element={<OverviewUser />} />
           <Route path="userProfile-user" element={<UserProfileUser />} />
-          <Route path="tickets-user" element={<TicketsUser />} />
+          <Route path="tickets-user/:clientCode" element={<TicketsUser />} />
           <Route
             path="tickets-user/createTickets"
             element={<CreateTicketsUser />}
           />
-          <Route path="tickets-user/detailTickets/:id" element={<DetailTicketsUser />} />
+          <Route
+            path="tickets-user/detailTickets/:id"
+            element={<DetailTicketsUser />}
+          />
           <Route
             path="tickets-user/detailTickets/editTickets/:id"
             element={<EditTicketsUser />}

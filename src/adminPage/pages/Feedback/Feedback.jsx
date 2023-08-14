@@ -33,7 +33,6 @@ const headCells = [
     id: "senderUsername",
     numeric: false,
     label: "Sender",
-    
   },
   {
     id: "senderClientCode",
@@ -130,7 +129,7 @@ function RowItem(props) {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback?id=${_id}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/feedback?id=${_id}`,
       });
       console.log(res.data.data);
       props.getAllFeedbacks();
@@ -146,8 +145,8 @@ function RowItem(props) {
       <TableRow hover>
         <TableCell align="center">{props.item.senderUsername}</TableCell>
         <TableCell align="center">{props.item.senderClientCode}</TableCell>
-        <TableCell align="center">{props.item.senderName}</TableCell>
-        <TableCell align="center" style={{ width: "198px",}}>
+        <TableCell align="center">{props.item.receiverUsername}</TableCell>
+        <TableCell align="center" style={{ width: "198px" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link
               to={`detailFeedback/${props.item._id}`}
@@ -159,7 +158,10 @@ function RowItem(props) {
             </Link>
           </Box>
         </TableCell>
-        <TableCell align="center" style={{ width: "150px", alignItems :'center' }}>
+        <TableCell
+          align="center"
+          style={{ width: "150px", alignItems: "center" }}
+        >
           {formatCreatedAt(props.item.createdAt)}
         </TableCell>
         <TableCell align="center" style={{ width: "120px" }}>
@@ -168,7 +170,7 @@ function RowItem(props) {
               variant="outlined"
               color="secondary"
               size="small"
-              onClick={() => handleDeleteClick()}
+              onClick={() => handleDeleteClick(props.item._id)}
             >
               <DeleteForeverIcon />
             </Button>
@@ -201,7 +203,10 @@ function RowItem(props) {
                   Cancel
                 </Button>
                 <Button
-                  onClick={()=>handleDeleteFeedbacks(props.item._id)}
+                  onClick={() => {
+                    handleDeleteFeedbacks(props.item._id);
+                    handleDeleteConfirm();
+                  }}
                   sx={{
                     backgroundColor: "#FF0000",
                     color: "#fff",
@@ -231,22 +236,6 @@ const Feedback = () => {
     getAllFeedbacks();
   }, []);
 
-  // const getEngineerFeedbacks = async (receiver) => {
-  //   try {
-  //     const res = await axios({
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-  //       },
-  //       url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback?receiver=${receiver}&username`,
-  //     });
-  //     setFeedbackData(res.data.data);
-  //     console.log(res.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const getAllFeedbacks = async () => {
     try {
       const res = await axios({
@@ -254,9 +243,13 @@ const Feedback = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/feedback/all`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/feedback/all`,
       });
-      setFeedbackData(res.data.data);
+      const sortedTickets = res.data.data.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      setFeedbackData(sortedTickets);
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -350,40 +343,22 @@ const Feedback = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* Table Pagination */}
-        <Box
+
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component="div"
+          count={feedbackData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
           sx={{
-            width: "100%",
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            [theme.breakpoints.down("sm")]: {
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            },
+            justifyContent: "center",
+            width: "100%",
+            [theme.breakpoints.up("sm")]: { justifyContent: "right" },
           }}
-        >
-          <span>
-            <Button sx={{ width: "max-content" }}>Pagination 1 (1-100)</Button>
-          </span>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component="div"
-            count={feedbackData.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-            }}
-          />
-        </Box>
+        />
       </Grid>
     </Container>
   );

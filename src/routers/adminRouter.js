@@ -1,4 +1,11 @@
-import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Choose from "../choose/Choose";
 import Overview from "../adminPage/pages/overview/Overview";
 import Tickets from "../adminPage/pages/tickets/Tickets";
@@ -19,70 +26,90 @@ import DetailFeedback from "../adminPage/pages/Feedback/DetailFeedback/DetailFee
 import EditTickets from "../adminPage/pages/tickets/DetailTickets/EditTickets/EditTickets";
 import DetailClient from "../adminPage/pages/clients/DetailClient/DetailClient";
 import DetailEngineerAnalytics from "../adminPage/pages/members/DetailEngineerPerformance/DetailEngineerAnalytics/DetailEngineerAnalytics";
+import YourComponent from "../components/TestButton/testButton";
 
+import { useEffect } from "react";
 const ProtectedAdminRoute = () => {
   if (
-    !localStorage.getItem("access_token") &&
-    !localStorage.getItem("role") === "admin"
+    !localStorage.getItem("access_token") ||
+    localStorage.getItem("role") !== "admin"
   ) {
     return <Navigate to="/" replace />;
   }
-  return <DashboardLayout />;
+  return <Outlet />;
 };
 
 const HandleLoginSuccessfully = () => {
-  if (localStorage.getItem("access_token")) {
-    return <Navigate to={-1} replace />;
+  const accessToken = localStorage.getItem("access_token");
+  const role = localStorage.getItem("role");
+
+  if (accessToken && role === "admin") {
+    return <Navigate to="overview-admin" replace />;
   }
   return <Outlet />;
 };
-function AdminRouter() {
+
+
+function AdminRouter({ chooseElement }) {
   return (
     <Routes>
       {/* Router Admin */}
       <Route element={<HandleLoginSuccessfully />}>
-        <Route path="/" element={<Choose />} />
+        <Route path="/" element={chooseElement} />
         <Route path="admin-login" element={<Login />} />
       </Route>
       <Route element={<ProtectedAdminRoute />}>
-        <Route path="overview-admin" element={<Overview />} />
-        <Route path="userProfile-admin" element={<UserProfile />} />
-        <Route path="tickets-admin" element={<Tickets />} />
-        <Route path="tickets-admin/createTickets" element={<CreateTickets />} />
-        <Route
-          path="tickets-admin/detailTickets/:id"
-          element={<DetailTickets />}
-        />
-        <Route
-          path="tickets-admin/detailTickets/editTickets/:id"
-          element={<EditTickets />}
-        />
-        <Route path="members-admin" element={<Members />} />
-        <Route path="members-admin/createAccount" element={<CreateMember />} />
-        <Route
-          path="members-admin/userPerformance/:username"
-          element={<DetailEngineerPerformance />}
-        />
-        <Route
-          path="members-admin/userPerformance/:username/engineerAnalytics"
-          element={<DetailEngineerAnalytics />}
-        />
-        <Route path="clients-admin" element={<Clients />} />
-        <Route path="clients-admin/createClient" element={<CreateClient />} />
-        <Route
-          path="clients-admin/clientAnalysis"
-          element={<ClientAnalysis />}
-        />
-        <Route path="clients-admin/editClient/:code" element={<EditClient />} />
-        <Route
-          path="clients-admin/detailClient/:code"
-          element={<DetailClient />}
-        />
-        <Route path="feedbacks-admin" element={<Feedback />} />
-        <Route
-          path="feedbacks-admin/detailFeedback/:id"
-          element={<DetailFeedback />}
-        />
+        <Route element={<DashboardLayout />}>
+          <Route path="overview-admin" element={<Overview />} />
+          <Route path="userProfile-admin" element={<UserProfile />} />
+          <Route path="tickets-admin" element={<Tickets />} />
+          <Route
+            path="tickets-admin/createTickets"
+            element={<CreateTickets />}
+          />
+          <Route
+            path="tickets-admin/detailTickets/:id"
+            element={<DetailTickets />}
+          />
+          <Route
+            path="tickets-admin/detailTickets/editTickets/:id"
+            element={<EditTickets />}
+          />
+          <Route path="members-admin" element={<Members />} />
+          <Route
+            path="members-admin/createAccount"
+            element={<CreateMember />}
+          />
+          <Route
+            path="members-admin/userPerformance/:username"
+            element={<DetailEngineerPerformance />}
+          />
+          <Route
+            path="members-admin/userPerformance/:username/engineerAnalytics"
+            element={<DetailEngineerAnalytics />}
+          />
+          <Route path="clients-admin" element={<Clients />} />
+          <Route path="clients-admin/createClient" element={<CreateClient />} />
+          <Route
+            path="clients-admin/clientAnalysis"
+            element={<ClientAnalysis />}
+          />
+          <Route
+            path="clients-admin/editClient/:code"
+            element={<EditClient />}
+          />
+          <Route
+            path="clients-admin/detailClient/:code"
+            element={<DetailClient />}
+          />
+          <Route path="feedbacks-admin" element={<Feedback />} />
+          <Route
+            path="feedbacks-admin/detailFeedback/:id"
+            element={<DetailFeedback />}
+          />
+          <Route path="testbutoon" element={<YourComponent />} />
+        </Route>
+        
       </Route>
     </Routes>
   );

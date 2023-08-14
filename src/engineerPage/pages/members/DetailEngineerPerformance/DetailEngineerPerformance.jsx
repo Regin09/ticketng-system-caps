@@ -42,7 +42,7 @@ const headCells = [
   {
     id: "processingTime",
     numeric: false,
-    label: "Processing Time (In Minute)",
+    label: "Processing Time",
   },
 ];
 
@@ -64,6 +64,36 @@ function formatDate(dateTimeString) {
   const formattedTime = `${hours}:${minutes}:${seconds}`;
 
   return ` ${formattedTime} - ${formattedDate} `;
+}
+
+function formatTime(minutes) {
+  const years = Math.floor(minutes / (365 * 24 * 60));
+  const months = Math.floor((minutes % (365 * 24 * 60)) / (30 * 24 * 60));
+  const weeks = Math.floor((minutes % (30 * 24 * 60)) / (7 * 24 * 60));
+  const days = Math.floor((minutes % (7 * 24 * 60)) / (24 * 60));
+  const hours = Math.floor((minutes % (24 * 60)) / 60);
+  const remainingMinutes = minutes % 60;
+
+  let formattedTime = "";
+
+  if (years > 0) {
+    formattedTime += `${years}y `;
+  }
+  if (months > 0) {
+    formattedTime += `${months}mo `;
+  }
+  if (weeks > 0) {
+    formattedTime += `${weeks}w `;
+  }
+  if (days > 0) {
+    formattedTime += `${days}d `;
+  }
+  if (hours > 0) {
+    formattedTime += `${hours}h `;
+  }
+  formattedTime += `${remainingMinutes}m`;
+
+  return formattedTime;
 }
 
 function formatCreatedAt(dateTimeString) {
@@ -122,7 +152,7 @@ function RowItem(props) {
           {formatDate(props.item.finishedAt)}
         </TableCell>
         <TableCell align="center">{props.item.score}</TableCell>
-        <TableCell align="center">{props.item.processingTime}</TableCell>
+        <TableCell align="center">{formatTime(props.item.processingTime)}</TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -150,8 +180,9 @@ const DetailEngineerPerformance = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/performance/engineer/${username}`,
+        url: `${process.env.REACT_APP_API_URL}/api/performance/engineer/${username}`,
       });
+      
       setDetailEngineer(res.data.data);
       setNameUsers(res.data);
       console.log(res.data.data);
@@ -160,26 +191,25 @@ const DetailEngineerPerformance = () => {
       console.log(error);
     }
   };
-   const getUserProfileHandler = async () => {
-     try {
-       const res = await axios({
-         method: "GET",
-         url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile/",
-         headers: {
-           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-         },
-       });
-       console.log("Response GET");
-       console.log(res);
-       setUserProfile(res.data.data);
-       // console.log(userProfile);
-     } catch (error) {
-       if (error.response.status === 404) {
-       }
-       console.log(error);
-     }
-   };
-
+  const getUserProfileHandler = async () => {
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `${process.env.REACT_APP_API_URL}/api/member/profile/`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Response GET");
+      console.log(res);
+      setUserProfile(res.data.data);
+      // console.log(userProfile);
+    } catch (error) {
+      if (error.response.status === 404) {
+      }
+      console.log(error);
+    }
+  };
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -310,23 +340,22 @@ const DetailEngineerPerformance = () => {
         </Table>
       </TableContainer>
       {/* Table Pagination */}
-      
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={detailEngineer.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-          }}
-        />
-     
+
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        component="div"
+        count={detailEngineer.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          [theme.breakpoints.up("sm")]: { justifyContent: "right" },
+        }}
+      />
     </Container>
   );
 };

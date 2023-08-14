@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import { Fragment,useState } from "react";
+import { Fragment, useState } from "react";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import { deepOrange, green } from "@mui/material/colors";
@@ -19,20 +19,20 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import Avatar from "@mui/material/Avatar";
 import "./UserProfile.css";
 import axios from "axios";
+import LogoDummy from "../../../assets/images/profilepic.png";
 
 const UserProfile = () => {
- 
   const [userProfile, setUserProfile] = useState([]);
-   React.useEffect(() => {
-     document.title = "User Profile";
-     getUserProfileHandler();
-   }, []);
+  React.useEffect(() => {
+    document.title = "User Profile";
+    getUserProfileHandler();
+  }, []);
 
   const getUserProfileHandler = async () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile/",
+        url: `${process.env.REACT_APP_API_URL}/api/member/profile/`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -48,166 +48,168 @@ const UserProfile = () => {
     }
   };
 
-   if (userProfile.length === 0) {
-     return (
-       <div
-         style={{
-           display: "flex",
-           justifyContent: "center",
-           alignItems: "center",
-           height: "100vh",
-         }}
-       >
-         <div
-           style={{
-             position: "relative",
-             width: "50vh",
-             height: "50vh",
-           }}
-         >
-           <CircularProgress
-             style={{
-               position: "absolute",
-               top: "26%",
-               left: "45%",
-               transform: "translate(-50%, -50%)",
-               zIndex: 1,
-             }}
-             color="success"
-           />
-           <div
-             style={{
-               position: "absolute",
-               top: 0,
-               left: 0,
-               width: "100%",
-               height: "100%",
-
-               animation: "rotate 2s linear infinite",
-               zIndex: 0,
-             }}
-           ></div>
-         </div>
-       </div>
-     );
-   }
-
-  return (
-    <Fragment>
-      <h1>User Profile</h1>
-      <Card
-        sx={{
-          minWidth: "100%",
-          border: "1px solid rgba(0, 0, 0, 0.2)",
-          borderRadius: "10px",
-          padding: "16px",
-          // height:"100%",
+  if (userProfile.length === 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
         }}
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4} xl={6}>
-            <div className="item">
-              <img
-                src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tiny"
-                alt=""
-                className="itemImg"
-              />
-            </div>
-          </Grid>
-          <Grid item xs={12} md={8} xl={6}>
-            <CardContent>
-              <div style={{ display: "flex" }}>
-                <div style={{ width: "100%", maxWidth: "200px" }}>Fullname</div>
-                <div style={{ paddingLeft: "15px" }}>{userProfile.name} </div>
-              </div>
-              <br />
-              <div style={{ display: "flex" }}>
-                <div style={{ width: "100%", maxWidth: "200px" }}>Username</div>
-                <div style={{ paddingLeft: "15px" }}>{userProfile.username}</div>
-              </div>
-              <br />
-              <div style={{ display: "flex" }}>
-                <div style={{ width: "100%", maxWidth: "200px" }}>Email</div>
-                <div style={{ paddingLeft: "15px" }}>{userProfile.email}</div>
-              </div>
-              <br />
-              <div style={{ display: "flex" }}>
-                <div style={{ width: "100%", maxWidth: "200px" }}>Role</div>
-                <div style={{ paddingLeft: "15px" }}>{userProfile.role}</div>
-              </div>
-            </CardContent>
-          </Grid>
-        </Grid>
-      </Card>
-      {/* USER PROFILE 1
-          <Card sx={{ 
-            minWidth: "100%",
-            border:"1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "10px", 
-            padding:"16px",
-            // height:"100%",
-            height:"500px",
-            }}>
+        <div
+          style={{
+            position: "relative",
+            width: "50vh",
+            height: "50vh",
+          }}
+        >
+          <CircularProgress
+            style={{
+              position: "absolute",
+              top: "26%",
+              left: "45%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 1,
+            }}
+            color="success"
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
 
-              <Grid container spacing={10}>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Fullname
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                </Grid>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Username
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                </Grid>
-              </Grid>
-              <br/><br/><br/>
-              <Grid container spacing={10}>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Email
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                </Grid>
-                <Grid item xs={12} md={6} xl={6}>
-                <Typography variant="body2" sx={{fontSize:"17px"}}>
-                  Role
-                  </Typography>
-                  <TextField id="outlined-basic" variant="outlined"  size='small' 
-                    sx={{
-                      width:"100%", 
-                      height:"35px",  
-                      background:"#FFFFFF",
-                      borderRadius: "7px"
-                    }}/>
-                  
-                </Grid>
-              </Grid>
-              <div style={{position:'fixed', bottom:'0', right:'0'}}> 
-              <ArrowBackOutlinedIcon sx={{objectPosition: '25% 75%'}}/>
+              animation: "rotate 2s linear infinite",
+              zIndex: 0,
+            }}
+          ></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Container>
+      <h1 style={{ fontWeight: 800 }}>User Profile</h1>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Card
+          sx={{
+            border: "1px solid rgba(0, 0, 0, 0.2)",
+            borderRadius: "10px",
+            padding: "16px",
+            width: "100%",
+            height: "auto",
+            minWidth: "300px",
+          }}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={4} xl={6}>
+              <div
+                style={{ display: "flex", height: "auto", marginRight: "50px" }}
+              >
+                <img
+                  src={LogoDummy}
+                  alt=""
+                  className="itemImg"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
               </div>
-          </Card>  */}
-    </Fragment>
+            </Grid>
+            <Grid item xs={12} md={8} xl={6}>
+              <CardContent>
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      width: "100%",
+                      maxWidth: "200px",
+                      fontSize: "25px",
+                    }}
+                  >
+                    Fullname
+                  </div>
+                  <div
+                    style={{
+                      paddingLeft: "15px",
+                      fontSize: "25px",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {userProfile.name}{" "}
+                  </div>
+                </div>
+                <br />
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      width: "100%",
+                      maxWidth: "200px",
+                      fontSize: "25px",
+                    }}
+                  >
+                    Username
+                  </div>
+                  <div
+                    style={{
+                      paddingLeft: "15px",
+                      fontSize: "25px",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {userProfile.username}
+                  </div>
+                </div>
+                <br />
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      width: "100%",
+                      maxWidth: "200px",
+                      fontSize: "25px",
+                    }}
+                  >
+                    Email
+                  </div>
+                  <div
+                    style={{
+                      paddingLeft: "15px",
+                      fontSize: "25px",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {userProfile.email}
+                  </div>
+                </div>
+                <br />
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      width: "100%",
+                      maxWidth: "200px",
+                      fontSize: "25px",
+                    }}
+                  >
+                    Role
+                  </div>
+                  <div
+                    style={{
+                      paddingLeft: "15px",
+                      fontSize: "25px",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {userProfile.role}
+                  </div>
+                </div>
+              </CardContent>
+            </Grid>
+          </Grid>
+        </Card>
+      </div>
+    </Container>
   );
 };
 

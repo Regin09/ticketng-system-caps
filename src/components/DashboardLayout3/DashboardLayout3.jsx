@@ -27,7 +27,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Logout } from "@mui/icons-material";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import LogoWebsite from "../../assets/images/Logo Btech.png";
 import { Helmet } from "react-helmet";
 
@@ -106,15 +106,51 @@ const Drawer = styled(MuiDrawer, {
 
 const DashboardLayout = () => {
   const [userProfile, setUserProfile] = useState({});
+  let {username } = useParams();
+  const [feedbackData, setFeedbackData] = React.useState([]);
+   const decodedToken = localStorage.getItem("decoded_token");
+   const parsedToken = decodedToken ? JSON.parse(decodedToken) : null;
+
+   
+  
+
+  // React.useEffect(() => {
+  //   getAllFeedbacks();
+  //   const username = localStorage.getItem("username");
+  //   if (username) {
+  //     getAllFeedbacks(username);
+  //   }
+  // }, []);
+
+  // const getAllFeedbacks = async (username) => {
+  //   try {
+  //     const res = await axios({
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //       },
+  //       url: `${process.env.REACT_APP_API_URL}/api/member/feedback?receiverUsername=${username}`,
+  //     });
+  //     const sortedTickets = res.data.data.sort((a, b) => {
+  //       return new Date(b.createdAt) - new Date(a.createdAt);
+  //     });
+
+  //     setFeedbackData(sortedTickets);
+
+  //     console.log(res.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   React.useEffect(() => {
-    document.title = "User Profile";
     getUserProfileHandler();
   }, []);
   const getUserProfileHandler = async () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/profile",
+        url: `${process.env.REACT_APP_API_URL}/api/member/profile`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -182,7 +218,11 @@ const DashboardLayout = () => {
           </div>
           <IconButton color="inherit">
             <Avatar
-              alt={userProfile.name ? userProfile.name.toUpperCase() : ""}
+              alt={
+                userProfile && userProfile.name
+                  ? userProfile.name.toUpperCase()
+                  : ""
+              }
               // alt={userProfile.name.toUpperCase()}
               onClick={handleClick}
               src="/static/images/avatar/1.jpg"
@@ -240,6 +280,8 @@ const DashboardLayout = () => {
                 onClick={() => {
                   localStorage.removeItem("access_token");
                   localStorage.removeItem("role");
+                  localStorage.removeItem("name");
+                  localStorage.removeItem("decoded_token");
                 }}
               >
                 <ListItemIcon>
@@ -312,12 +354,16 @@ const DashboardLayout = () => {
                 icon: <ModeCommentOutlinedIcon />,
                 link: "/feedbacks-Engineer",
               },
+              // link: `/feedbacks-Engineer/${parsedToken && parsedToken.username}`,
             ].map((listNavbar, index) => (
               <Link to={listNavbar.link} className="disable-link-style">
                 <ListItem
                   key={listNavbar.title}
                   disablePadding
                   sx={{ display: "block" }}
+                  className={`list-item-${listNavbar.title
+                    .toLowerCase()
+                    .replace(/ /g, "-")}`}
                 >
                   <ListItemButton
                     sx={{

@@ -21,6 +21,7 @@ import {
 import WarningIcon from "../../../assets/images/iconwarning.png";
 import axios from "axios";
 
+
 const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
   background:
     "linear-gradient(234.94deg, #C9ED3A 9.55%, rgba(93, 151, 48, 0.676754) 89.47%)",
@@ -29,7 +30,9 @@ const DialogTitleStyled = styled(DialogTitle)(({ theme }) => ({
 const Clients = () => {
   const theme = useTheme();
   const [clientSummary, setClientSummary] = useState([]);
-   const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [clientsPerPage] = useState(6);
+  
 
   React.useEffect(() => {
     document.title = "Client Page";
@@ -40,7 +43,7 @@ const Clients = () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/client",
+        url: `${process.env.REACT_APP_API_URL}/api/member/client?page=${currentPage}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -57,18 +60,38 @@ const Clients = () => {
   };
 
   const [open, setOpen] = useState(false);
+  const handleDeleteClick = (cardIndex) => {
+    setOpen((prevState) => ({
+      ...prevState,
+      [cardIndex]: true,
+    }));
+  };
 
-  function handleDeleteClick() {
-    setOpen(true);
-  }
+  const handleDeleteConfirm = (cardIndex) => {
+    setOpen((prevState) => ({
+      ...prevState,
+      [cardIndex]: false,
+    }));
+  };
 
-  function handleDeleteConfirm() {
-    setOpen(false);
-  }
+  const handleDeleteCancel = (cardIndex) => {
+    setOpen((prevState) => ({
+      ...prevState,
+      [cardIndex]: false,
+    }));
+  };
 
-  function handleDeleteCancel() {
-    setOpen(false);
-  }
+  // function handleDeleteClick() {
+  //   setOpen(true);
+  // }
+
+  // function handleDeleteConfirm() {
+  //   setOpen(false);
+  // }
+
+  // function handleDeleteCancel() {
+  //   setOpen(false);
+  // }
 
   const handleDeleteClients = async (code) => {
     try {
@@ -77,7 +100,7 @@ const Clients = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/client/${code}`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/client/${code}`,
       });
       console.log(res.data.data);
       getClientSummaryHandler();
@@ -86,13 +109,28 @@ const Clients = () => {
     }
   };
 
-
   const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
       color: "#1F305C !important",
       backgroundColor: "rgba(31, 48, 92, 0.25)",
     },
   });
+
+  // Get current clients
+  const indexOfLastClient = currentPage * clientsPerPage;
+  const indexOfFirstClient = indexOfLastClient - clientsPerPage;
+  const currentClients = clientSummary.slice(
+    indexOfFirstClient,
+    indexOfLastClient
+  );
+
+
+  // Change page
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    getClientSummaryHandler();
+  };
+
   return (
     <React.Fragment>
       <div style={{ width: "100%", paddingBottom: "15px", maxWidth: "500px" }}>
@@ -161,7 +199,7 @@ const Clients = () => {
         </Grid>
       </div>
       <Grid container spacing={3}>
-        {clientSummary.map((summary) => (
+        {currentClients.map((summary, index) => (
           <Grid item xs={12} md={4} xl={4} key={summary._id}>
             <Card
               sx={{
@@ -226,11 +264,15 @@ const Clients = () => {
                   <Button
                     size="small"
                     sx={{ width: "10px", color: "red" }}
-                    onClick={() => handleDeleteClick()}
+                    onClick={() => handleDeleteClick(index)}
                   >
                     <DeleteOutlineOutlinedIcon />
                   </Button>
-                  <Dialog open={open} onClose={handleDeleteCancel}>
+
+                  <Dialog
+                    open={open[index]}
+                    onClose={() => handleDeleteCancel(index)}
+                  >
                     <DialogContent
                       sx={{ display: "flex", justifyContent: "center" }}
                     >
@@ -249,7 +291,7 @@ const Clients = () => {
                     </DialogTitleStyled>
                     <DialogActions>
                       <Button
-                        onClick={handleDeleteCancel}
+                        onClick={() => handleDeleteCancel(index)}
                         sx={{
                           backgroundColor: "grey",
                           color: "#fff",
@@ -261,7 +303,10 @@ const Clients = () => {
                         Cancel
                       </Button>
                       <Button
-                        onClick={() => handleDeleteClients(summary.code)}
+                        onClick={() => {
+                          handleDeleteClients(summary.code);
+                          handleDeleteConfirm(index);
+                        }}
                         sx={{
                           backgroundColor: "#FF0000",
                           color: "#fff",
@@ -279,9 +324,76 @@ const Clients = () => {
             </Card>
           </Grid>
         ))}
+        <br/>
       </Grid>
+      
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {clientSummary.length > clientsPerPage && (
+          <ClientPagination
+            clientsPerPage={clientsPerPage}
+            totalClients={clientSummary.length}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
+        )}
+      </div>
     </React.Fragment>
   );
 };
 
+const ClientPagination = ({
+  clientsPerPage,
+  totalClients,
+  currentPage,
+  paginate,
+}) => {
+  const pageNumbers = [];
+
+  for (let i = 1; i <= Math.ceil(totalClients / clientsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <nav
+      style={{
+        position: "fixed",
+        bottom: "0",
+        width: "100%",
+        textAlign: "center",
+        zIndex: "1000",
+        background: "white",
+        boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
+        padding: "10px 0",
+      }}
+    >
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          margin: 0,
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {pageNumbers.map((number) => (
+          <li
+            key={number}
+            style={{
+              margin: "0 5px",
+            }}
+          >
+            <Button
+              variant={currentPage === number ? "contained" : "outlined"}
+              onClick={() => paginate(number)}
+              sx={{ minWidth: "30px", padding: "6px" }}
+            >
+              {number}
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
 export default Clients;

@@ -42,9 +42,39 @@ const headCells = [
   {
     id: "processingTime",
     numeric: false,
-    label: "Processing Time (In Minute)",
+    label: "Processing Time",
   },
 ];
+
+function formatTime(minutes) {
+  const years = Math.floor(minutes / (365 * 24 * 60));
+  const months = Math.floor((minutes % (365 * 24 * 60)) / (30 * 24 * 60));
+  const weeks = Math.floor((minutes % (30 * 24 * 60)) / (7 * 24 * 60));
+  const days = Math.floor((minutes % (7 * 24 * 60)) / (24 * 60));
+  const hours = Math.floor((minutes % (24 * 60)) / 60);
+  const remainingMinutes = minutes % 60;
+
+  let formattedTime = "";
+
+  if (years > 0) {
+    formattedTime += `${years}y `;
+  }
+  if (months > 0) {
+    formattedTime += `${months}mo `;
+  }
+  if (weeks > 0) {
+    formattedTime += `${weeks}w `;
+  }
+  if (days > 0) {
+    formattedTime += `${days}d `;
+  }
+  if (hours > 0) {
+    formattedTime += `${hours}h `;
+  }
+  formattedTime += `${remainingMinutes}m`;
+
+  return formattedTime;
+}
 
 function formatDate(dateTimeString) {
   if (dateTimeString === null) {
@@ -122,7 +152,9 @@ function RowItem(props) {
           {formatDate(props.item.finishedAt)}
         </TableCell>
         <TableCell align="center">{props.item.score}</TableCell>
-        <TableCell align="center">{props.item.processingTime}</TableCell>
+        <TableCell align="center">
+          {formatTime(props.item.processingTime)}
+        </TableCell>
       </TableRow>
     </React.Fragment>
   );
@@ -148,7 +180,7 @@ const DetailEngineerPerformance = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/performance/engineer/${username}`,
+        url: `${process.env.REACT_APP_API_URL}/api/performance/engineer/${username}`,
       });
       setDetailEngineer(res.data.data);
       setNameUsers(res.data);
@@ -183,7 +215,6 @@ const DetailEngineerPerformance = () => {
   const renderTableBody = () => {
     if (detailEngineer.length === 0) {
       return (
-        
         <TableRow>
           <TableCell colSpan={6} align="center">
             <Card
@@ -233,27 +264,27 @@ const DetailEngineerPerformance = () => {
 
   return (
     <Container>
-      <div style={{display:'flex', justifyContent:'space-between'}}>
-          <h1>Performance of {nameUsers.name} </h1>
-          <Link
-            to="engineerAnalytics"
-            style={{ textDecoration: "none", color: "black" }}
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h1>Performance of {nameUsers.name} </h1>
+        <Link
+          to="engineerAnalytics"
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              color: "black",
+              background: "#FFFFFF",
+              height: "36px",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
           >
-            <Button
-              variant="contained"
-              sx={{
-                color: "black",
-                background: "#FFFFFF",
-                height: "36px",
-                "&:hover": {
-                  backgroundColor: "white",
-                },
-              }}
-            >
-              <Typography>{nameUsers.name} Analytics</Typography>
-            </Button>
-          </Link>
-          </div>
+            <Typography>{nameUsers.name} Analytics</Typography>
+          </Button>
+        </Link>
+      </div>
       <br />
       <TableContainer sx={{ maxHeight: rowsPerPage !== 10 ? 800 : "none" }}>
         <Table stickyHeader sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -289,23 +320,22 @@ const DetailEngineerPerformance = () => {
         </Table>
       </TableContainer>
       {/* Table Pagination */}
-     
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={detailEngineer.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            [theme.breakpoints.up("sm")]: { justifyContent: "right" },
-          }}
-        />
-     
+
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        component="div"
+        count={detailEngineer.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          [theme.breakpoints.up("sm")]: { justifyContent: "right" },
+        }}
+      />
     </Container>
   );
 };

@@ -21,12 +21,15 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { ToggleButtonGroup } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const CreateMember = () => {
   const theme = useTheme();
   const [roleMember, setRoleMember] = React.useState("Engineer");
   const navigate = useNavigate();
   const [showProgress, setShowProgress] = React.useState(false);
+
   const [formCreate, setFormCreate] = useState({
     username: "",
     name: "",
@@ -44,6 +47,18 @@ const CreateMember = () => {
 
   const [clientCode, setClientCode] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const showAlert = (severity, message) => {
+    setAlertSeverity(severity);
+    setAlertMessage(message);
+    setAlertOpen(true);
+  };
+
+  const handleCloseAlert = () => {
+    setAlertOpen(false);
+  };
 
   const ToggleButton = styled(MuiToggleButton)({
     "&.Mui-selected, &.Mui-selected:hover": {
@@ -58,26 +73,21 @@ const CreateMember = () => {
   }, []);
 
   const handleCreateEngineer = async (data) => {
-    // if (!isPasswordValid(formCreate.password)) {
-    //   setErrorMessage(
-    //     "Must have at least 8 characters that include one uppercase, one lowercase, one numeric character, and one special character."
-    //   );
-    //   return;
-    // }
     try {
       const res = await axios({
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/engineer-register`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/engineer-register`,
         data: data,
       });
       console.log(res.data.data);
-
-      navigate("/members-admin");
+     navigate("/members-admin");
     } catch (error) {
       // setErrorMessage("");
+      showAlert("error", error.response.data.message);
+      // alert(error.response.data.message);
       console.log(error);
     } finally {
       setShowProgress(false); // Hide the progress indicator
@@ -85,24 +95,20 @@ const CreateMember = () => {
   };
 
   const handleCreateUser = async (data) => {
-    // if (!isPasswordValid(formCreate.password)) {
-    //   setErrorMessage(
-    //     "Must have at least 8 characters that include one uppercase, one lowercase, one numeric character, and one special character."
-    //   );
-    //   return;
-    // }
     try {
       const res = await axios({
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        url: `https://stg.capstone.adaptivenetworklab.org/api/member/user-register`,
+        url: `${process.env.REACT_APP_API_URL}/api/member/user-register`,
         data: data,
       });
       console.log(res.data.data);
+      
       navigate("/members-admin");
     } catch (error) {
+      showAlert("error", error.response.data.message);
       // setErrorMessage("");
       console.log(error);
     } finally {
@@ -114,7 +120,7 @@ const CreateMember = () => {
     try {
       const res = await axios({
         method: "GET",
-        url: "https://stg.capstone.adaptivenetworklab.org/api/member/client",
+        url: `${process.env.REACT_APP_API_URL}/api/member/client`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -144,17 +150,17 @@ const CreateMember = () => {
     return pattern.test(password);
   };
 
-  const handleCreateAccount = () => {
-    if (!isPasswordValid(formCreate.password)) {
-      setErrorMessage(
-        "Must have at least 8 characters that include one uppercase, one lowercase, one numeric character, and one special character."
-      );
-    } else {
-      // Proceed with creating the account
-      setErrorMessage("");
-      // Add your code to create the account here
-    }
-  };
+  // const handleCreateAccount = () => {
+  //   if (!isPasswordValid(formCreate.password)) {
+  //     setErrorMessage(
+  //       "Must have at least 8 characters that include one uppercase, one lowercase, one numeric character, and one special character."
+  //     );
+  //   } else {
+  //     // Proceed with creating the account
+  //     setErrorMessage("");
+  //     // Add your code to create the account here
+  //   }
+  // };
 
   return (
     <Fragment>
@@ -242,7 +248,7 @@ const CreateMember = () => {
                   </Typography>
                   <TextField
                     required
-                    placeholder="adaptive@gmail.com"
+                    placeholder="adaptive@gmail.coms"
                     type="email"
                     id="outlined-basic"
                     variant="outlined"
@@ -305,7 +311,6 @@ const CreateMember = () => {
                         pattern:
                           "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
                       }}
-                  
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
@@ -487,7 +492,7 @@ const CreateMember = () => {
                     Password
                   </Typography>
                   <FormControl
-                  required
+                    required
                     sx={{ width: "100%" }}
                     variant="outlined"
                     size="small"
@@ -624,6 +629,21 @@ const CreateMember = () => {
           </Card>
         </form>
       )}
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseAlert}
+          severity={alertSeverity}
+        >
+          {alertMessage}
+        </MuiAlert>
+      </Snackbar>
     </Fragment>
   );
 };
